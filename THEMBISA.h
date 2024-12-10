@@ -14,23 +14,23 @@ using namespace std;
 //=============================================================================
 
 int StartYear = 1985;
-int ProjectionTerm = 39; // Note that entering term of 10 will give you results in 1994
+int ProjectionTerm = 40; // Note that entering term of 10 will give you results in 1994
 int CurrYear;
 int CurrMonth; // 0 to 11
 
-int FixedUncertainty = 1;
+int FixedUncertainty = 0;
 const int VaryFutureInterventions = 0; // 0 = fix the future rollout at Rollout.txt values
 const int FixedARTinitiation = 0; // 1 = fix the rates of ART initiation at the values generated in
 								  // the uncertainty analysis (only valid if FixedUncertainty = 1)
-const int InputARTinitiationRates = 0; // 1 = specify rates of ART initiation in Rollout.txt
+const int InputARTinitiationRates = 1; // 1 = specify rates of ART initiation in Rollout.txt
 									   // 0 = specify numbers starting ART in Rollout.txt
 const int PropnalImmART = 1; // 1 if immediate ART start is proportional to later rate of ART start
 const int ExcludeInterrupters = 1; // 1 = exclude temporary ART interrupters when calculating
 								   // numbers currently on ART
 const int UseNumbersTests = 1; // 1 = calculate rates of testing from numbers of HIV tests
-const int ProvModel = 0; // 1 if modelling a province, 0 for national model
-string ProvID = "MP"; // Choose from EC, FS, GT, KZ, LM, MP, NC, NW, WC
-const int UseBrassLogit = 0; // 1 if using Brass relational logit to get non-HIV mort over 1996-2018
+const int ProvModel = 1; // 1 if modelling a province, 0 for national model
+string ProvID = "EC"; // Choose from EC, FS, GT, KZ, LM, MP, NC, NW, WC
+const int UseBrassLogit = 1; // 1 if using Brass relational logit to get non-HIV mort over 1996-2018
 int PrEPorVM = 0; // 1 if allowing for PrEP or vaginal microbicides. Keep set to 0 as default; it
 				  // will automatically get recalculated if there is PrEP/VM rollout.
 double RRtestingDiagnosed = 1.0; // Relative rate of consent to testing if individual is diagnosed
@@ -50,20 +50,21 @@ const int CalibHCT_ANC = 0; // 1 = calibrate to propn ever tested in antenatal s
 const int CalibHCTprev = 0; // 1 = calibrate to HIV prevalence in adults receiving HCT
 const int CalibHCTprevP = 0; // 1 = calibrate to HIV prevalence in children receiving HCT
 const int CalibHCTtotP = 0; // 1 = calibrate to recorded number of kids receiving HCT
+const int CalibHCTageSex = 0; // 1 = calibrate to proportions tested by age/sex and prev by age/sex
 const int CalibDeathsA = 1; // 1 = calibrate to recorded numbers of adult deaths
 const int AgeLimitMortCalib = 60; // Death data below this age are used in mort calibration
 								  // Should be multiple of 5 (set to 95 if all ages included)
 const int CalibDeathsP = 0; // 1 = calibrate to recorded numbers of paediatric deaths
 const int CalibAIDStrend = 0; // 1 = calibrate to reported new AIDS cases in adults (1990-4)
 const int CalibAIDSage = 0; // 1 = calibrate to reported new AIDS cases by age and sex (1993-4)
-const int CalibARTtotals = 0; // 1 = calibrate to reported total numbers of ART patients
+const int CalibARTtotals = 1; // 1 = calibrate to reported total numbers of ART patients
 const int CalibARTtotalsP = 0; // 1 = calibrate to reported total numbers of children on ART
 const int CalibCD4atARTstart = 0; // 1 = calibrate to recorded # starting ART by CD4 (WC only)
 const int CalibARTbyAge = 1; // 1 = calibrate to age distribution of adults on ART
 const int CalibARTbyAgeP = 0; // 1 = calibrate to age distribution of kids starting ART
 const int CalibARTbyAgeP2 = 0; // 1 = calibrate to age distribution of kids on ART
 const int CalibChildPIP = 0; // 1 = calibrate to child deaths in facilities
-const int CalibARTcoverage = 0; // 1 = calibrate to ARV metabolite data
+const int CalibARTcoverage = 1; // 1 = calibrate to ARV metabolite data
 const int CalibMarriageData = 0; // 1 = calibrate to marriage data
 const int CalibANC_ART = 0; // 1 = calibrate to % of HIV+ ANC attenders previously on ART
 
@@ -80,6 +81,7 @@ double RRpartnerLow[2]; // relative rate of partnership formation in low risk gr
 double RRpartnerMarried[2]; // relative rate of partnership formation in married high risk group
 double GammaMeanF; // partnership formation age adjustment factor: gamma mean
 double GammaSDF; // partnership formation age adjustment factor: gamma standard deviation
+double IncreaseGammaMeanF; // Factor by which mean increases, comparing 2016 to 1998
 double DebutMedian[2]; // Median age at start of sexual activity in high risk group
 double DebutLow[2]; // relative rate of starting sexual activity in low risk group
 double DebutShape[2]; // Log-logistic shape parameter for rate of starting sexual activity
@@ -97,12 +99,9 @@ double DivorceTrend; // Annual change in rates of union dissolution (multiplier)
 double ORremarriage[2]; // Odds of remarriage in recently divorced/widowed, relative to never-married
 
 // (b) Commercial sex
-double FSWageMean; // Mean age of FSWs (female sex workers)
-double FSWageSD; // Standard deviation of FSW ages
 double FSWageAlpha; // Alpha parameter for gamma distribution of FSW ages
 double FSWageLambda; // Lambda parameter for gamma distribution of FSW ages
 double ClientsPA; // Number of sex acts with clients per annum
-double DurFSW; // Average duration of sex work (years)
 double FSWcontactAge21; // Annual # contacts with FSW for unmarried high risk male aged 21
 double FSWcontactMarried; // Relative rate of visiting FSWs in married men
 double FSWcontactMean; // FSW contact age adjustment factor: gamma mean
@@ -240,7 +239,7 @@ double MedianCirc; // Median age at circumcisions (including infants)
 double ShapeCirc; // Weibull shape parameter for times to MC post-infancy
 double MCefficacy; // Redn in susceptibility in men who are circumcised
 int MMCdataYear; // Year to which numbers of MMCs are specified
-double UltMMCprob; // Ultimate annual prob of MMC in men who are highly sexually active
+double UltMMCprob; // Ultimate annual prob of MMC in males aged 10-14
 int UltMMCyear; // Year in which ultimate MMC prob first applies
 double VMMCdataAdj; // Ratio of true number of VMMCs to number reported
 
@@ -294,6 +293,8 @@ double ChangeAgeDifMSM; // Change in partner age dif in MSM per year of age
 double SDageDifMSM; // Standard deviation of partner age differences in MSM
 double MtoM_ST; // Ave transmission prob per sex act (male-to-male)
 double InitMSMprevRatio; // Ratio of init HIV prev in MSM to that in hetero men
+double RR_HIV_TGW; // RR of HIV in transgender women to cis-gender MSM
+double PropnTGW; // Proportion of MSM and TGW who are TGW
 
 //=============================================================================
 // Parameters in the 'Paed assumptions' sheet
@@ -509,6 +510,11 @@ double RR_MMCpromo50[86]; // RR of MMC promotion at ages 50+
 double NeonatalMMC[86]; // % of children circumcised at birth
 double CurrCircPrev10; // prevalence of circumcision in 10-year olds at end of yr
 
+// FSW assumptions
+double DurFSW[86]; // Average duration of sex work (years)
+double FSWageMean[86]; // Mean age of FSWs (female sex workers)
+double FSWageSD[86]; // Standard deviation of FSW ages
+
 //============================================================================
 // Parameters and arrays in the 'Results' sheet
 //============================================================================
@@ -721,6 +727,8 @@ double OnARTbyIntDur[6][2][81]; // Fraction still on ART, by duration, sex, age
 double OnARThalfIntDur[6][2][81]; // As above, but at durations 0.25, 0.5, 1.5, ... 4.5
 double OnARThalfIntDurP[5]; // % kids still on ART at 0.5, 1.5, 2.5, 3.5, 4.5 yrs
 double OnARTpaed[10]; // Fraction of ART-experienced kids currently on ART, by age
+double InterruptedPaedLate[10]; // Fraction of paed interrupters who started ART late
+double RestartRateByIntDur[6][2][81]; // Mnthly rate of re-initiation by dur, sex, age
 double AgeAdjInterrupt[81][2]; // RR ART interruption by age & sex (ref. females 35)
 double LowVLuntreated[5][2]; // Prob of VL<1000 if untreated, by CD4 stage and sex
 double AveCD4byARTdur[4][6]; // Average CD4 count by baseline CD4 (1st index) and
@@ -792,7 +800,10 @@ double MatIncidencePN[36]; // HIV incidence in breastfeeding women, by age of ki
 
 double MigrationAdj[91][2]; // Migration adjustment factors at end of current yr
 double NetMigrants[91][38][2]; // Number of net in-mgrants, by age, year and sex
-double MigrationHIVadj[91][3]; // RR HIV after migration (cf before): 1995, 2000, 2010
+double MigrationHIVadj[91][4]; // RR HIV after migration: 1995, 2000, 2010, 2021
+double RecentIntImmig; // Proportion of population that moved into SA over last yr
+double RecentIntImmigP; // Proportion of children who moved into SA over last yr
+double PrevRatioIntImmig; // Ratio of HIV prev in international immigrants to local
 
 //=========================================================================
 // Parameters in the 'Births' sheet
@@ -882,7 +893,10 @@ double BirthsPosMothers;
 double BirthsARTmothers;
 double BirthsDiagMothers;
 double AdultsNewARTbyCD4[4][2]; // Note stage runs from highest CD4 to lowest
+double AdultsReinitARTbyCD4[4][2]; // Resuming ART after an interruption
 double ChildNewARTlate;
+double ChildReinitARTlate; // Children aged 10-14
+double ChildReinitARTearly; // Children aged 10-14
 double NewElig350[2]; // Number of M and F (15+) becoming eligible at 350 threshold
 double NewElig500[2]; // Number of M and F (15+) becoming eligible at 500 threshold
 double NewlyTestedNeg[3]; // Indivs who tested negative through HCT in current year (M, F, child)
@@ -891,6 +905,8 @@ double NewlyTestedFalseNeg[3]; // Indivs who tested in the acute phase of infect
 double NewlyTested1stPos[2];
 double NewlyTestedPaed[3][2]; // Newly tested by age (18, 19-59, 60-179 mo) and HIV status
 double NewlyTestedAdult[3][2]; // Newly tested by age (15-24, 25-49, 50+) and sex
+double PosTestedAdult[3][2]; // Positive tests by age (15-24, 25-49, 50+) and sex
+double ANCtestsByAge[2][2]; // 1st ANC tests by maternal age (15-24, 25+) and HIV status
 double NewlyTestedNegST[6]; // # HIV-neg self-test results, by testing modality
 double NewlyTestedPosST[6]; // # HIV-pos self-test results, by testing modality
 double NewSTtoART[6]; // # HIV-pos self-testers who subsequently start ART, by modality
@@ -946,8 +962,9 @@ double ObservedProvHH_P[5]; // HIV prevalence in kids aged 2-14 in selected prov
 double ObservedProvHH[6][2]; // HIV prevalence in selected province by year and age (15-24, 25+)
 double ObservedPrevANC[5][28]; // ANC prevalence by age and year (1991-2015, 2017)
 double ObservedProvANC[26]; // ANC prevalence in selected province (1990-2015, 2017)
-double ObservedPrevHCT[15]; // HIV prevalence in adults tested for HIV 2004-8, 2010, 2012, 2015-21
+double ObservedPrevHCT[16]; // HIV prevalence in adults tested for HIV 2004-8, 2010, 2012, 2015-23
 double ObservedPrevHCT_P[8]; // HIV prevalence in kids tested for HIV, 2015-21
+double ObsHCTprevAgeSex[5][4]; // HIV prev in HCT by risk (M 15-24, F 15-24, 25-49, 50, ANC) & yr
 double ObsCoverage[2][3]; // % of HIV-positive M & F (1st index) on ART by survey (2nd index)
 double SEprev05[12][2]; // std error of HIV prevalence estimates in 2005 HSRC survey
 double SEprev08[12][2];
@@ -960,14 +977,15 @@ double SEprovHH_P[5];
 double SEprovHH[6][2];
 double SEprevANC[5][28];
 double SEprovANC[26];
-double SEprevHCT[15];
+double SEprevHCT[16];
 double SEprevHCT_P[8];
 double SEcoverage[2][3];
 double RecordedHCT_P[5]; // Recorded numbers of HIV tests in children, 2015-17. Redundant
 double RecordedHCT_P_CoV[5]; // Coefficients of variation for numbers of HIV tests in kids (on log scale)
-const int nCSWstudies = 30;
+double AdultTestsAgeSex[5][4]; // Propn of adult HIV tests by risk (M 15-24, F 15-24, 25-49, 50, ANC), year
+const int nCSWstudies = 4;
 double CSWstudyDetails[nCSWstudies][3];
-const int nMSMstudies = 20;
+const int nMSMstudies = 0;
 double MSMstudyDetails[nMSMstudies+1][4];
 double AgeDbnAdultsOnART[7][9][2]; // % of treated adults in each age group (2nd index) by yr (1st index), sex
 double AgeDbnKidsStartingART[10][2]; // Propn of kids starting ART in <1 and 1-4 age groups (2nd index)
@@ -979,8 +997,10 @@ double ModelPrevPaed2[2][2][3]; // Prevalence by age (0-4, 5-14), sex and year (
 double ModelPrevU208; // Prevalence under age 2 in 2008 
 double ModelProvHH[6][2];
 double ModelProvHH_P[5];
-double ModelPrevHCT[15];
+double ModelPrevHCT[16];
 double ModelPrevHCT_P[8];
+double ModelTestsAgeSex[5][4];
+double ModelPosTestsAgeSex[5][4];
 double ModelCoverage[2][3];
 double ModelAgeDbnAdultART[7][9][2];
 double ProvANCbias = 0.0; 
@@ -1007,16 +1027,19 @@ double EverTested08[5][2][2]; // Proportion ever tested in 2008 HSRC survey by a
 double EverTested12[5][2][2]; // Proportion ever tested in 2012 HSRC survey by age, sex & HIV status
 double EverTested16[4][2][2]; // Proportion ever tested in 2016 DHS by age, sex & HIV status
 double EverTested17[5][2][2]; // Proportion ever tested in 2017 HSRC survey by age, sex & HIV status
+double EverTested22[5][2][2]; // Proportion ever tested in 2022 HSRC survey by age, sex & HIV status
 double SEtested05[5][2][2]; // std error of HIV prevalence estimates in 2005 HSRC survey
 double SEtested08[5][2][2];
 double SEtested12[5][2][2];
 double SEtested16[4][2][2];
 double SEtested17[5][2][2];
+double SEtested22[5][2][2];
 double ModelTested05[5][2][2]; // Model estimate of % ever tested in 2005, by age, sex & HIV status
 double ModelTested08[5][2][2]; // Model estimate of % ever tested in 2008, by age, sex & HIV status
 double ModelTested12[5][2][2]; // Model estimate of % ever tested in 2012, by age, sex & HIV status
 double ModelTested16[4][2][2]; // Model estimate of % ever tested in 2016, by age, sex & HIV status
 double ModelTested17[5][2][2]; // Model estimate of % ever tested in 2017, by age, sex & HIV status
+double ModelTested22[5][2][2]; // Model estimate of % ever tested in 2022, by age, sex & HIV status
 double SeTestingHistory[2]; // Sensitivity of self-reported HIV testing history (HIV-neg & -pos)
 double SpTestingHistory; // Specificity of self-reported HIV testing history 
 
@@ -1033,11 +1056,11 @@ double AIDScasesProfile[10][2]; // Reported new adult AIDS cases (1993-94) by ag
 double OIsDiagnosedByYr[5]; // Modelled # OIs leading to HIV diagnosis, 1990-94
 double OIsDiagnosedProfile[10][2]; // Modelled # OIs leading to HIV diagnosis (1993-4), by age & sex
 
-const int ARTdataPoints = 179; // Number of reported ART totals that combine adults and children
-const int ARTdataPointsP = 122; // Number of reported ART totals in children
-const int ARTdataPointsM = 4; // Number of estimates of fraction of adult ART patients who are men
-double ARTtotals[ARTdataPoints][4]; // Total numbers on ART in public and private sectors
-double ARTtotalsP[ARTdataPointsP][4]; // Total children on ART in public and private sectors
+const int ARTdataPoints = 194; // Number of reported ART totals that combine adults and children
+const int ARTdataPointsP = 180; // Number of reported ART totals in children
+const int ARTdataPointsM = 8; // Number of estimates of fraction of adult ART patients who are men
+double ARTtotals[ARTdataPoints][5]; // Total numbers on ART in public and private sectors
+double ARTtotalsP[ARTdataPointsP][5]; // Total children on ART in public and private sectors
 double ARTmale[ARTdataPointsM][3]; // Proportions of ART patients who are male (year, mean, SE)
 double RecordedARTstart[12][4][2]; // Number starting ART by year, CD4 and sex
 double ARTmodelled[ARTdataPoints][2]; // Modelled total number on ART (current and cumulative)
@@ -1046,6 +1069,7 @@ double ARTmodelledM[ARTdataPointsM]; // Modelled % of adult ART patients who are
 double LastDateCum; // Last date when reported public totals were definitely cumulative
 double AnnSwitchCumToCurr; // Annual rate of switch from reporting cumulative totals to current 
 						   // totals, after LastDateCum
+double AveDurImmART[2]; // Average time spent on ART from outside SA for recent migrants (2017, 2022)
 double BsplineCoef[10]; // B spline coefficients for total numbers starting ART
 double BsplineCoefP[10]; // B spline coefficients for total children starting ART
 double SDchangeBspline; // Std deviation of change in B spline coefficient (sampled from hyperprior)
@@ -1056,8 +1080,8 @@ double MarriageData[15][2][4]; // % of adults married by age and sex, in 1996, 2
 double ModelMarried[15][2][4]; // % of adults married by age and sex, in 1996, 2001, 2007, 2016
 
 double LogLikelihood;
-const int MCMCdim = 48; // Number of parameters in uncertainty analysis
-const int MaxPriors = 140; // Corresponds to the number of rows of data in Priors.txt
+const int MCMCdim = 18; // Number of parameters in uncertainty analysis
+const int MaxPriors = 144; // Corresponds to the number of rows of data in Priors.txt
 int InclPriors[MaxPriors][2]; // Indicator of which priors are included (1st index) and if
 							  // included their index in MCMCdim (2nd index)
 double RandPrior[MCMCdim]; // Random numbers used to sample from prior in current simulation
@@ -1202,9 +1226,9 @@ class Adult
 	// Arrays to represent population profile at START of month
 	double NegNoHCT[81]; // HIV-negative, never tested for HIV
 	double NegPastHCT[81]; // HIV-negative, previously tested
-	double RegHCT[81]; // HIV-negative, receiving regular HCT
-	double RegPrEP[81]; // HIV-negative, receiving regular PrEP
-	double RegVM[81]; // HIV-negative, receiving regular vaginal microbicide
+	double RegHCT[81]; // HIV-negative, receiving injectable PrEP (+ regular HCT)
+	double RegPrEP[81]; // HIV-negative, receiving oral PrEP
+	double RegVM[81]; // HIV-negative, receiving regular vaginal microbicide/DPV ring
 	double PosNoHCT[81][5]; // HIV-positive, never tested for HIV (2nd index is CD4 stage)
 	double PosHCTpreHIV[81][5]; // HIV-positive, last tested before HIV acquisition
 	double PosDiagnosedPreART[81][5]; // Diagnosed HIV-positive, not yet on ART
@@ -1445,6 +1469,7 @@ double CalcHCTlogL();
 double CalcHCTprevLogL();
 double CalcHCTprevPlogL();
 double CalcRecHCT_PlogL();
+double CalcHCTageSexLogL();
 double CalcAIDStrendLogL();
 double CalcAIDSageLogL();
 double CalcARTtotalLogL();
@@ -1602,6 +1627,7 @@ PostOutputArray MSMprev18plus(56);
 PostOutputArray MSMprev18to24(56);
 PostOutputArray MSMprev25plus(56);
 PostOutputArray MSMprev15to49(56);
+PostOutputArray TGWprev18plus(56);
 PostOutputArray MalePrev18plus(56);
 PostOutputArray HIVprevalence(56);
 /*PostOutputArray Prev0to1(31);
@@ -1617,6 +1643,7 @@ PostOutputArray NewHIVinFSW(56);
 PostOutputArray NewHIVclients(56);
 PostOutputArray NewHIVclientsNotSW(56);
 PostOutputArray NewHIVinMSM(56);
+PostOutputArray NewHIVinTGW(56);
 PostOutputArray HIVinc0to14(56);
 PostOutputArray HIVinc15to49(56);
 PostOutputArray HIVinc15to49adj(56);
@@ -1640,6 +1667,7 @@ PostOutputArray PAFforCSW(41);
 PostOutputArray HIVincFSW(56);
 PostOutputArray HIVincClients(56);
 PostOutputArray HIVincMSM(56);
+PostOutputArray HIVincTGW(56);
 PostOutputArray ANCincidence(56);
 PostOutputArray ANCincidenceAdj(56);
 PostOutputArray NewMTCT(56);
@@ -1822,6 +1850,10 @@ PostOutputArray NewART200to349(56);
 PostOutputArray NewART350to499(56);
 PostOutputArray NewARTover500(56);
 PostOutputArray NewARTpaedAdvanced(56);
+PostOutputArray AdultsRestartingART(56);
+PostOutputArray ReinitARTunder200(56);
+PostOutputArray RestartARTchild(56);
+PostOutputArray RestartARTpaedAdvanced(56);
 PostOutputArray TotalOnART(56);
 PostOutputArray TotalART15F(56);
 PostOutputArray TotalART15M(56);
@@ -1947,6 +1979,7 @@ PostOutputArray PrevTested05(20);
 PostOutputArray PrevTested08(20);
 PostOutputArray PrevTested12(20);
 PostOutputArray PrevTested17(20);
+PostOutputArray PrevTested22(20);
 PostOutputArray PrevTested16(16);
 PostOutputArray PrevTested09(16);
 PostOutputArray MMC10to14(56);
@@ -1971,11 +2004,21 @@ PostOutputArray TotalHIVtests25to49M(56);
 PostOutputArray TotalHIVtests25to49F(56);
 PostOutputArray TotalHIVtests50plusM(56);
 PostOutputArray TotalHIVtests50plusF(56);
+PostOutputArray PregTests15to24(56);
+PostOutputArray PregTests25to49(56);
 PostOutputArray HIVtestsPos(56);
 PostOutputArray HIVtestsPosU15(56);
 PostOutputArray HIVtestsPos18mo(56);
 PostOutputArray HIVtestsPos19to59mo(56);
 PostOutputArray HIVtestsPos5to14(56);
+PostOutputArray PosHIVtests15to24M(56);
+PostOutputArray PosHIVtests15to24F(56);
+PostOutputArray PosHIVtests25to49M(56);
+PostOutputArray PosHIVtests25to49F(56);
+PostOutputArray PosHIVtests50plusM(56);
+PostOutputArray PosHIVtests50plusF(56);
+PostOutputArray PregDiag15to24(56);
+PostOutputArray PregDiag25to49(56);
 PostOutputArray FalseNegPropn(56);
 PostOutputArray FirstHIVtestsPos(41);
 PostOutputArray NewDiagAtBirth(56);
@@ -2158,3 +2201,10 @@ OutputByAge NetMigrantsNegM(91, 56);
 OutputByAge NetMigrantsNegF(91, 56);
 OutputByAge NewHIVmen(81, 56);
 OutputByAge NewHIVwomen(81, 56);
+// Inputs for condom model
+/*OutputByAge SexExpUnmarriedF(81, 56);
+OutputByAge SexExpMarriedF(81, 56);
+OutputByAge SexExpUnmarriedDiagF(81, 56);
+OutputByAge SexExpMarriedDiagF(81, 56);
+OutputByAge SexExpUnmarriedART_F(81, 56);
+OutputByAge SexExpMarriedART_F(81, 56);*/
