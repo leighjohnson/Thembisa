@@ -1,18 +1,81 @@
 // This is the main project file for VC++ application project 
 // generated using an Application Wizard.
 
-#include "stdafx.h"
-#using <mscorlib.dll>
-using namespace System;
+//#include "stdafx.h"
+//#using <mscorlib.dll>
+//using namespace System;
+
+#ifdef _WIN32
+    #include "stdafx.h"
+    #using <mscorlib.dll>
+    using namespace System;
+#else
+    #include <iostream>
+    using namespace std;
+#endif
 
 #include "THEMBISA.h"
 #include "StatFunctions.h"
 #include "randomc.h"
+
 #include <time.h>
 #include <cstdlib>
-//#include <omp.h>
+#include <cstring>
+#include <sstream>
+#include <string>
 
-int _tmain()
+#ifdef _WIN32
+  #include <direct.h>             // _mkdir on Windows
+  #define MKDIR(path) _mkdir((path).c_str())
+#else
+  #include <sys/stat.h>           // mkdir on Unix
+  #define MKDIR(path) mkdir((path).c_str(), 0755)
+#endif
+
+static const std::string CALIB_OUT_PATH = "./calibration-outputs/";
+
+std::string getCalibrationOutputPath(const std::string& filename,
+                                     int IncludeTB,
+                                     int ProvModel,
+                                     const std::string& ProvID)
+{
+    std::string subdir;
+    if (IncludeTB == 1)           
+		subdir = "TB";
+    else if (ProvModel == 1)      
+		subdir = "HIV_" + ProvID;
+    else                           
+		subdir = "HIV";
+
+    MKDIR(CALIB_OUT_PATH);             
+    MKDIR(CALIB_OUT_PATH + subdir);   
+
+    return CALIB_OUT_PATH + subdir + "/" + filename;
+}
+
+static const std::string OUT_PATH = "./outputs/";
+
+std::string getOutputPath(const std::string& filename,
+                                     int IncludeTB,
+                                     int ProvModel,
+                                     const std::string& ProvID)
+{
+
+    std::string subdir;
+    if (IncludeTB == 1)           
+		subdir = "TB";
+    else if (ProvModel == 1)      
+		subdir = "HIV_" + ProvID;
+    else                           
+		subdir = "HIV";
+
+    MKDIR(OUT_PATH);             
+    MKDIR(OUT_PATH + subdir);    
+
+    return OUT_PATH + subdir + "/" + filename;
+}
+
+int main()
 {
 	int iy; 
 	clock_t start, finish;
@@ -81,7 +144,6 @@ int _tmain()
 	finish = clock();
 	elapsed_time = (finish - start);
 	cout<<"Time taken: "<<elapsed_time<<endl;
-	system("PAUSE");
 	return 0;
 }
 
@@ -2353,7 +2415,7 @@ OutputArray::OutputArray(int n)
 	columns = n;
 }
 
-void OutputArray::Record(char* filout, int n)
+void OutputArray::Record(const char* filout, int n)
 {
 	int i, c;
 	ofstream file(filout);
@@ -2367,7 +2429,7 @@ void OutputArray::Record(char* filout, int n)
 	file.close();
 }
 
-void OutputArray::RecordSample(char* filout, int n)
+void OutputArray::RecordSample(const char* filout, int n)
 {
 	int i, c;
 	ofstream file(filout);
@@ -2400,7 +2462,7 @@ PostOutputArray::PostOutputArray(int n)
 	columns = n;
 }
 
-void PostOutputArray::RecordSample(char* filout)
+void PostOutputArray::RecordSample(const char* filout)
 {
 	int i, c;
 	ofstream file(filout);
@@ -2502,9 +2564,10 @@ void ReadPaedAssumps()
 {
 	ifstream file;
 	int ia, ic;
-	string InputFile = "PaedAssumps.txt";
+	string InputFile = "./inputs/PaedAssumps.txt";
 
-	if (ProvModel == 1){ InputFile = "PaedAssumps" + ProvID + ".txt"; }
+	// If the provincial model is being run, read in province-specific files
+	if (ProvModel == 1){ InputFile = "./inputs/PaedAssumps" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
 		cerr << "Could not open PaedAssumps.txt\n";
@@ -2753,9 +2816,9 @@ void ReadAdultAssumps()
 {
 	ifstream file;
 	int ic, id, ig, ii, ij;
-	string InputFile = "AdultAssumps2.txt";
+	string InputFile = "./inputs/AdultAssumps2.txt";
 
-	if (ProvModel == 1){ InputFile = "AdultAssumps" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/AdultAssumps" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
       cerr << "Could not open AdultAssumps.txt\n";
@@ -3291,9 +3354,9 @@ void ReadRollout()
 {
 	int iy, ig;
 	ifstream file;
-	string InputFile = "Rollout.txt";
+	string InputFile = "./inputs/Rollout.txt";
 
-	if (ProvModel == 1){ InputFile = "Rollout" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/Rollout" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
       cerr << "Could not open Rollout.txt\n";
@@ -3592,9 +3655,9 @@ void ReadStartingPop()
 {
 	int ia;
 	ifstream file;
-	string InputFile = "StartingPop.txt";
+	string InputFile = "./inputs/StartingPop.txt";
 
-	if (ProvModel == 1){ InputFile = "StartingPop" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/StartingPop" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
       cerr << "Could not open StartingPop.txt\n";
@@ -3610,9 +3673,9 @@ void ReadNonHIVmort()
 {
 	int ia, iy;
 	ifstream file;
-	string InputFile = "Non-HIVmort.txt";
+	string InputFile = "./inputs/Non-HIVmort.txt";
 
-	if (ProvModel == 1){ InputFile = "Non-HIVmort" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/Non-HIVmort" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
       cerr << "Could not open Non-HIVmort.txt\n";
@@ -3648,7 +3711,7 @@ void ReadWestTable()
 	int ia, ig, is, iy, idum;
 	ifstream file;
 
-	file.open("WestLevel26.txt");
+	file.open("./inputs/WestLevel26.txt");
 	if (file.fail()) {
 		cerr << "Could not open WestLevel26.txt\n";
 		exit(1);
@@ -3694,9 +3757,9 @@ void ReadMarriage()
 {
 	int ia, ig;
 	ifstream file;
-	string InputFile = "Marriage.txt";
+	string InputFile = "./inputs/Marriage.txt";
 
-	if (ProvModel == 1){ InputFile = "Marriage" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/Marriage" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
       cerr << "Could not open Marriage.txt\n";
@@ -3755,7 +3818,7 @@ void ReadCD4dbn()
 	int ic, id;
 	ifstream file;
 
-	file.open("CD4dbn.txt");
+	file.open("./inputs/CD4dbn.txt");
 	if (file.fail()) {
       cerr << "Could not open CD4dbn.txt\n";
       exit(1);
@@ -3786,9 +3849,9 @@ void ReadFertility()
 {
 	int ia, iy;
 	ifstream file;
-	string InputFile = "Fertility.txt";
+	string InputFile = "./inputs/Fertility.txt";
 
-	if (ProvModel == 1){ InputFile = "Fertility" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/Fertility" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
       cerr << "Could not open Fertility.txt\n";
@@ -3816,9 +3879,9 @@ void ReadMigration()
 {
 	int ia, iy;
 	ifstream file;
-	string InputFile = "Migration.txt";
+	string InputFile = "./inputs/Migration.txt";
 
-	if (ProvModel == 1){ InputFile = "Migration" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/Migration" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
       cerr << "Could not open Migration.txt\n";
@@ -3890,7 +3953,7 @@ void ReadHIVprevData()
 	int ia, idum;
 	ifstream file;
 
-	file.open("HIVprevData.txt");
+	file.open("./inputs/HIVprevData.txt");
 	if (file.fail()) {
       cerr << "Could not open HIVprevData.txt\n";
       exit(1);
@@ -3957,7 +4020,7 @@ void ReadANCprevData()
 	int ia, iy, idum;
 	ifstream file;
 
-	file.open("ANCprevData.txt");
+	file.open("./inputs/ANCprevData.txt");
 	if (file.fail()) {
       cerr << "Could not open ANCprevData.txt\n";
       exit(1);
@@ -3995,9 +4058,9 @@ void ReadCSWprevData()
 {
 	int ir, ic;
 	ifstream file;
-	string InputFile = "CSWstudies.txt";
+	string InputFile = "./inputs/CSWstudies.txt";
 
-	if (ProvModel == 1){ InputFile = "CSWstudies" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/CSWstudies" + ProvID + ".txt"; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4017,9 +4080,9 @@ void ReadMSMprevData()
 {
 	int ir, ic;
 	ifstream file;
-	string InputFile = "MSMstudies.txt";
+	string InputFile = "./inputs/MSMstudies.txt";
 
-	if (ProvModel == 1){ InputFile = "MSMstudies" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/MSMstudies" + ProvID + ".txt"; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4041,7 +4104,7 @@ void ReadProvHIV()
 	ifstream file;
 	string InputFile;
 
-	InputFile = "HIVprevData" + ProvID + ".txt";
+	InputFile = "./inputs/HIVprevData" + ProvID + ".txt";
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4103,9 +4166,9 @@ void ReadHCTprevData()
 {
 	int iy, ir, idum;
 	ifstream file;
-	string InputFile = "HCTprevData.txt";
+	string InputFile = "./inputs/HCTprevData.txt";
 
-	if (ProvModel == 1){ InputFile = "HCTprevData" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/HCTprevData" + ProvID + ".txt"; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4138,9 +4201,9 @@ void ReadHCTpaedData()
 {
 	int iy, idum;
 	ifstream file;
-	string InputFile = "HCTpaedData.txt";
+	string InputFile = "./inputs/HCTpaedData.txt";
 
-	if (ProvModel == 1){ InputFile = "HCTpaedData" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/HCTpaedData" + ProvID + ".txt"; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4164,9 +4227,9 @@ void ReadMortData()
 {
 	int ia, iy, ig;
 	ifstream file;
-	string InputFile = "MortData.txt";
+	string InputFile = "./inputs/MortData.txt";
 
-	if (ProvModel == 1){ InputFile = "MortData" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/MortData" + ProvID + ".txt"; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4217,8 +4280,8 @@ void ReadCompleteness()
 	int ia, iy;
 	ifstream file;
 
-	if (ProvModel == 0){ file.open("Completeness.txt"); }
-	else{ file.open("CompletenessProv.txt"); }
+	if (ProvModel == 0){ file.open("./inputs/Completeness.txt"); }
+	else{ file.open("./inputs/CompletenessProv.txt"); }
 	if (file.fail()) {
 		cerr << "Could not open Completeness.txt\n";
 		exit(1);
@@ -4267,7 +4330,7 @@ void ReadHCTdata()
 	int ia, idum;
 	ifstream file;
 
-	file.open("HCTdata.txt");
+	file.open("./inputs/HCTdata.txt");
 	if (file.fail()) {
       cerr << "Could not open HCTdata.txt\n";
       exit(1);
@@ -4386,7 +4449,7 @@ void ReadAIDScases()
 	int ia, iy;
 	ifstream file;
 
-	file.open("AIDScases.txt");
+	file.open("./inputs/AIDScases.txt");
 	if (file.fail()) {
       cerr << "Could not open AIDScases.txt\n";
       exit(1);
@@ -4408,8 +4471,8 @@ void ReadARTtotals()
 	ifstream file;
 	string InputFile;
 
-	if (ProvModel == 1){ InputFile = "ARTtotals" + ProvID + ".txt"; }
-	else{ InputFile = "ARTtotals.txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/ARTtotals" + ProvID + ".txt"; }
+	else{ InputFile = "./inputs/ARTtotals.txt"; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4518,7 +4581,7 @@ void ReadChildPIP()
 	ifstream file;
 	string InputFile;
 
-	InputFile = "ChildPIP.txt"; 
+	InputFile = "./inputs/ChildPIP.txt"; 
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4554,7 +4617,7 @@ void ReadInitPrev()
 	int ia;
 	ifstream file;
 	
-	file.open("InitPrev.txt");
+	file.open("./inputs/InitPrev.txt");
 	for(ia=0; ia<35; ia++){
 		file>>InitPrevAdj[ia][0]>>InitPrevAdj[ia][1];}
 	file.close();
@@ -4618,7 +4681,7 @@ void ReadInitTB()
 	ifstream file;
 	string InputFile;
 
-	InputFile = "InitTBprev.txt";
+	InputFile = "./inputs/TBinputs/InitTBprev.txt";
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -4656,7 +4719,7 @@ void ReadTBadultAssumps()
 	ifstream file;
 	string InputFile;
 
-	InputFile = "TBadultAssumps.txt";
+	InputFile = "./inputs/TBinputs/TBadultAssumps.txt";
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -5046,7 +5109,7 @@ void ReadTBrollout()
 {
 	int iy, is;
 	ifstream file;
-	string InputFile = "TBrollout.txt";
+	string InputFile = "./inputs/TBinputs/TBrollout.txt";
 
 	if (ProvModel == 1) { InputFile = "TBrollout" + ProvID + ".txt"; }
 	file.open(InputFile);
@@ -5202,9 +5265,9 @@ void ReadTBriskFactorPrev()
 {
 	int ia;
 	ifstream file;
-	string InputFile = "TBriskFactorPrev.txt";
+	string InputFile = "./inputs/TBinputs/TBriskFactorPrev.txt";
 
-	if (ProvModel == 1) { InputFile = "TBriskFactorPrev" + ProvID + ".txt"; }
+	if (ProvModel == 1) { InputFile = "./inputs/TBinputs/TBriskFactorPrev" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
 		cerr << "Could not open TBriskFactorPrev.txt\n";
@@ -5239,7 +5302,7 @@ void ReadTBmortData()
 	ifstream file;
 	string InputFile;
 
-	InputFile = "TB_MortData.txt";
+	InputFile = "./inputs/TBinputs/TB_MortData.txt";
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -5273,7 +5336,7 @@ void ReadTB_ETRdata()
 {
 	int ia, iy, ig;
 	ifstream file;
-	string InputFile = "TB_ETRdata.txt";
+	string InputFile = "./inputs/TBinputs/TB_ETRdata.txt";
 
 	if (ProvModel == 1) { InputFile = "TB_ETRdata" + ProvID + ".txt"; }
 	file.open(InputFile);
@@ -5319,9 +5382,9 @@ void ReadTBlabDiag()
 {
 	int ia, iy;
 	ifstream file;
-	string InputFile = "TBlabTests.txt";
+	string InputFile = "./inputs/TBinputs/TBlabTests.txt";
 
-	if (ProvModel == 1) { InputFile = "TBlabTests" + ProvID + ".txt"; }
+	if (ProvModel == 1) { InputFile = "./inputs/TBinputs/TBlabTests" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
 		cerr << "Could not open TBlabTests.txt\n";
@@ -5344,7 +5407,7 @@ void ReadTBprevData()
 {
 	int ic;
 	ifstream file;
-	string InputFile = "TBprevData.txt";
+	string InputFile = "./inputs/TBinputs/TBprevData.txt";
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -5382,7 +5445,7 @@ void ReadTB_HIV_ORs()
 {
 	int ic;
 	ifstream file;
-	string InputFile = "TB_HIVoddsRatios.txt";
+	string InputFile = "./inputs/TBinputs/TB_HIVoddsRatios.txt";
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -5402,7 +5465,7 @@ void ReadTBscreening()
 	ifstream file;
 	ifstream file2;
 
-	file.open("PropnScreened.txt");
+	file.open("./inputs/TBinputs/PropnScreened.txt");
 	for (ir = 0; ir < ResampleSize; ir++) {
 		file >> dummy >> dummy;
 		for (ic = 0; ic < 56; ic++) {
@@ -5411,7 +5474,7 @@ void ReadTBscreening()
 	}
 	file.close();
 
-	file2.open("PropnScreened2.txt");
+	file2.open("./inputs/TBinputs/PropnScreened2.txt");
 	for (ir = 0; ir < ResampleSize; ir++) {
 		file2 >> dummy >> dummy;
 		for (ic = 0; ic < 56; ic++) {
@@ -17795,7 +17858,7 @@ void OneYear()
 	if (IncludeTB == 1) { TBresultsAtEndOfYr(); }
 }
 
-/*void SaveHSRCcalib(char* filout)
+/*void SaveHSRCcalib(const char* filout)
 {
 	int ia;
 	ofstream file(filout);
@@ -17821,7 +17884,7 @@ void OneYear()
 	file.close();
 }*/
 
-/*void SaveAdolProj(char* filout)
+/*void SaveAdolProj(const char* filout)
 {
 	int iy, ii;
 	ofstream file(filout);
@@ -17834,7 +17897,7 @@ void OneYear()
 	file.close();
 }
 
-void SaveFSWprofile(char* filout)
+void SaveFSWprofile(const char* filout)
 {
 	int iy, ii;
 	ofstream file(filout);
@@ -17847,7 +17910,7 @@ void SaveFSWprofile(char* filout)
 	file.close();
 }
 
-void SaveHCTbyAge(char* filout)
+void SaveHCTbyAge(const char* filout)
 {
 	int ia, ii;
 	ofstream file(filout);
@@ -17860,7 +17923,7 @@ void SaveHCTbyAge(char* filout)
 	file.close();
 }*/
 
-void GetSummaryOutputs(char* filout)
+void GetSummaryOutputs(const char* filout)
 {
 	int i, c;
 	ofstream file(filout);
@@ -18194,7 +18257,7 @@ void GetSummaryOutputs(char* filout)
 	file.close();
 }
 
-void GetAddedOutputs(char* filout)
+void GetAddedOutputs(const char* filout)
 {
 	int i, c;
 	ofstream file(filout);
@@ -18388,7 +18451,7 @@ void GetAddedOutputs(char* filout)
 	file.close();
 }
 
-void GetOutputsByAge(char* filout)
+void GetOutputsByAge(const char* filout)
 {
 	int i, c;
 	ofstream file(filout);
@@ -18447,7 +18510,7 @@ void GetOutputsByAge(char* filout)
 	file.close();
 }
 
-void GetOutputsByAge2(char* filout)
+void GetOutputsByAge2(const char* filout)
 {
 	int i, c;
 	ofstream file(filout);
@@ -18515,7 +18578,7 @@ void GetOutputsByAge2(char* filout)
 	file.close();
 }
 
-void GetTBoutputs(char* filout)
+void GetTBoutputs(const char* filout)
 {
 	// Similar to the TB_GetSummaryOutputs function in Mmamapudi's code
 
@@ -18687,7 +18750,7 @@ void GetTBoutputs(char* filout)
 	file.close();
 }
 
-void GetAddedTBoutputs(char* filout)
+void GetAddedTBoutputs(const char* filout)
 {
 	int i, c;
 	ofstream file(filout);
@@ -18734,7 +18797,7 @@ void GetAddedTBoutputs(char* filout)
 	file.close();
 }
 
-void GetTBoutputsByAge(char* filout)
+void GetTBoutputsByAge(const char* filout)
 {
 	int i, c;
 	ofstream file(filout);
@@ -20646,8 +20709,8 @@ void SimulateParameters()
 	double Temp, Temp2, Adj1996;
 
 	if(FixedUncertainty==0){
-		int32 seed = 8222 + CurrSim * 53;
-		TRandomMersenne rg(seed);
+		int seed = 8222 + CurrSim * 53;
+		CRandomMersenne rg(seed);
 		for(i=0; i<MCMCdim; i++){
 			RandPrior[i] = rg.Random();
 			RandomUniform.out[CurrSim-1][i] = RandPrior[i];
@@ -21466,8 +21529,8 @@ void GenerateSample()
 		CumTotL[i+1] = CumTotL[i] + exp(LogL.out[i][0] - MaxLogL);}
 	
 	// Generate random variables from the uniform (0, 1) distribution
-	int32 seed = time(0);
-	TRandomMersenne rg(seed);
+	int seed = time(0);
+	CRandomMersenne rg(seed);
 	for(i=0; i<ResampleSize; i++){
 		r[i] = rg.Random();}
 
@@ -21502,7 +21565,19 @@ void RunSample()
 	// Read in random numbers for each parameter combination in sample
 	ReadPriors();
 	if(IMISind==0){
-		file1.open("RandomUniform.txt");
+		// file1.open("./calibration-outputs/RandomUniform.txt");
+
+	    if (IncludeTB == 1) {
+        	file1.open("./calibration-outputs/TB/RandomUniform.txt");
+    	}
+    	else if (ProvModel == 1) {
+        	std::string path = "./calibration-outputs/HIV_" + ProvID + "/RandomUniform.txt";
+        	file1.open(path.c_str());
+    	}
+    	else {
+        	file1.open("./calibration-outputs/HIV/RandomUniform.txt");
+    	}
+		
 		for(i=0; i<ResampleSize; i++){
 			file1>>idum>>idum;
 			for(c=0; c<RandomUniform.columns; c++){
@@ -21511,7 +21586,20 @@ void RunSample()
 		file1.close();
 	}
 	else{
-		file1.open("ModelParameters.txt");
+		//file1.open("./calibration-outputs/ModelParameters.txt");
+		
+		if (IncludeTB == 1) {
+        	file1.open("./calibration-outputs/TB/ModelParameters.txt");
+    	}
+    	else if (ProvModel == 1) {
+        	std::string path = "./calibration-outputs/HIV_" + ProvID + "/ModelParameters.txt";
+        	file1.open(path.c_str());
+    	}
+    	else {
+        	file1.open("./calibration-outputs/HIV/ModelParameters.txt");
+    	}
+		
+		
 		for(i=0; i<ResampleSize; i++){
 			file1>>idum>>idum;
 			for(c=0; c<ModelParameters.columns; c++){
@@ -21519,7 +21607,8 @@ void RunSample()
 		}
 		file1.close();
 		if (VaryFutureInterventions == 1){
-			file2.open("FutureInterventions.txt");
+			file2.open("./inputs/FutureInterventions.txt");
+
 			for (i = 0; i<ResampleSize; i++){
 				file2 >> idum;
 				for (c = 0; c<34; c++){
@@ -21529,7 +21618,8 @@ void RunSample()
 			file2.close();
 		}
 		if (VaryFutureInterventionsTB == 1) {
-			file3.open("FutureInterventionsTB.txt");
+			file3.open("./inputs/FutureInterventionsTB.txt");
+
 			for (i = 0; i < ResampleSize; i++) {
 				file3 >> idum;
 				for (c = 0; c < 30; c++) {
@@ -21607,7 +21697,10 @@ void RunSample()
 	PrevPreg35to39.RecordSample("PrevPreg35to39.txt");
 	PrevPreg40to49.RecordSample("PrevPreg40to49.txt");
 	ANCbias.RecordSample("ANCbias.txt");*/
-	ErrorVariance.RecordSample("ErrorVar.txt");
+	//ErrorVariance.RecordSample("./outputs/ErrorVar.txt");
+
+	ErrorVariance.RecordSample(getOutputPath("ErrorVar.txt", IncludeTB, ProvModel, ProvID).c_str());
+
 	/*PrevFSW.RecordSample("PrevFSW.txt");
 	PrevFSW15to24.RecordSample("PrevFSW15to24.txt");
 	PrevFSW25plus.RecordSample("PrevFSW25plus.txt");
@@ -21619,13 +21712,25 @@ void RunSample()
 	Prev25plus.RecordSample("Prev25plus.txt");
 	Prev0to14.RecordSample("Prev0to14.txt");
 	Prev2to14.RecordSample("Prev2to14.txt");*/
-	HSRCcalib2002.RecordSample("HSRCcalib2002.txt");
-	HSRCcalib2005.RecordSample("HSRCcalib2005.txt");
-	HSRCcalib2008.RecordSample("HSRCcalib2008.txt");
-	HSRCcalib2012.RecordSample("HSRCcalib2012.txt");
-	HSRCcalib2017.RecordSample("HSRCcalib2017.txt");
-	DHScalib2016.RecordSample("DHScalib2016.txt");
-	HSRCcalib2022.RecordSample("HSRCcalib2022.txt");
+	//HSRCcalib2002.RecordSample("./outputs/HSRCcalib2002.txt");
+
+	HSRCcalib2002.RecordSample(getOutputPath("HSRCcalib2002.txt", IncludeTB, ProvModel, ProvID).c_str());
+
+	
+	//HSRCcalib2005.RecordSample("./outputs/HSRCcalib2005.txt");
+	//HSRCcalib2008.RecordSample("./outputs/HSRCcalib2008.txt");
+	//HSRCcalib2012.RecordSample("./outputs/HSRCcalib2012.txt");
+	//HSRCcalib2017.RecordSample("./outputs/HSRCcalib2017.txt");
+	//DHScalib2016.RecordSample("./outputs/DHScalib2016.txt");
+	//HSRCcalib2022.RecordSample("./outputs/HSRCcalib2022.txt");
+
+	HSRCcalib2005.RecordSample(getOutputPath("HSRCcalib2005.txt", IncludeTB, ProvModel, ProvID).c_str());
+	HSRCcalib2008.RecordSample(getOutputPath("HSRCcalib2008.txt", IncludeTB, ProvModel, ProvID).c_str());
+	HSRCcalib2012.RecordSample(getOutputPath("HSRCcalib2012.txt", IncludeTB, ProvModel, ProvID).c_str());
+	HSRCcalib2017.RecordSample(getOutputPath("HSRCcalib2017.txt", IncludeTB, ProvModel, ProvID).c_str());
+	DHScalib2016.RecordSample(getOutputPath("DHScalib2016.txt", IncludeTB, ProvModel, ProvID).c_str());
+	HSRCcalib2022.RecordSample(getOutputPath("HSRCcalib2022.txt", IncludeTB, ProvModel, ProvID).c_str());
+
 	/*Prev0to1.RecordSample("Prev0to1.txt");
 	Prev2to4M.RecordSample("Prev2to4M.txt");
 	Prev2to4F.RecordSample("Prev2to4F.txt");
@@ -21748,14 +21853,23 @@ void RunSample()
 	ARTerror.RecordSample("ARTerror.txt");
 	AdultRootM.RecordSample("AdultRootM.txt");
 	AdultRootF.RecordSample("AdultRootF.txt");*/
-	AgeDbnOnART_M.RecordSample("AgeDbnOnART_M.txt");
-	AgeDbnOnART_F.RecordSample("AgeDbnOnART_F.txt");
+	
+	//AgeDbnOnART_M.RecordSample("./outputs/AgeDbnOnART_M.txt");
+	//AgeDbnOnART_F.RecordSample("./outputs/AgeDbnOnART_F.txt");
+
+	AgeDbnOnART_M.RecordSample(getOutputPath("AgeDbnOnART_M.txt", IncludeTB, ProvModel, ProvID).c_str());
+	AgeDbnOnART_F.RecordSample(getOutputPath("AgeDbnOnART_F.txt", IncludeTB, ProvModel, ProvID).c_str());
+
 
 	// Write TB outputs to text files
-	ETRbias.RecordSample("ETRbias.txt");
-	VRbiasTB.RecordSample("VRbiasTB.txt");
-	TBlogL.RecordSample("TBlogL.txt");
-	/*NewActiveTBadult.RecordSample("NewActiveTBadult.txt");
+	//ETRbias.RecordSample("./outputs/ETRbias.txt");
+	ETRbias.RecordSample(getOutputPath("ETRbias.txt", IncludeTB, ProvModel, ProvID).c_str());
+
+	VRbiasTB.RecordSample(getCalibrationOutputPath("VRbiasTB.txt", IncludeTB, ProvModel, ProvID).c_str());
+	
+	TBlogL.RecordSample(getCalibrationOutputPath("TBlogL.txt", IncludeTB, ProvModel, ProvID).c_str());
+	/*TBlogL.RecordSample("TBlogL.txt");
+	NewActiveTBadult.RecordSample("NewActiveTBadult.txt");
 	NewActiveTBadultM.RecordSample("NewActiveTBadultM.txt");
 	NewActiveTBadultF.RecordSample("NewActiveTBadultF.txt");
 	NewActiveTB_HIVpos.RecordSample("NewActiveTB_HIVpos.txt");
@@ -21787,13 +21901,24 @@ void RunSample()
 	Neg50F.RecordSample("Neg50F.txt");
 	Neg50M.RecordSample("Neg50M.txt");
 	FSWcondomUse.RecordSample("FSWcondomUse.txt");*/
-	PrevTested05.RecordSample("PrevTested05.txt");
-	PrevTested08.RecordSample("PrevTested08.txt");
-	PrevTested09.RecordSample("PrevTested09.txt");
-	PrevTested12.RecordSample("PrevTested12.txt");
-	PrevTested16.RecordSample("PrevTested16.txt");
-	PrevTested17.RecordSample("PrevTested17.txt");
-	PrevTested22.RecordSample("PrevTested22.txt");
+	
+	//PrevTested05.RecordSample("./outputs/PrevTested05.txt");
+	//PrevTested08.RecordSample("./outputs/PrevTested08.txt");
+	//PrevTested09.RecordSample("./outputs/PrevTested09.txt");
+	//PrevTested12.RecordSample("./outputs/PrevTested12.txt");
+	//PrevTested16.RecordSample("./outputs/PrevTested16.txt");
+	//PrevTested17.RecordSample("./outputs/PrevTested17.txt");
+	//PrevTested22.RecordSample("./outputs/PrevTested22.txt");
+
+	PrevTested05.RecordSample(getOutputPath("PrevTested05.txt", IncludeTB, ProvModel, ProvID).c_str());
+	PrevTested08.RecordSample(getOutputPath("PrevTested08.txt", IncludeTB, ProvModel, ProvID).c_str());
+	PrevTested09.RecordSample(getOutputPath("PrevTested09.txt", IncludeTB, ProvModel, ProvID).c_str());
+	PrevTested12.RecordSample(getOutputPath("PrevTested12.txt", IncludeTB, ProvModel, ProvID).c_str());
+	PrevTested16.RecordSample(getOutputPath("PrevTested16.txt", IncludeTB, ProvModel, ProvID).c_str());
+	PrevTested17.RecordSample(getOutputPath("PrevTested17.txt", IncludeTB, ProvModel, ProvID).c_str());
+	PrevTested22.RecordSample(getOutputPath("PrevTested22.txt", IncludeTB, ProvModel, ProvID).c_str());
+
+	
 	/*AdultsEverTested.RecordSample("AdultsEverTested.txt");
 	//TestingBias.RecordSample("TestingBias.txt");
 	TotalHIVtests.RecordSample("TotalHIVtests.txt");
@@ -21926,13 +22051,22 @@ void RunSample()
 	ChildrenOnExtNVP.RecordSample("ChildrenOnExtNVP.txt");
 	TotBirthDiagnosed.RecordSample("TotBirthDiagnosed.txt");*/
 
-	GetSummaryOutputs("SummaryOutput.txt");
-	GetAddedOutputs("AddnalOutput.txt");
-	GetOutputsByAge("OutputByAge.txt");
-	GetOutputsByAge2("OutputByAge2.txt");
-	GetTBoutputs("SummaryTBoutput.txt");
-	GetAddedTBoutputs("AddnalTBoutput.txt");
-	GetTBoutputsByAge("TBoutputByAge.txt");
+	//GetSummaryOutputs("./outputs/SummaryOutput.txt");
+	//GetAddedOutputs("./outputs/AddnalOutput.txt");
+	//GetOutputsByAge("./outputs/OutputByAge.txt");
+	//GetOutputsByAge2("./outputs/OutputByAge2.txt");
+	//GetTBoutputs("./outputs/SummaryTBoutput.txt");
+	//GetAddedTBoutputs("./outputs/AddnalTBoutput.txt");
+	//GetTBoutputsByAge("./outputs/TBoutputByAge.txt");
+
+	GetSummaryOutputs(getOutputPath("SummaryOutput.txt", IncludeTB, ProvModel, ProvID).c_str());
+	GetAddedOutputs(getOutputPath("AddnalOutput.txt", IncludeTB, ProvModel, ProvID).c_str());
+	GetOutputsByAge(getOutputPath("OutputByAge.txt", IncludeTB, ProvModel, ProvID).c_str());
+	GetOutputsByAge2(getOutputPath("OutputByAge2.txt", IncludeTB, ProvModel, ProvID).c_str());
+	GetTBoutputs(getOutputPath("SummaryTBoutput.txt", IncludeTB, ProvModel, ProvID).c_str());
+	GetAddedTBoutputs(getOutputPath("AddnalTBoutput.txt", IncludeTB, ProvModel, ProvID).c_str());
+	GetTBoutputsByAge(getOutputPath("TBoutputByAge.txt", IncludeTB, ProvModel, ProvID).c_str());
+
 }
 
 double CalcAdultTBmortLogL()
@@ -22359,8 +22493,8 @@ void SimulateTBparams()
 	double Temp, Temp2;
 
 	if (FixedUncertainty == 0) {
-		int32 seed = 8222 + CurrSim * 53;
-		TRandomMersenne rg(seed);
+		int seed = 8222 + CurrSim * 53;
+		CRandomMersenne rg(seed);
 		for (i = 0; i < MCMCdim; i++) {
 			RandPrior[i] = rg.Random();
 			RandomUniform.out[CurrSim - 1][i] = RandPrior[i];
@@ -22646,12 +22780,33 @@ void ReadPriors()
 
 	ii = 0;
 
-	if (IncludeTB == 0) { file.open("Priors.txt"); }
-	else { file.open("TBpriors.txt"); }
-	if (file.fail()) {
-      cerr << "Could not open Priors.txt\n";
-      exit(1);
+	// if (IncludeTB == 0) { file.open("./inputs/Priors.txt"); }
+	// else { file.open("./inputs/TBpriors.txt"); }
+	// if (file.fail()) {
+    //   cerr << "Could not open Priors.txt\n";
+    //   exit(1);
+    // }
+
+if (IncludeTB == 1) {
+    file.open("./inputs/TBinputs/TBpriors.txt");
+    if (file.fail()) {
+        cerr << "Could not open TBpriors.txt\n";
+        exit(1);
     }
+} else if (ProvModel == 1) {
+    file.open(("./inputs/Priors" + ProvID + ".txt").c_str());
+    if (file.fail()) {
+        cerr << "Could not open provincial Priors.txt\n";
+        exit(1);
+    }
+} else {
+    file.open("./inputs/Priors.txt");
+    if (file.fail()) {
+        cerr << "Could not open Priors.txt\n";
+        exit(1);
+    }
+}
+
 
 	for(ir=0; ir<MaxPriors; ir++){
 		file.ignore(255,'\n');
@@ -22674,7 +22829,7 @@ void ReadImportanceDbns()
 	int ir;
 	ifstream file;
 
-	file.open("ImportanceDbns.txt");
+	file.open("./inputs/ImportanceDbns.txt");
 	if (file.fail()) {
 		cerr << "Could not open ImportanceDbns.txt\n";
 		exit(1);
@@ -22700,7 +22855,19 @@ void ReadPrevIMIS()
 
 	totsim = InitSample + StepSample * (CurrIMISstep - 1);
 
-	file1.open("MixtureMean.txt");
+	//file1.open("./calibration-outputs/MixtureMean.txt");
+
+	if (IncludeTB == 1) {
+    	file1.open("./calibration-outputs/TB/MixtureMean.txt");
+    }
+    else if (ProvModel == 1) {
+    std::string path = "./calibration-outputs/HIV_" + ProvID + "/MixtureMean.txt";
+    	file1.open(path.c_str());
+    }
+    else {
+        file1.open("./calibration-outputs/HIV/MixtureMean.txt");
+    }
+
 	if (file1.fail()) {
       cerr << "Could not open MixtureMean.txt\n";
       exit(1);
@@ -22711,7 +22878,20 @@ void ReadPrevIMIS()
 	}
 	file1.close();
 
-	file2.open("Inverse.txt");
+	//file2.open("./calibration-outputs/Inverse.txt");
+
+	if (IncludeTB == 1) {
+    	file2.open("./calibration-outputs/TB/Inverse.txt");
+    }
+    else if (ProvModel == 1) {
+    std::string path = "./calibration-outputs/HIV_" + ProvID + "/Inverse.txt";
+    	file2.open(path.c_str());
+    }
+    else {
+        file2.open("./calibration-outputs/HIV/Inverse.txt");
+    }
+
+	
 	if (file2.fail()) {
       cerr << "Could not open Inverse.txt\n";
       exit(1);
@@ -22726,7 +22906,19 @@ void ReadPrevIMIS()
 	}
 	file2.close();
 
-	file3.open("Cholesky.txt");
+	//file3.open("./calibration-outputs/Cholesky.txt");
+
+	if (IncludeTB == 1) {
+    	file3.open("./calibration-outputs/TB/Cholesky.txt");
+    }
+    else if (ProvModel == 1) {
+    std::string path = "./calibration-outputs/HIV_" + ProvID + "/Cholesky.txt";
+    	file3.open(path.c_str());
+    }
+    else {
+        file3.open("./calibration-outputs/HIV/Cholesky.txt");
+    }
+	
 	if (file3.fail()) {
       cerr << "Could not open Cholesky.txt\n";
       exit(1);
@@ -22741,7 +22933,19 @@ void ReadPrevIMIS()
 	}
 	file3.close();
 
-	file4.open("PosteriorMeans.txt");
+	//file4.open("./calibration-outputs/PosteriorMeans.txt");
+
+	if (IncludeTB == 1) {
+    	file4.open("./calibration-outputs/TB/PosteriorMeans.txt");
+    }
+    else if (ProvModel == 1) {
+    std::string path = "./calibration-outputs/HIV_" + ProvID + "/PosteriorMeans.txt";
+    	file4.open(path.c_str());
+    }
+    else {
+        file4.open("./calibration-outputs/HIV/PosteriorMeans.txt");
+    }
+
 	if (file4.fail()) {
       cerr << "Could not open PosteriorMeans.txt\n";
       exit(1);
@@ -22752,7 +22956,19 @@ void ReadPrevIMIS()
 	}
 	file4.close();
 
-	file5.open("RandomParameter.txt");
+	//file5.open("./calibration-outputs/RandomParameter.txt");
+
+	if (IncludeTB == 1) {
+    	file5.open("./calibration-outputs/TB/RandomParameter.txt");
+    }
+    else if (ProvModel == 1) {
+    std::string path = "./calibration-outputs/HIV_" + ProvID + "/RandomParameter.txt";
+    	file5.open(path.c_str());
+    }
+    else {
+        file5.open("./calibration-outputs/HIV/RandomParameter.txt");
+    }
+
 	if (file5.fail()) {
       cerr << "Could not open RandomParameter.txt\n";
       exit(1);
@@ -22763,7 +22979,20 @@ void ReadPrevIMIS()
 	}
 	file5.close();
 
-	file6.open("FractionUnique.txt");
+	//file6.open("./calibration-outputs/FractionUnique.txt");
+
+
+	if (IncludeTB == 1) {
+    	file6.open("./calibration-outputs/TB/FractionUnique.txt");
+    }
+    else if (ProvModel == 1) {
+    std::string path = "./calibration-outputs/HIV_" + ProvID + "/FractionUnique.txt";
+    	file6.open(path.c_str());
+    }
+    else {
+        file6.open("./calibration-outputs/HIV/FractionUnique.txt");
+    }
+
 	if (file6.fail()) {
       cerr << "Could not open FractionUnique.txt\n";
       exit(1);
@@ -22786,7 +23015,19 @@ void ReadPrevIMIS2(double completed)
 
 	totsim = InitSample * completed;
 
-	file5.open("RandomParameter.txt");
+	//file5.open("./calibration-outputs/RandomParameter.txt");
+
+	if (IncludeTB == 1) {
+    	file5.open("./calibration-outputs/TB/RandomParameter.txt");
+    }
+    else if (ProvModel == 1) {
+    std::string path = "./calibration-outputs/HIV_" + ProvID + "/RandomParameter.txt";
+    	file5.open(path.c_str());
+    }
+    else {
+        file5.open("./calibration-outputs/HIV/RandomParameter.txt");
+    }
+
 	if (file5.fail()) {
 		cerr << "Could not open RandomParameter.txt\n";
 		exit(1);
@@ -22803,12 +23044,19 @@ void SaveTempIMIS()
 {
 	int ir, ic, ii, totsim;
 
-	ofstream file1("MixtureMean.txt");
-	ofstream file2("Inverse.txt");
-	ofstream file3("Cholesky.txt");
-	ofstream file4("PosteriorMeans.txt");
-	ofstream file5("RandomParameter.txt");
-	ofstream file6("FractionUnique.txt");
+	//ofstream file1("./calibration-outputs/MixtureMean.txt");
+	//ofstream file2("./calibration-outputs/Inverse.txt");
+	//ofstream file3("./calibration-outputs/Cholesky.txt");
+	//ofstream file4("./calibration-outputs/PosteriorMeans.txt");
+	//ofstream file5("./calibration-outputs/RandomParameter.txt");
+	//ofstream file6("./calibration-outputs/FractionUnique.txt");
+
+	ofstream file1(getCalibrationOutputPath("MixtureMean.txt",     IncludeTB, ProvModel, ProvID));
+	ofstream file2(getCalibrationOutputPath("Inverse.txt",          IncludeTB, ProvModel, ProvID));
+	ofstream file3(getCalibrationOutputPath("Cholesky.txt",        IncludeTB, ProvModel, ProvID));
+	ofstream file4(getCalibrationOutputPath("PosteriorMeans.txt",  IncludeTB, ProvModel, ProvID));
+	ofstream file5(getCalibrationOutputPath("RandomParameter.txt", IncludeTB, ProvModel, ProvID));
+	ofstream file6(getCalibrationOutputPath("FractionUnique.txt",   IncludeTB, ProvModel, ProvID));
 
 	totsim = InitSample + StepSample * CurrIMISstep;
 
@@ -22862,7 +23110,8 @@ void SaveTempIMIS2(double completed)
 {
 	int ir, ic, totsim;
 
-	ofstream file5("RandomParameter.txt");
+	//ofstream file5("./calibration-outputs/RandomParameter.txt");
+	ofstream file5(getCalibrationOutputPath("RandomParameter.txt", IncludeTB, ProvModel, ProvID));
 
 	totsim = InitSample * completed;
 
@@ -23149,8 +23398,8 @@ void runIMIS(double CumSteps)
 	}
 	
 	// Generate random variables from the uniform (0, 1) distribution
-	int32 seed = 3055;
-	TRandomMersenne rg(seed);
+	int seed = 3055;
+	CRandomMersenne rg(seed);
 	for(i=0; i<ResampleSize; i++){
 		r[i] = rg.Random();}
 
@@ -23177,20 +23426,43 @@ void runIMIS(double CumSteps)
 				ModelParameters.out[i][j] = RandomParameterIMIS[j][SampleID[i]];}
 		}
 	}
-	ModelParameters.RecordSample("ModelParameters.txt", 8);
-	if (ProvModel == 1){ ARTerror.RecordSample("ARTerror.txt"); }
+	//ModelParameters.RecordSample("./calibration-outputs/ModelParameters.txt", 8);
+	//if (ProvModel == 1){ ARTerror.RecordSample("./calibration-outputs/ARTerror.txt"); }
 
-	ofstream file1("WeightedCov.txt");
-	ofstream file2("Inverse1.txt");
-	ofstream file3("Cholesky1.txt");
-	ofstream file4("PosteriorMeans.txt");
-	ofstream file5("RandomParameter.txt");
-	ofstream file6("Weights.txt");
-	ofstream file7("LogLxWeight.txt");
-	ofstream file8("Diagnostics.txt");
-	ofstream file9("Distance.txt");
-	ofstream file10("Sorted.txt");
-	ofstream file11("NextMode.txt");
+
+	ARTerror.RecordSample(
+    	getCalibrationOutputPath("ARTerror.txt", IncludeTB, ProvModel, ProvID)
+      	.c_str()
+	);
+
+
+	ModelParameters.RecordSample(
+   	 getCalibrationOutputPath("ModelParameters.txt", IncludeTB, ProvModel, ProvID)
+   	   .c_str(), 8);
+
+	//ofstream file1("./calibration-outputs/WeightedCov.txt");
+	//ofstream file2("./calibration-outputs/Inverse1.txt");
+	//ofstream file3("./calibration-outputs/Cholesky1.txt");
+	//ofstream file4("./calibration-outputs/PosteriorMeans.txt");
+	//ofstream file5("./calibration-outputs/RandomParameter.txt");
+	//ofstream file6("./calibration-outputs/Weights.txt");
+	//ofstream file7("./calibration-outputs/LogLxWeight.txt");
+	//ofstream file8("./calibration-outputs/Diagnostics.txt");
+	//ofstream file9("./calibration-outputs/Distance.txt");
+	//ofstream file10("./calibration-outputs/Sorted.txt");
+	//ofstream file11("./calibration-outputs/NextMode.txt");
+
+	ofstream file1(getCalibrationOutputPath("WeightedCov.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file2(getCalibrationOutputPath("Inverse1.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file3(getCalibrationOutputPath("Cholesky1.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file4(getCalibrationOutputPath("PosteriorMeans.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file5(getCalibrationOutputPath("RandomParameter.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file6(getCalibrationOutputPath("Weights.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file7(getCalibrationOutputPath("LogLxWeight.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file8(getCalibrationOutputPath("Diagnostics.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file9(getCalibrationOutputPath("Distance.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file10(getCalibrationOutputPath("Sorted.txt",IncludeTB, ProvModel, ProvID));
+	ofstream file11(getCalibrationOutputPath("NextMode.txt",IncludeTB, ProvModel, ProvID));
 
 	for(ir=0; ir<MCMCdim; ir++){
 		for(ic=0; ic<MCMCdim; ic++){
@@ -23439,8 +23711,8 @@ void SimulateParameters_IMIS()
 
 	if(FixedUncertainty==0){
 		offset = InitSample + (CurrIMISstep - 1) * StepSample + CurrSim - 1;
-		int32 seed = 1784 + CurrSim * 73 + (CurrIMISstep * StepSample) * 29;
-		TRandomMersenne rg(seed);
+		int seed = 1784 + CurrSim * 73 + (CurrIMISstep * StepSample) * 29;
+		CRandomMersenne rg(seed);
 		for(i=0; i<MCMCdim; i++){
 			r[i] = rg.Random();}
 		GetMultNorm(r, MultNorm);
@@ -23968,8 +24240,8 @@ void SimulateTBparamsIMIS()
 
 	if (FixedUncertainty == 0) {
 		offset = InitSample + (CurrIMISstep - 1) * StepSample + CurrSim - 1;
-		int32 seed = 1784 + CurrSim * 73 + (CurrIMISstep * StepSample) * 29;
-		TRandomMersenne rg(seed);
+		int seed = 1784 + CurrSim * 73 + (CurrIMISstep * StepSample) * 29;
+		CRandomMersenne rg(seed);
 		for (i = 0; i < MCMCdim; i++) {
 			r[i] = rg.Random();
 		}
@@ -24360,7 +24632,7 @@ double ReturnNegLogL(double ParameterSet[20])
 	return -LogLikelihood;
 }
 
-void ReadInitSimplex(char* input, double ParameterCombinations[21][20], int Dimension)
+void ReadInitSimplex(const char* input, double ParameterCombinations[21][20], int Dimension)
 {
 	int ir, ic;
 	double sumvertices;
@@ -24379,7 +24651,7 @@ void ReadInitSimplex(char* input, double ParameterCombinations[21][20], int Dime
 	file.close();
 }
 
-void SaveFinalSimplex(char* filout, double ParameterCombinations[21][20], int Dimension)
+void SaveFinalSimplex(const char* filout, double ParameterCombinations[21][20], int Dimension)
 {
 	int ic, ir;
 	ofstream file(filout);
@@ -24393,7 +24665,7 @@ void SaveFinalSimplex(char* filout, double ParameterCombinations[21][20], int Di
 	file.close();
 }
 
-void SaveNegLogL(char* filout, double NegLogL[21])
+void SaveNegLogL(const char* filout, double NegLogL[21])
 {
 	int ir;
 	ofstream file(filout);
@@ -24403,7 +24675,7 @@ void SaveNegLogL(char* filout, double NegLogL[21])
 	file.close();
 }
 
-void MaximizeLikelihood(double FTol, char* input, char* filout)
+void MaximizeLikelihood(double FTol, const char* input, const char* filout)
 {
 	// This function implements the Downhill Simplex Method, and is copied from the 
 	// AMOEBA function outlined on pp. 292-3 of Press et al, 1986, Numerical Recipes,
@@ -24610,7 +24882,7 @@ void MaximizeLikelihood(double FTol, char* input, char* filout)
 		TotalART15F.RecordSample("TotalART15F.txt");
 		TotalART15M.RecordSample("TotalART15M.txt");
 		TotalARTunder15.RecordSample("TotalARTunder15.txt");
-		ARTerror.RecordSample("ARTerror.txt");
+		ARTerror.RecordSample(getCalibrationOutputPath("ARTerror.txt",IncludeTB,ProvModel,ProvID).c_str());
 	}
 	if (CalibARTtotalsP == 1){
 		StartingART0.RecordSample("StartingART0.txt");

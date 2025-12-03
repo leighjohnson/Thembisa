@@ -4,7 +4,7 @@
 #include <fstream>
 #include <cmath>
 #include <string>
-#using <mscorlib.dll>
+//#using <mscorlib.dll>
 
 using namespace std;
 
@@ -1667,8 +1667,8 @@ class OutputArray
 	int columns;
 	double out[InitSample][50]; ///< None of the arrays require > 40 columns. 
 
-	void Record(char* filout, int n);
-	void RecordSample(char* filout, int n);
+	void Record(const char* filout, int n);
+	void RecordSample(const char* filout, int n);
 	void SampleInput();
 };
 
@@ -1684,7 +1684,7 @@ class PostOutputArray
 	double out[ResampleSize][86]; ///< None of the arrays require > 86 columns. 
 	double Means[86][3]; ///< Mean, 95% LL and 95% UL
 
-	void RecordSample(char* filout);
+	void RecordSample(const char* filout);
 	void GetMeans(); ///< Calculate Means and 95% CIs
 };
 
@@ -1854,17 +1854,17 @@ void TBresultsAtEndOfYr();
 void OneYear();
 
 ///< Output functions
-//void SaveHSRCcalib(char* filout);
-//void SaveAdolProj(char* filout);
-//void SaveFSWprofile(char* filout);
-//void SaveHCTbyAge(char* filout);
-void GetSummaryOutputs(char* filout);
-void GetAddedOutputs(char* filout);
-void GetOutputsByAge(char* filout);
-void GetOutputsByAge2(char* filout);
-void GetTBoutputs(char* filout);
-void GetAddedTBoutputs(char* filout);
-void GetTBoutputsByAge(char* filout);
+//void SaveHSRCcalib(const char* filout);
+//void SaveAdolProj(const char* filout);
+//void SaveFSWprofile(const char* filout);
+//void SaveHCTbyAge(const char* filout);
+void GetSummaryOutputs(const char* filout);
+void GetAddedOutputs(const char* filout);
+void GetOutputsByAge(const char* filout);
+void GetOutputsByAge2(const char* filout);
+void GetTBoutputs(const char* filout);
+void GetAddedTBoutputs(const char* filout);
+void GetTBoutputsByAge(const char* filout);
 
 //============================================================================
 ///< Functions used in uncertainty analysis
@@ -1948,10 +1948,10 @@ double GetParameter(int PriorIndex);
 ///< Nelder-Mead algorithm
 
 double ReturnNegLogL(double ParameterSet[20]);
-void ReadInitSimplex(char* input, double ParameterCombinations[21][20], int Dimension);
-void SaveFinalSimplex(char* filout, double ParameterCombinations[21][20], int Dimension);
-void SaveNegLogL(char* filout, double NegLogL[21]);
-void MaximizeLikelihood(double FTol, char* input, char* filout);
+void ReadInitSimplex(const char* input, double ParameterCombinations[21][20], int Dimension);
+void SaveFinalSimplex(const char* filout, double ParameterCombinations[21][20], int Dimension);
+void SaveNegLogL(const char* filout, double NegLogL[21]);
+void MaximizeLikelihood(double FTol, const char* input, const char* filout);
 
 //============================================================================
 ///< Objects created from defined classes
