@@ -23,49 +23,6 @@ using namespace System;
   #define MKDIR(path) mkdir((path).c_str(), 0755)
 #endif
 
-static const std::string CALIB_OUT_PATH = "./calibration-outputs/";
-
-std::string getCalibrationOutputPath(const std::string& filename,
-                                     int IncludeTB,
-                                     int ProvModel,
-                                     const std::string& ProvID)
-{
-    std::string subdir;
-    if (IncludeTB == 1)           
-		subdir = "TB";
-    else if (ProvModel == 1)      
-		subdir = "HIV_" + ProvID;
-    else                           
-		subdir = "HIV";
-
-    MKDIR(CALIB_OUT_PATH);             
-    MKDIR(CALIB_OUT_PATH + subdir);   
-
-    return CALIB_OUT_PATH + subdir + "/" + filename;
-}
-
-static const std::string OUT_PATH = "./outputs/";
-
-std::string getOutputPath(const std::string& filename,
-                                     int IncludeTB,
-                                     int ProvModel,
-                                     const std::string& ProvID)
-{
-
-    std::string subdir;
-    if (IncludeTB == 1)           
-		subdir = "TB";
-    else if (ProvModel == 1)      
-		subdir = "HIV_" + ProvID;
-    else                           
-		subdir = "HIV";
-
-    MKDIR(OUT_PATH);             
-    MKDIR(OUT_PATH + subdir);    
-
-    return OUT_PATH + subdir + "/" + filename;
-}
-
 int _tmain()
 {
 	int iy; 
@@ -137,6 +94,50 @@ int _tmain()
 	cout<<"Time taken: "<<elapsed_time<<endl;
 	//system( PAUSE );
 	return 0;
+}
+
+
+static const std::string CALIB_OUT_PATH = "./calibration-outputs/";
+
+std::string getCalibrationOutputPath(const std::string& filename,
+                                     int IncludeTB,
+                                     int ProvModel,
+                                     const std::string& ProvID)
+{
+    std::string subdir;
+    if (IncludeTB == 1)           
+		subdir = "TB";
+    else if (ProvModel == 1)      
+		subdir = "HIV_" + ProvID;
+    else                           
+		subdir = "HIV";
+
+    MKDIR(CALIB_OUT_PATH);             
+    MKDIR(CALIB_OUT_PATH + subdir);   
+
+    return CALIB_OUT_PATH + subdir + "/" + filename;
+}
+
+static const std::string OUT_PATH = "./outputs/";
+
+std::string getOutputPath(const std::string& filename,
+                                     int IncludeTB,
+                                     int ProvModel,
+                                     const std::string& ProvID)
+{
+
+    std::string subdir;
+    if (IncludeTB == 1)           
+		subdir = "TB";
+    else if (ProvModel == 1)      
+		subdir = "HIV_" + ProvID;
+    else                           
+		subdir = "HIV";
+
+    MKDIR(OUT_PATH);             
+    MKDIR(OUT_PATH + subdir);    
+
+    return OUT_PATH + subdir + "/" + filename;
 }
 
 Child::Child(int Gender)
