@@ -135,7 +135,7 @@ int _tmain()
 	finish = clock();
 	elapsed_time = (finish - start);
 	cout<<"Time taken: "<<elapsed_time<<endl;
-	system(“PAUSE”);
+	//system( PAUSE );
 	return 0;
 }
 
