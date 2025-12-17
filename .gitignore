@@ -28,5 +28,7 @@ docs/latex/
 docs/.DS_Store
 *.vcxproj.user
 .vs/
-.Debug/
-.Release/
+Debug/
+Release/
+calibration-outputs/
+outputs/
