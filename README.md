@@ -10,17 +10,6 @@ This project uses HIV version 4.8 and TB version 2.1 and will be updated as code
 
 Thembisa is written in C++ and primarily designed for Windows using Microsoft Visual Studio, but it can also be compiled and run on Unix-like systems (Linux/MacOS) with compatibility modifications.
 
-### Git installation
-- Windows: [Download](https://git-scm.com/install/windows)
-- MacOS: [Download](https://git-scm.com/install/mac)
-- Linux: [Download](https://git-scm.com/install/linux)
-
-- Configure Git in your terminal (first time only)
-```{bash, eval=FALSE}
-git config --global user.name "Your Name"
-git config --global user.email "your.email@example.com"
-```
-
 ### Windows
 - Windows 10 or later
 - **Visual Studio**: [Download](https://visualstudio.microsoft.com/downloads/) and select **"Desktop development with C++"** workload.
@@ -50,12 +39,11 @@ git config --global user.email "your.email@example.com"
 │   stdafx.cpp  
 │   stdafx.h  
 │   ├── calibration-outputs/
+│   │   ├── HIV/
+│   │   ├── TB/
 │   ├── outputs/
-│   │   ├── Backup/
-│   │   ├── Debug/
-│   │   ├── Release/
-│   │   ├── Template/
-│   │   ├── ipch/
+│   │   ├── HIV/
+│   │   ├── TB/
 │   ├── inputs/
 │   │   ├── TBinputs/
 ```
@@ -64,21 +52,20 @@ git config --global user.email "your.email@example.com"
 
 **1. Setup**
 
-- All text files use Unix-style LF line endings. To avoid automatic conversion by Git, run the following in your terminal:
-    ```{bash, eval=FALSE}
-    git config --global core.autocrlf false
-    ```
-    Do **not** modify the `.gitattributes` file.
+- All text files use Unix-style LF line endings. To avoid automatic conversion by Git, please do **not** modify the `.gitattributes` file.
 
-- Clone the full directory structure, including inputs, outputs, and calibration-outputs in a suitable place:
-    ```{bash, eval=FALSE}
-    git clone https://github.com/leighjohnson/Thembisa.git
-    cd Thembisa
-    ```
+- Clone the Git repository through either Visual Studio (Windows only) or Visual Studio Code using the built-in Git functionality:
+    - **Visual Studio:** [Follow these instructions](https://learn.microsoft.com/en-us/visualstudio/version-control/git-clone-repository?view=visualstudio)
+    - **Visual Studio Code:** [Follow these instructions](https://code.visualstudio.com/docs/sourcecontrol/quickstart)
+    - **OR** clone the repository through your terminal in a suitable place:
+        ```{bash, eval=FALSE}
+        git clone https://github.com/leighjohnson/Thembisa.git
+        cd Thembisa
+        ```
 
 **2. Compatibility**
 
-If you are not using Windows and Visual Studio, please ensure you follow the modifications to the specific files in the table below:
+If you are not using Windows in Visual Studio, please ensure you follow the modifications to the specific files in the table below:
 
 | File               | Lines    | Windows                                                                       | Linux/MacOS                                                                  |
 |--------------------|----------|-------------------------------------------------------------------------------|------------------------------------------------------------------------------|
@@ -90,12 +77,20 @@ If you are not using Windows and Visual Studio, please ensure you follow the mod
 
 **3. Compilation**
 
-- Windows: Open `THEMBISA.sln` in Visual Studio and build the solution.
+- **Windows**: Visual Studio
+    - Click on Build → Build solution
+    - Click on Debug → Start Without Debugging
     
-- Linux/MacOS: Compile using g++
-    ```{bash, eval=FALSE}
-    g++ -std=c++14 THEMBISA.cpp StatFunctions.cpp mersenne.cpp -I. -o THEMBISA
-    ```
+- **Linux/MacOS**: Visual Studio Code
+    - Make the compatibility changes in the table above
+    - Compile using g++:
+        ```{bash, eval=FALSE}
+        g++ -std=c++14 THEMBISA.cpp StatFunctions.cpp mersenne.cpp -I. -o THEMBISA
+        ```
+    - Run THEMBISA.exe:
+      ```{bash, eval=FALSE}
+        ./THEMBISA
+        ```
 
 # National HIV Model
 
@@ -226,21 +221,23 @@ There are some variables specified in the **Thembisa.h** file that should not be
 
 This section provides detailed guidance for team members contributing to Thembisa. It is written for people who may be new to GitHub or Git. Following these guidelines ensures consistency, reproducibility, and prevents accidental overwrites of critical files.
 
-### 1. Branching basics
+Here is a [link to a blog](https://madebymade.medium.com/github-for-dummies-96f753f96a59) that outlines the basics of Git and GitHub.
 
-Branches allow multiple people to work on the same project **without overwriting each other's work**.
+### Branching basics
 
-- Main branch: `main` (stable, tested code)
-- "Feature branch": for your work
+Branches allow multiple people to work on the same project **without overwriting each other's work**. The structure we use is the following:
 
-### 2. Creating a branch
+- Main branch: `main` (for stable, tested code)
+- Your work: `Feature-branch` (an example name for a copy of the main branch you want to make changes to)
+
+### Creating a branch
 
 ```{bash, eval=FALSE}
 git checkout -b <your-branch-name>
 ```
 For example, if you're adding compatibility for linux: `git checkout -b linux-compatibility-fix`
 
-### 3. Making changes
+### Making changes
 
 1. Edit or add files in your feature branch and ensure the model outputs are the same as on the website outputs.
 2. Check what has changed:
@@ -268,7 +265,7 @@ For example, if you're adding compatibility for linux: `git checkout -b linux-co
    git push origin <your-branch-name>
    ```
 
-### 4. Opening a Pull Request (PR)
+### Opening a Pull Request (PR)
 
 A PR is a request to merge your branch into main. It allows team members to review your code before it becomes part of the main project.
 
@@ -278,26 +275,25 @@ A PR is a request to merge your branch into main. It allows team members to revi
 4. Assign Leigh Johnson as the reviewer, and one additional reviewer if requested.
 5. Submit the PR.
 
-The reviewer checks the code, adds comments, and requests changes if necessary. Address comments by committing updates to your branch and pushing again. Once approved, merge the PR using Squash and Merge (recommended) or Merge Commit. Delete the branch after merging.
+The reviewer (Leigh Johnson) checks the code, adds comments, and requests changes if necessary. Address comments by committing updates to your branch and pushing again. Once approved, merge the PR using Squash and Merge (recommended) or Merge Commit. Delete the branch after merging.
 
-### 5. Keeping Your Branch Updated
+### Keeping Your Branch Updated
 
 If others merge changes while you are working, sync your branch:
 ```{bash, eval=FALSE}
 git checkout main
 git pull origin main
 git checkout <your-branch-name>
-git merge main
 ```
 
 Resolve any conflicts locally, test the code, then push.
 
-### 6. Handling output files
+### Handling output files
 - **Never** commit files in outputs/ or calibration-outputs/.
 - `.gitignore` is configured to prevent this, but double-check before committing.
 - If you need to share outputs, compress them and place them in a temporary folder outside the repo or use a shared cloud storage. If outputs are mistakenly pushed in your PR, please let one of the developers know.
 
-### 7. Recommended workflow and additional tips
+### Recommended workflow and additional tips
 
 **Workflow:**
 - Clone the repository.
@@ -311,4 +307,4 @@ Resolve any conflicts locally, test the code, then push.
 - **Descriptive commit messages** help reviewers understand your changes.
 - Comment your code, especially in complex calculations or compatibility modifications.
 - **Test on your platform** (Windows/Linux/MacOS) before requesting a review.
-- If unsure about Git commands, visit [**GitHub Docs**](https://docs.github.com/en)
+- If unsure about Git commands, visit [**GitHub Docs**](https://docs.github.com/en) or email Lauren Brown (laurenbrown@sun.ac.za) or Georgia Roussos (georgiaroussos@sun.ac.za)
