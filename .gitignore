@@ -26,3 +26,7 @@ docs/docs/html/
 docs/latex/
 .DS_Store
 docs/.DS_Store
+*.vcxproj.user
+.vs/
+.Debug/
+.Release/
