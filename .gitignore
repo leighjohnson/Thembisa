@@ -1,0 +1,34 @@
+THEMBISA.ncb
+THEMBISA.sdf
+THEMBISA.suo
+THEMBISA.v12.suo
+UpgradeLog.htm
+# app.ico
+# app.rc
+outputs/Debug
+outputs/Template
+outputs/Release
+outputs/Backup
+outputs/ipch
+PaediatricHIV.cpp
+PaediatricHIV.ncb
+PaediatricHIV.h
+PaediatricHIV.sdf
+PaediatricHIV.suo
+PaediatricHIV.v12.suo
+PaediatricHIV.sln
+PaediatricHIV.vcproj
+PaediatricHIV.vcxproj
+PaediatricHIV.vcxproj.filters
+PaediatricHIV.vcxproj.user
+THEMBISA.exe
+docs/docs/html/
+docs/latex/
+.DS_Store
+docs/.DS_Store
+*.vcxproj.user
+.vs/
+Debug/
+Release/
+calibration-outputs/
+outputs/

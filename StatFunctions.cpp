@@ -11,7 +11,6 @@
 # include <ctime>
 
 #include "stdafx.h"
-
 #using <mscorlib.dll>
 #include "StatFunctions.h"
 
@@ -7909,7 +7908,7 @@ S20:
 }
 //****************************************************************************
 
-void ftnstop ( char *msg )
+void ftnstop ( const char *msg )
 
 //****************************************************************************
 //
@@ -7919,7 +7918,7 @@ void ftnstop ( char *msg )
 //
 //  Parameters:
 //
-//    Input, char *MSG, the message to be printed.
+//    Input, const char *MSG, the message to be printed.
 //
 {
   if ( msg != NULL ) 
@@ -9927,7 +9926,7 @@ void negative_binomial_cdf_values ( int *n_data, int *f, int *s, double *p,
     1, 2, 3, 
     0, 1, 2 };
 
-  if ( n_data < 0 )
+  if ( *n_data < 0 )
   {
     *n_data = 0;
   }
@@ -10711,7 +10710,7 @@ S20:
 }
 //**********************************************************************
 
-/*void timestamp ( void )
+//void timestamp ( void )
 
 //**********************************************************************
 //
@@ -10735,10 +10734,10 @@ S20:
 //
 //    None
 //
-{
+/*{
 #define TIME_SIZE 40
 
-  static char time_buffer[TIME_SIZE];
+  static const char time_buffer[TIME_SIZE];
   const struct tm *tm;
   size_t len;
   time_t now;
