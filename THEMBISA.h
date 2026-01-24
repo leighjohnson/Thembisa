@@ -18,7 +18,7 @@ int ProjectionTerm = 46; ///< Note that entering term of 10 will give you result
 int CurrYear;
 int CurrMonth; ///< 0 to 11
 
-int FixedUncertainty = 1;
+int FixedUncertainty = 0;
 const int VaryFutureInterventions = 0; ///< 0 = fix the future rollout at Rollout.txt values
 const int VaryFutureInterventionsTB = 0; ///< 0 = fix the future rollout at TBrollout.txt values
 const int FixedARTinitiation = 0; ///< 1 = fix the rates of ART initiation at the values generated in
@@ -29,12 +29,12 @@ const int PropnalImmART = 1; ///< 1 if immediate ART start is proportional to la
 const int ExcludeInterrupters = 1; ///< 1 = exclude temporary ART interrupters when calculating
 								   ///< numbers currently on ART
 const int UseNumbersTests = 1; ///< 1 = calculate rates of testing from numbers of HIV tests
-const int ProvModel = 0; ///< 1 if modelling a province, 0 for national model
-string ProvID = "NW"; ///< Choose from EC, FS, GT, KZ, LM, MP, NC, NW, WC
+const int ProvModel = 1; ///< 1 if modelling a province, 0 for national model
+string ProvID = "EC"; ///< Choose from EC, FS, GT, KZ, LM, MP, NC, NW, WC
 const int UseBrassLogit = 0; ///< 1 if using Brass relational logit to get non-HIV mort over 1996-2018
 int PrEPorVM = 0; ///< 1 if allowing for PrEP or vaginal microbicides. Keep set to 0 as default; it
 				  ///< will automatically get recalculated if there is PrEP/VM rollout.
-const int IncludeTB = 0; ///< 1 if including TB simulations
+const int IncludeTB = 1; ///< 1 if including TB simulations
 const int IncludeDR_TB = 0; ///< 1 if including drug-resisant (DR) TB 
 const int FixedTBscreening = 0; ///< 1 = fix the rates of TB screening at the values generated in
 								///< the uncertainty analysis (only valid if FixedUncertainty = 1)
@@ -1427,8 +1427,8 @@ double TBprev2018[2]; ///< Modelled pulmonary TB prevalence in 2018, by sex
 ///< Priors and likelihood
 
 double LogLikelihood;
-const int MCMCdim = 49; ///< Number of parameters in uncertainty analysis
-const int MaxPriors = 145; ///< Number of input rows in Priors file (145 for HIV, 63 for TB)
+const int MCMCdim = 4; ///< Number of parameters in uncertainty analysis
+const int MaxPriors = 65; ///< Number of input rows in Priors file (145 for HIV, 63 for TB)
 int InclPriors[MaxPriors][2]; ///< Indicator of which priors are included (1st index) and if
 							  ///< included their index in MCMCdim (2nd index)
 double RandPrior[MCMCdim]; ///< Random numbers used to sample from prior in current simulation

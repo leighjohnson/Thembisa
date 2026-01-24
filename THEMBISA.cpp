@@ -31,8 +31,8 @@ int _tmain()
 
 	start = clock();
 	//GenerateSample(); // Not yet updated in THEMBISA
-	RunSample();	// Remember to set FixedUncertainty = 1 before running this function
-	//runIMIS(0.0);
+	//RunSample();	// Remember to set FixedUncertainty = 1 before running this function
+	runIMIS(0.0);
 	//MaximizeLikelihood(0.0000001, "InitialSimplex.txt", "FinalSimplex.txt");
 	/*ReadAllFiles();
 	CurrSim = 1;
@@ -4675,6 +4675,7 @@ void ReadInitTB()
 	string InputFile;
 
 	InputFile = "./inputs/TBinputs/InitTBprev.txt";
+	if (ProvModel == 1) { InputFile = "./inputs/TBinputs/InitTBprev" + ProvID + ".txt"; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -5104,7 +5105,7 @@ void ReadTBrollout()
 	ifstream file;
 	string InputFile = "./inputs/TBinputs/TBrollout.txt";
 
-	if (ProvModel == 1) { InputFile = "TBrollout" + ProvID + ".txt"; }
+	if (ProvModel == 1) { InputFile = "./inputs/TBinputs/TBrollout" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
 		cerr << "Could not open TBrollout.txt\n";
@@ -5291,11 +5292,14 @@ void ReadTBriskFactorPrev()
 
 void ReadTBmortData()
 {
-	int ia, iy;
+	int ia, iy, YearLimit;
 	ifstream file;
 	string InputFile;
 
 	InputFile = "./inputs/TBinputs/TB_MortData.txt";
+	if (ProvModel == 1) { InputFile = "./inputs/TBinputs/TB_MortData" + ProvID + ".txt"; }
+	if (ProvModel == 1) { YearLimit = 20; }
+	else { YearLimit = 23; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -5305,14 +5309,14 @@ void ReadTBmortData()
 
 	file.ignore(255, '\n');
 	for (ia = 0; ia < 16; ia++) {
-		for (iy = 0; iy < 23; iy++) {
+		for (iy = 0; iy < YearLimit; iy++) {
 			file >> RecordedTBdeathsA[ia][iy][0];
 		}
 	}
 	file.ignore(255, '\n');
 	file.ignore(255, '\n');
 	for (ia = 0; ia < 16; ia++) {
-		for (iy = 0; iy < 23; iy++) {
+		for (iy = 0; iy < YearLimit; iy++) {
 			file >> RecordedTBdeathsA[ia][iy][1];
 		}
 	}
@@ -5331,7 +5335,7 @@ void ReadTB_ETRdata()
 	ifstream file;
 	string InputFile = "./inputs/TBinputs/TB_ETRdata.txt";
 
-	if (ProvModel == 1) { InputFile = "TB_ETRdata" + ProvID + ".txt"; }
+	if (ProvModel == 1) { InputFile = "./inputs/TBinputs/TB_ETRdata" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
 		cerr << "Could not open TB_ETRdata.txt\n";
@@ -5373,11 +5377,14 @@ void ReadTB_ETRdata()
 
 void ReadTBlabDiag()
 {
-	int ia, iy;
+	int ia, iy, YearLimit;
 	ifstream file;
 	string InputFile = "./inputs/TBinputs/TBlabTests.txt";
 
 	if (ProvModel == 1) { InputFile = "./inputs/TBinputs/TBlabTests" + ProvID + ".txt"; }
+	if (ProvModel == 1) { YearLimit = 17; }
+	else { YearLimit = 20; }
+
 	file.open(InputFile);
 	if (file.fail()) {
 		cerr << "Could not open TBlabTests.txt\n";
@@ -5385,7 +5392,7 @@ void ReadTBlabDiag()
 	}
 
 	file.ignore(255, '\n');
-	for (iy = 0; iy < 20; iy++) {
+	for (iy = 0; iy < YearLimit; iy++) {
 		file >> RecordedTBlabA[iy];
 	}
 	file.ignore(255, '\n');
@@ -5401,6 +5408,7 @@ void ReadTBprevData()
 	int ic;
 	ifstream file;
 	string InputFile = "./inputs/TBinputs/TBprevData.txt";
+	if (ProvModel == 1) { InputFile = "./inputs/TBinputs/TBprevData" + ProvID + ".txt"; }
 
 	file.open(InputFile);
 	if (file.fail()) {
@@ -22071,8 +22079,11 @@ double CalcAdultTBmortLogL()
 	// be under-/over-counting of TB deaths due to problems with cause of death recording,
 	// hence the need for the TBmortAdj factor.
 
-	int ia, ig, iy, UpperAge;
+	int ia, ig, iy, UpperAge, YearLimit;
 	double TempLogL, Temp1, Temp2, ErrorVar, TBmortAdj, Temp3[2], Temp4[2];
+
+	if (ProvModel == 1) {YearLimit = 20;}
+	else {YearLimit = 23;}
 
 	TempLogL = 0.0;
 
@@ -22080,7 +22091,7 @@ double CalcAdultTBmortLogL()
 	UpperAge = (90 / 5) - 3;
 	Temp1 = 0.0;
 	Temp2 = 0.0;
-	for (iy = 0; iy < 23; iy++) {
+	for (iy = 0; iy < YearLimit; iy++) {
 		for (ia = 1; ia < UpperAge; ia++) {
 			for (ig = 0; ig < 2; ig++) {
 				ModelTBdeathsA[ia][iy][ig] = 0.5 * (TBadultMortBy5yr[iy + 11][ia][ig] +
@@ -22098,7 +22109,7 @@ double CalcAdultTBmortLogL()
 
 	// Calculate likelihood
 	TempLogL = 0.0;
-	for (iy = 0; iy < 23; iy++) {
+	for (iy = 0; iy < YearLimit; iy++) {
 		if (iy == 21) { ErrorVar *= 0.25; } // To impose a better fit to the most recent data
 		for (ig = 0; ig < 2; ig++) {
 			Temp3[ig] = 0.0;
@@ -22268,8 +22279,11 @@ double CalcAdultTBcasesLogL()
 
 double CalcAdultTBlabDiagLogL()
 {
-	int iy;
+	int iy, YearLimit;
 	double TempLogL, ModelAdj, Temp1, Temp2, ErrorVar;
+
+	if (ProvModel == 1) { YearLimit = 17; }
+	else { YearLimit = 20; }
 
 	// Likelihood for 2004-2012 period
 	ErrorVar = pow(0.2, 2.0); // Previously 0.01
@@ -22290,7 +22304,7 @@ double CalcAdultTBlabDiagLogL()
 
 	// Likelihood for 2018-2024 period
 	ErrorVar = pow(0.09, 2.0); // Previously 0.01
-	for (iy = 13; iy < 20; iy++) {
+	for (iy = 13; iy < YearLimit; iy++) {
 		Temp1 = log(0.5 * (ModelTBtests[iy + 19] + ModelTBtests[iy + 20])) - log(RecordedTBlabA[iy] *
 			0.85 / (1.0 - PrivateTBdiagPropn));
 		TempLogL += -0.5 * (log(2.0 * 3.141592654 * ErrorVar) + pow(Temp1, 2.0) / ErrorVar);
@@ -22320,7 +22334,7 @@ double CalcHIVprevETRlogL()
 		}
 		temp1 = (TBadultRxHIV[iy + 24][0] + TBadultRxHIV[iy + 24][1]) / denom;
 		temp2 = log(temp1 / (1 - temp1)) - log(ETR_HIVprev[iy] / (1.0 - ETR_HIVprev[iy]));
-		TempLogL += -0.5 * (log(2.0 * 3.141592654 * ErrorVar) + pow(temp2, 2.0) / ErrorVar);
+		if (ETR_HIVprev[iy] > 0.0) { TempLogL += -0.5 * (log(2.0 * 3.141592654 * ErrorVar) + pow(temp2, 2.0) / ErrorVar); }
 	}
 	if (FixedUncertainty == 1) { TBlogL.out[CurrSim - 1][5] = TempLogL; }
 
@@ -23587,7 +23601,9 @@ void OneIMISstep(double CumSteps)
 				SaveTempIMIS2(completed);
 			}
 		}
-		if(LogLikelihood<0.0 || LogLikelihood >0.0){}
+		if(LogLikelihood<0.0 || LogLikelihood >0.0){
+			cout << "Likelihood for simulation " << offset + 1 << ": " << LogLikelihood << endl;
+		}
 		else{
 			cout<<"Undefined likelihood for simulation "<<offset+1<<endl;
 			for (iy = 0; iy < MCMCdim; iy++){
