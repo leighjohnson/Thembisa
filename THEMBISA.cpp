@@ -16647,7 +16647,7 @@ void CalcCurrMarriageRates()
 void GetMarriageAndDivorceRates()
 {
 	int ia, ib, ig, ii, ij;
-	double Temp1, Temp2, Temp3, NewMarriages[2][3], CurrDivorceAdj;
+	double Temp1, Temp2, Temp3, NewMarriages[2][2], CurrDivorceAdj;
 
 	// Calculate AnnAIDSmort
 	for(ia=0; ia<76; ia++){
@@ -16757,7 +16757,7 @@ void GetMarriageAndDivorceRates()
 	}
 
 	// Calculate remaining parameters in Mixing sheet (balancing factor and risk group prefs)
-	for(ig=0; ig<3; ig++){
+	for(ig=0; ig<2; ig++){
 		for(ii=0; ii<2; ii++){
 			NewMarriages[ii][ig] = 0.0;
 			for(ia=0; ia<76; ia++){
