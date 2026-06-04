@@ -16647,7 +16647,7 @@ void CalcCurrMarriageRates()
 void GetMarriageAndDivorceRates()
 {
 	int ia, ib, ig, ii, ij;
-	double Temp1, Temp2, Temp3, NewMarriages[2][2], CurrDivorceAdj;
+	double Temp1, Temp2, Temp3, NewMarriages[2][3], CurrDivorceAdj;
 
 	// Calculate AnnAIDSmort
 	for(ia=0; ia<76; ia++){
