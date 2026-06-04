@@ -2943,7 +2943,7 @@ void ReadAdultAssumps()
 	int ic, id, ig, ii, ij;
 	string InputFile = "./inputs/AdultAssumps2.txt";
 
-	if (ProvModel == 1){ InputFile = "AdultAssumps" + ProvID + ".txt"; }
+	if (ProvModel == 1){ InputFile = "./inputs/AdultAssumps" + ProvID + ".txt"; }
 	file.open(InputFile);
 	if (file.fail()) {
       cerr << "Could not open AdultAssumps.txt\n";
