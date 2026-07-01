@@ -89,11 +89,11 @@ If you are not using Windows in Visual Studio, please ensure you follow the modi
 - **Linux/MacOS**: Visual Studio Code
     - Make the compatibility changes in the table above
     - Compile using g++:
-        ```{bash, eval=FALSE}
+        ```cpp
         g++ -std=c++14 THEMBISA.cpp StatFunctions.cpp mersenne.cpp -I. -o THEMBISA
         ```
     - Run THEMBISA.exe:
-      ```{bash, eval=FALSE}
+      ```cpp
         ./THEMBISA
         ```
 
@@ -103,14 +103,14 @@ If you are not using Windows in Visual Studio, please ensure you follow the modi
 
 For the national HIV simulation of the model, ensure that in **`THEMBISA.cpp`** , the following lines are commented and uncommented respectively: 
 
-```{bash, eval=FALSE}
+```cpp
 RunSample();	
 //runIMIS(0.0);
 ```
 
 In the header file, **`THEMBISA.h`**, ensure
 
-```{bash, eval=FALSE}
+```cpp
 int FixedUncertainty = 1;
 const int VaryFutureInterventions = 0; 
 const int VaryFutureInterventionsTB = 0; 
@@ -120,7 +120,7 @@ const int InputARTinitiationRates = 0;
 
 and: 
 
-```{bash, eval=FALSE}
+```cpp
 const int ProvModel = 0; 
 string ProvID = "KZ"; // variable selection ignored if ProvModel=0
 const int UseBrassLogit = 0;
@@ -128,11 +128,25 @@ const int IncludeTB = 0;
 const int IncludeDR_TB = 0; 
 ```
 
-Please also ensure: 
+Ensure that the following calibration settings are enabled (`= 1`):
 
-```{bash, eval=FALSE}
-const int MCMCdim = 49; ///< Number of parameters in uncertainty analysis
-const int MaxPriors = 145; ///< Number of input rows in Priors file (145 for HIV, 63 for TB)
+- `CalibAdultPrev`
+- `CalibANCprev`
+- `CalibFSWprev`
+- `CalibMSMprev`
+- `CalibHCT_HH`
+- `CalibHCTprev`
+- `CalibHCTprevP`
+- `CalibDeathsA`
+- `CalibDeathsP`
+- `CalibARTbyAge`
+- `CalibARTcoverage`
+
+All remaining calibration settings should be disabled (`= 0`). Lastly, ensure that the following values are set in `THEMBISA.h`:
+
+```cpp
+const int MCMCdim = 51;   ///< Number of parameters in uncertainty analysis
+const int MaxPriors = 149; ///< Number of input rows in Priors file (149 for HIV, 63 for TB)
 ```
 
 # Provincial HIV Model
@@ -141,20 +155,22 @@ const int MaxPriors = 145; ///< Number of input rows in Priors file (145 for HIV
 
 For the provincial-level HIV simulation, ensure that in the C++ program, **`THEMBISA.cpp`** , the following lines are uncommented and commented respectively: 
 
-```{bash, eval=FALSE}
+```cpp
 RunSample();	
 //runIMIS(0.0);
 ```
 
 In the header file, **`THEMBISA.h`**, ensure
 
-```{bash, eval=FALSE}
+```cpp
 int FixedUncertainty = 1;
+...
+const int InputARTinitiationRates = 1; 
 ```
 
 and: 
 
-```{bash, eval=FALSE}
+```cpp
 const int ProvModel = 1; 
 string ProvID = "KZ"; // Choose from EC, FS, GT, KZ, LM, MP, NC, NW, WC
 const int UseBrassLogit = 0;
@@ -162,11 +178,22 @@ const int IncludeTB = 0;
 const int IncludeDR_TB = 0; 
 ```
 
-Please also ensure: 
+Ensure that the following calibration settings are enabled (`= 1`):
 
-```{bash, eval=FALSE}
-const int MCMCdim = 40; ///< Number of parameters in uncertainty analysis
-const int MaxPriors = 145; ///< Number of input rows in Priors file (145 for HIV, 63 for TB)
+- `CalibPaedPrev`
+- `CalibAdultPrev`
+- `CalibANCprev` (and also `InclANCpre1997` and `InclAS_ANCprov`)
+- `CalibDeathsA`
+- `CalibARTtotals`
+- `CalibARTbyAge`
+- `CalibARTbyAgeP2`
+- `CalibARTcoverage`
+
+All remaining calibration settings should be disabled (`= 0`). Lastly, ensure that the following values are set in `THEMBISA.h`:
+
+```cpp
+const int MCMCdim = 44; ///< Number of parameters in uncertainty analysis
+const int MaxPriors = 149; ///< Number of input rows in Priors file (145 for HIV, 63 for TB)
 ```
 
 # National TB Model
@@ -175,14 +202,14 @@ const int MaxPriors = 145; ///< Number of input rows in Priors file (145 for HIV
 
 For the simulation of the national-level TB model, ensure that in the C++ program, **`THEMBISA.cpp`** , the following lines are commented and uncommented respectively: 
 
-```{bash, eval=FALSE}
+```cpp
 RunSample();	
 //runIMIS(0.0);
 ```
 
 In the header file, **`THEMBISA.h`**, ensure
 
-```{bash, eval=FALSE}
+```cpp
 
 int FixedUncertainty = 1;
 const int VaryFutureInterventions = 0; 
@@ -206,7 +233,7 @@ double RRtestingDiagnosed = 1.0;
 ```
 Please also ensure: 
 
-```{bash, eval=FALSE}
+```cpp
 const int MCMCdim = 21; ///< Number of parameters in uncertainty analysis
 const int MaxPriors = 65; ///< Number of input rows in Priors file (145 for HIV, 63 for TB)
 ```
