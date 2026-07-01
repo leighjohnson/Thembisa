@@ -2,9 +2,21 @@
 
 This repository contains code and supporting files for the Thembisa HIV/TB model, developed by Prof Leigh Johnson, Prof Rob Dorrington, and Dr Mmamapudi Kubjane. Thembisa is a mathematical model of the South African HIV epidemic, designed to answer policy questions relating to HIV prevention and treatment. Thembisa is also a demographic projection model and a source of demographic statistics. Recently the model has also been extended to include tuberculosis.
 
-This project uses HIV version 4.8 and TB version 2.1 and will be updated as code becomes available from the developers. More details can be found at the official [Thembisa website](https://www.thembisa.org/)
+This project uses HIV version 4.8 and TB version 2.1 and will be updated as code becomes available from the developers. More details can be found at the official [Thembisa website](https://www.thembisa.org/).
 
 **Note**: If you are a direct collaborator on the project, please follow the instructions set out in the "Collaborators" section below.
+
+## Note to collaborators & users: 
+There are two active branches for this repository based on the model you're using:
+- **main** contains the code for Thembisa HIV version 5.0
+- **Thembisa-TB2.1** contains the code for Thembisa TB version 2.1
+
+If you are working with the HIV model, continue using **main**, if you are using the TB model switch to the TB branch **Thembisa-TB2.1** using:
+```{bash, eval=FALSE}
+git checkout Thembisa-TB2.1
+```
+
+The HIV and TB branches will be merged after the next calibration of the TB model. Collaborators will be updated accordingly.
 
 # Software Requirements
 
