@@ -201,7 +201,7 @@ Ensure that the following calibration settings are enabled (`= 1`):
 - `CalibARTbyAgeP2`
 - `CalibARTcoverage`
 
-All remaining calibration settings should be disabled (`= 0`). Lastly, ensure that the following values are set in `THEMBISA.h`:
+All remaining calibration settings should be disabled (`= 0`), including `CalibHCTprevP` and `CalibHCTtotP`. Lastly, ensure that the following values are set in `THEMBISA.h`:
 
 ```cpp
 const int MCMCdim = 44; ///< Number of parameters in uncertainty analysis
