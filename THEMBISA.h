@@ -1451,7 +1451,7 @@ double ExpectedTBdeathsPLHIV[14]; ///< Expected # TB deaths in HIV+ adults, base
 double SE_TBdeathsPLHIV[14]; ///< Std error for # TB deaths in HIV+ adults, based on post-mortem studies
 double RecordedTBcasesA[16][13][2]; ///< ETR cases treated by age, year (2004-2016) & sex
 double ETRmortPropn[13][2]; ///< % of TB cases recorded as dead in ETR, by year (2004-2016) & sex
-double RecordedTBlabA[20]; ///< Recorded numbers of microbiologically-tested adults (negative & positive)
+double RecordedTBlabA[21]; ///< Recorded numbers of microbiologically-tested adults (negative & positive)
 double ETR_HIVprev[8]; ///< HIV prevalence in adult TB patients in ETR
 double TBprevSurvey[2]; ///< Recorded pulmonary TB prevalence in 2017 survey, by sex
 double TBprevSurveySE[2]; ///< Std error for recorded pulmonary TB prevalence in 2017 survey, by sex

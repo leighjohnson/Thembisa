@@ -5610,7 +5610,7 @@ void ReadTBlabDiag()
 	}
 
 	file.ignore(255, '\n');
-	for (iy = 0; iy < 20; iy++) {
+	for (iy = 0; iy < 21; iy++) {
 		file >> RecordedTBlabA[iy];
 	}
 	file.ignore(255, '\n');
@@ -23369,9 +23369,9 @@ double CalcAdultTBlabDiagLogL()
 		TempLogL += -0.5 * (log(2.0 * 3.141592654 * ErrorVar) + pow(Temp1, 2.0) / ErrorVar);
 	}
 
-	// Likelihood for 2018-2024 period
+	// Likelihood for 2018-2025 period
 	ErrorVar = pow(0.09, 2.0); // Previously 0.01
-	for (iy = 13; iy < 20; iy++) {
+	for (iy = 13; iy < 21; iy++) {
 		Temp1 = log(0.5 * (ModelTBtests[iy + 19] + ModelTBtests[iy + 20])) - log(RecordedTBlabA[iy] *
 			0.85 / (1.0 - PrivateTBdiagPropn));
 		TempLogL += -0.5 * (log(2.0 * 3.141592654 * ErrorVar) + pow(Temp1, 2.0) / ErrorVar);
