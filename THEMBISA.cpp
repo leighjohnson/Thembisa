@@ -5516,7 +5516,7 @@ void ReadTBmortData()
 	ifstream file;
 	string InputFile;
 
-	if (ProvModel == 0) { YearLimit = 23; }
+	if (ProvModel == 0) { YearLimit = 26; }
 	else { YearLimit = 20; }
 
 	InputFile = "./inputs/TBinputs/TB_MortData.txt";
@@ -23151,7 +23151,7 @@ double CalcAdultTBmortLogL()
 	double TempLogL, Temp1, Temp2, ErrorVar, TBmortAdj, Temp3[2], Temp4[2];
 
 	TempLogL = 0.0;
-	if (ProvModel == 0) { YearLimit = 23; }
+	if (ProvModel == 0) { YearLimit = 26; }
 	else { YearLimit = 20; }
 
 	// First calculate ModelTBdeathsA, after interpolation

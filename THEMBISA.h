@@ -1446,7 +1446,7 @@ double ModelMarried[15][2][4]; ///< % of adults married by age and sex, in 1996,
 
 ///< TB data inputs used in calibration
 
-double RecordedTBdeathsA[16][23][2]; ///< Stats SA TB deaths by age, year (1997-2016) & sex
+double RecordedTBdeathsA[16][26][2]; ///< Stats SA TB deaths by age, year (1997-2016) & sex
 double ExpectedTBdeathsPLHIV[14]; ///< Expected # TB deaths in HIV+ adults, based on post-mortem studies
 double SE_TBdeathsPLHIV[14]; ///< Std error for # TB deaths in HIV+ adults, based on post-mortem studies
 double RecordedTBcasesA[16][13][2]; ///< ETR cases treated by age, year (2004-2016) & sex
