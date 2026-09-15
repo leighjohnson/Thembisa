@@ -334,6 +334,14 @@ double RRinjDrug2000; ///< RR of starting injecting drugs in 2000 (ref. 2015)
 double StopInjDrugs; ///< Annual rate of stopping injecting drug use
 double BaseTransmNS; ///< Transmission prob per act of needle sharing with HIV-pos indiv
 double MonthlyInj; ///< Monthly # times PWID inject drugs
+double RednNeedleSharePerNeedleDist; ///< Reduction in prob of needle sharing per needle
+									 ///< distributed, per PWID
+double RednNeedleShareOAT; ///< Reduction in prob of needle sharing if currently on OAT
+double RateOATstop; ///< Annual rate of stopping OAT
+double ExitRateInjOAT; ///< Annual rate of ceasing injecting while on OAT
+double MaxExitInjOAT; ///< Maximum increase in ceasing injecting due to OAT
+double EffectOATstartOnInjExit; ///< Effect of OAT initiation rate on exit from injecting
+double EffectOATstopOnInjExit; ///< Effect of rate of stopping OAT on exit from injecting
 
 //=============================================================================
 ///< Parameters in the 'PaedAssumps' file
@@ -558,6 +566,8 @@ double FSWageSD[86]; ///< Standard deviation of FSW ages
 
 ///< PWID assumptions
 double PropnNeedleSharing[86]; ///< % of injections in which needle is shared 
+double NeedleCoverage[86]; ///< Annual number of needles distributed per PWID
+double RateOATstart[86]; ///< Annual rate of OAT initiation among PWID
 
 //============================================================================
 ///< Parameters and arrays in the 'TBrollout' file
@@ -620,6 +630,8 @@ double FSWprev[86]; ///< Row 107
 double PWIDprev[86]; ///< HIV prevalence in PWID
 double PWIDprevM[86]; ///< HIV prevalence in male PWID
 double PWIDprevF[86]; ///< HIV prevalence in female PWID
+double RRexitOAT; ///< RR of ceasing injecting in current year due to OAT
+double RRneedleShareHarmRed; ///< RR of needle sharing in current year due to OAT & NSP
 double CondomUseFSW[86]; ///< % of sex workers using condoms at last sex
 double ClientPrev; ///< HIV prevalence in clients
 double ClientARTcov; ///< ART coverage in clients of FSWs
@@ -1240,6 +1252,7 @@ double NewlyTested1stPos[2];
 double NewlyTestedPaed[3][2]; ///< Newly tested by age (18, 19-59, 60-179 mo) and HIV status
 double NewlyTestedAdult[3][2]; ///< Newly tested by age (15-24, 25-49, 50+) and sex
 double PosTestedAdult[3][2]; ///< Positive tests by age (15-24, 25-49, 50+) and sex
+double ModelTestsPWID[2]; // Total negative tests & positive tests in PWID
 double ANCtestsByAge[2][2]; ///< 1st ANC tests by maternal age (15-24, 25+) and HIV status
 double NewlyTestedNegST[6]; ///< # HIV-neg self-test results, by testing modality
 double NewlyTestedPosST[6]; ///< # HIV-pos self-test results, by testing modality
@@ -1843,6 +1856,7 @@ void SetPaedARTinitiation2(); ///< Called when inputs are numbers starting ART
 void UpdateFSW();
 void UpdateMonthlyCum();
 void UpdateMonthlySTesting();
+void CalcPWIDtestingYield();
 void OneMonth(int im);
 
 ///< Functions called on a monthly basis: TB
@@ -2573,6 +2587,7 @@ PostOutputArray PosHIVtests25to49M(56);
 PostOutputArray PosHIVtests25to49F(56);
 PostOutputArray PosHIVtests50plusM(56);
 PostOutputArray PosHIVtests50plusF(56);
+PostOutputArray PWIDyield(56);
 PostOutputArray PregDiag15to24(56);
 PostOutputArray PregDiag25to49(56);
 PostOutputArray FalseNegPropn(56);

@@ -349,3 +349,17 @@ BaseTransmNS
 0.00247
 MonthlyInj
 74.3
+RednNeedleSharePerNeedleDist
+0.002
+RednNeedleShareOAT
+0.50
+RateOATstop
+0.45
+ExitRateInjOAT
+0.08
+MaxExitInjOAT
+0.30
+EffectOATstartOnInjExit
+1.80
+EffectOATstopOnInjExit
+0.50

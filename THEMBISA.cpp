@@ -1427,7 +1427,7 @@ void Adult::UpdateProbTransmNS()
 		}
 	}
 	ProbTransmPWID[0] = BaseProb[0] * MonthlyInj * PropnNeedleSharing[iy] *
-		Temp2 / Temp1;
+		RRneedleShareHarmRed * Temp2 / Temp1;
 	if (ProbTransmPWID[0] > 0.999) { ProbTransmPWID[0] = 0.999; }
 	if (PrEPorVM == 1) {
 		ProbTransmPWID[1] = ProbTransmPWID[0] * (1.0 - CABLAefficacy[0]);
@@ -3492,6 +3492,27 @@ void ReadAdultAssumps()
 	file.ignore(255, '\n');
 	file.ignore(255, '\n');
 	file >> MonthlyInj;
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> RednNeedleSharePerNeedleDist;
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> RednNeedleShareOAT;
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> RateOATstop;
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> ExitRateInjOAT;
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> MaxExitInjOAT;
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> EffectOATstartOnInjExit;
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> EffectOATstopOnInjExit;
 	file.close();
 	
 	// Perform basic calculations in "Adult assumptions" sheet
@@ -3798,6 +3819,16 @@ void ReadRollout()
 	file.ignore(255, '\n');
 	for (iy = 0; iy < 86; iy++) {
 		file >> PropnNeedleSharing[iy];
+	}
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	for (iy = 0; iy < 86; iy++) {
+		file >> NeedleCoverage[iy];
+	}
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	for (iy = 0; iy < 86; iy++) {
+		file >> RateOATstart[iy];
 	}
 	file.close();
 	
@@ -10573,6 +10604,8 @@ void UpdateMonthlyCum()
 			for (is = 15; is < 35; is++){ Temp1 += SumGroupsF[ia][5 + is] * RelativeFert[5 + is][ia - 4] * RetestART; }
 			ANCtestsByAge[1][1] += Temp1 * HIVnegSEfert[ia - 4] * VCTuptake / 12.0;
 		}
+		// Calculate PWID testing outputs
+		if (FixedUncertainty == 1) { CalcPWIDtestingYield(); }
 		// Calculate self-testing outputs
 		if (FixedUncertainty == 1){ UpdateMonthlySTesting(); }
 		// Calculate NewElig350
@@ -10820,6 +10853,79 @@ void UpdateMonthlySTesting()
 		NewlyTestedPosST[im] += TempPos[im];
 		NewSTtoART[im] += TempART[im];
 	}
+}
+
+void CalcPWIDtestingYield()
+{
+	int ia, is;
+	double TempPos[2], TempNeg[2];
+
+	TempPos[0] = 0.0;
+	TempPos[1] = 0.0;
+	TempNeg[0] = 0.0;
+	TempNeg[1] = 0.0;
+
+	// Calculate NewlyTested at ages 10+ (excluding self-testing unless confirmed positive)
+	for (ia = 0; ia < 81; ia++) {
+		TempNeg[0] += (MHU_ID.NegNoHCT[ia] + MHC_ID.NegNoHCT[ia] + MLU_ID.NegNoHCT[ia] + MLC_ID.NegNoHCT[ia]) * TestingRateSE[ia][0][0] +
+			(MHU_ID.NegPastHCT[ia] + MHC_ID.NegPastHCT[ia] + MLU_ID.NegPastHCT[ia] + MLC_ID.NegPastHCT[ia]) * TestingRateSE[ia][1][0];
+		TempNeg[1] += (FH_ID.NegNoHCT[ia] + FL_ID.NegNoHCT[ia]) * TestingRateSE[ia][0][1] +
+			(FH_ID.NegPastHCT[ia] + FL_ID.NegPastHCT[ia]) * TestingRateSE[ia][1][1];
+		if (PrEPorVM == 1) {
+			TempNeg[0] += (MHU_ID.RegHCT[ia] + MHC_ID.RegHCT[ia] + MLU_ID.RegHCT[ia] + MLC_ID.RegHCT[ia] + MHU_ID.RegPrEP[ia] +
+				MHC_ID.RegPrEP[ia] + MLU_ID.RegPrEP[ia] + MLC_ID.RegPrEP[ia]) * FreqHCTinPrEP[0] / 12.0;
+			TempNeg[1] += (FH_ID.RegHCT[ia] + FL_ID.RegHCT[ia] + FH_ID.RegPrEP[ia] + FL_ID.RegPrEP[ia]) *
+				FreqHCTinPrEP[1] / 12.0 + (FH_ID.RegVM[ia] + FL_ID.RegVM[ia]) * FreqHCTinVM / 12.0;
+		}
+		for (is = 2; is < 6; is++) {
+			TempPos[0] += (MHU_ID.PosNoHCT[ia][is - 1] + MHC_ID.PosNoHCT[ia][is - 1] + MLU_ID.PosNoHCT[ia][is - 1] +
+				MLC_ID.PosNoHCT[ia][is - 1]) * TestingRateSE[ia][is][0];
+			TempPos[1] += (FH_ID.PosNoHCT[ia][is - 1] + FL_ID.PosNoHCT[ia][is - 1]) * TestingRateSE[ia][is][1];
+		}
+		for (is = 8; is < 12; is++) {
+			TempPos[0] += (MHU_ID.PosHCTpreHIV[ia][is - 7] + MHC_ID.PosHCTpreHIV[ia][is - 7] + MLU_ID.PosHCTpreHIV[ia][is - 7] +
+				MLC_ID.PosHCTpreHIV[ia][is - 7]) * TestingRateSE[ia][is][0];
+			TempPos[1] += (FH_ID.PosHCTpreHIV[ia][is - 7] + FL_ID.PosHCTpreHIV[ia][is - 7]) * TestingRateSE[ia][is][1];
+		}
+		for (is = 15; is < 20; is++) {
+			TempPos[0] += (MHU_ID.PosDiagnosedPreART[ia][is - 15] + MHC_ID.PosDiagnosedPreART[ia][is - 15] +
+				MLU_ID.PosDiagnosedPreART[ia][is - 15] + MLC_ID.PosDiagnosedPreART[ia][is - 15]) * (TestingRateM[ia] * RetestPos +
+					SelfTestingRate[ia][is - 8][0] * RetestPosST[0] * SelfTestConfirm);
+			TempPos[1] += (FH_ID.PosDiagnosedPreART[ia][is - 15] + FL_ID.PosDiagnosedPreART[ia][is - 15]) *
+				(TestingRateSE[ia][0][1] * RetestPos + SelfTestingRate[ia][is - 8][1] * RetestPosST[0] * SelfTestConfirm);
+		}
+		for (is = 0; is < 5; is++) {
+			TempPos[0] += (MHU_ID.OnARTpre500[ia][is] + MHC_ID.OnARTpre500[ia][is] + MLU_ID.OnARTpre500[ia][is] +
+				MLC_ID.OnARTpre500[ia][is]) * (TestingRateM[ia] * RetestART + SelfTestingRate[ia][8][0] * RetestPosST[1] * SelfTestConfirm);
+			TempPos[1] += (FH_ID.OnARTpre500[ia][is] + FL_ID.OnARTpre500[ia][is]) * (TestingRateSE[ia][0][1] * RetestART +
+				SelfTestingRate[ia][8][1] * RetestPosST[1] * SelfTestConfirm);
+		}
+		for (is = 0; is < 5; is++) {
+			TempPos[0] += (MHU_ID.OnART500[ia][is] + MHC_ID.OnART500[ia][is] + MLU_ID.OnART500[ia][is] + MLC_ID.OnART500[ia][is]) *
+				(TestingRateM[ia] * RetestART + SelfTestingRate[ia][8][0] * RetestPosST[1] * SelfTestConfirm);
+			TempPos[1] += (FH_ID.OnART500[ia][is] + FL_ID.OnART500[ia][is]) * (TestingRateSE[ia][0][1] * RetestART +
+				SelfTestingRate[ia][8][1] * RetestPosST[1] * SelfTestConfirm);
+		}
+		for (is = 0; is < 5; is++) {
+			TempPos[0] += (MHU_ID.OnART350[ia][is] + MHC_ID.OnART350[ia][is] + MLU_ID.OnART350[ia][is] + MLC_ID.OnART350[ia][is]) *
+				(TestingRateM[ia] * RetestART + SelfTestingRate[ia][8][0] * RetestPosST[1] * SelfTestConfirm);
+			TempPos[1] += (FH_ID.OnART350[ia][is] + FL_ID.OnART350[ia][is]) * (TestingRateSE[ia][0][1] * RetestART +
+				SelfTestingRate[ia][8][1] * RetestPosST[1] * SelfTestConfirm);
+		}
+		for (is = 0; is < 5; is++) {
+			TempPos[0] += (MHU_ID.OnART200[ia][is] + MHC_ID.OnART200[ia][is] + MLU_ID.OnART200[ia][is] + MLC_ID.OnART200[ia][is]) *
+				(TestingRateM[ia] * RetestART + SelfTestingRate[ia][8][0] * RetestPosST[1] * SelfTestConfirm);
+			TempPos[1] += (FH_ID.OnART200[ia][is] + FL_ID.OnART200[ia][is]) * (TestingRateSE[ia][0][1] * RetestART +
+				SelfTestingRate[ia][8][1] * RetestPosST[1] * SelfTestConfirm);
+		}
+		// Acutely infected are treated as negative
+		TempNeg[0] += (MHU_ID.PosNoHCT[ia][0] + MHC_ID.PosNoHCT[ia][0] + MLU_ID.PosNoHCT[ia][0] + MLC_ID.PosNoHCT[ia][0]) * TestingRateSE[ia][2][0] +
+			(MHU_ID.PosHCTpreHIV[ia][0] + MHC_ID.PosHCTpreHIV[ia][0] + MLU_ID.PosHCTpreHIV[ia][0] + MLC_ID.PosHCTpreHIV[ia][0]) * TestingRateSE[ia][7][0];
+		TempNeg[1] += (FH_ID.PosNoHCT[ia][0] + FL_ID.PosNoHCT[ia][0]) * TestingRateSE[ia][2][1] +
+			(FH_ID.PosHCTpreHIV[ia][0] + FL_ID.PosHCTpreHIV[ia][0]) * TestingRateSE[ia][7][1];
+	}
+	ModelTestsPWID[0] += TempNeg[0] + TempNeg[1];
+	ModelTestsPWID[1] += TempPos[0] + TempPos[1];
 }
 
 void OneMonth(int im)
@@ -11894,6 +12000,8 @@ void ResetMonthlyCum()
 				PosTestedAdult[ia][ii] = 0.0;
 			}
 		}
+		ModelTestsPWID[0] = 0.0;
+		ModelTestsPWID[1] = 0.0;
 		for (ia = 0; ia < 2; ia++){
 			for (ii = 0; ii < 2; ii++){
 				ANCtestsByAge[ia][ii] = 0.0;
@@ -14827,6 +14935,19 @@ void SetCurrYearParameters()
 		}
 	}
 
+	// PWID parameters
+	if (RateOATstart[iy] > 0.0) {
+		RRexitOAT = 1.0 + MaxExitInjOAT * (1.0 - exp(-EffectOATstartOnInjExit * RateOATstart[iy])) *
+			exp(-EffectOATstopOnInjExit * RateOATstop);
+	}
+	else { RRexitOAT = 1.0; }
+	if (RateOATstart[iy] > 0.0 || NeedleCoverage[iy] > 0.0) {
+		temp = RateOATstart[iy] / (RateOATstart[iy] + RateOATstop + ExitRateInjOAT);
+		RRneedleShareHarmRed = (temp * (1.0 - RednNeedleShareOAT) + 1.0 - temp) * (1.0 -
+			RednNeedleSharePerNeedleDist * NeedleCoverage[iy]);
+	}
+	else { RRneedleShareHarmRed = 1.0; }
+
 	if (IncludeTB == 1) { SetCurrYearParametersTB(); }
 }
 
@@ -17036,7 +17157,7 @@ void UpdatePWID(Adult* NonInjecting, Adult* Injecting)
 		Temp *= (RRinjDrug2000 + (1.0 - RRinjDrug2000) *
 			(CurrYear - 2000)/15.0);
 	}
-	ExitLT1 = 1.0 - exp(-StopInjDrugs);
+	ExitLT1 = 1.0 - exp(-StopInjDrugs * RRexitOAT);
 
 	for (ia = 5; ia < 81; ia++) {
 		EnterLT1 = 1.0 - exp(-Temp * RR_IDage[ia]);
@@ -18002,6 +18123,7 @@ void ResultsAtEndOfYr()
 		PosHIVtests25to49F.out[CurrSim - 1][iy] = PosTestedAdult[1][1];
 		PosHIVtests50plusM.out[CurrSim - 1][iy] = PosTestedAdult[2][0];
 		PosHIVtests50plusF.out[CurrSim - 1][iy] = PosTestedAdult[2][1];
+		PWIDyield.out[CurrSim - 1][iy] = ModelTestsPWID[1] / (ModelTestsPWID[0] + ModelTestsPWID[1]);
 		PregDiag15to24.out[CurrSim - 1][iy] = ANCtestsByAge[0][1];
 		PregDiag25to49.out[CurrSim - 1][iy] = ANCtestsByAge[1][1];
 		if (iy >= 35 && iy < 39){
@@ -19358,6 +19480,7 @@ void GetAddedOutputs(const char* filout)
 	PosHIVtests50plusF.GetMeans(); // New to 4.8
 	PregDiag15to24.GetMeans(); // New to 4.8
 	PregDiag25to49.GetMeans(); // New to 4.8
+	PWIDyield.GetMeans();
 	DiagnosedPropnAdult.GetMeans();
 	FalseNegPropn.GetMeans(); 
 	HIVtestsPos18mo.GetMeans();
