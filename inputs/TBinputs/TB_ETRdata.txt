@@ -37,5 +37,7 @@ Recorded proportions dead, in males and females (15+), by year
 0.0843	0.0908	0.0948	0.0972	0.0973	0.0926	0.0863	0.0799	0.0792	0.0712	0.0623	0.0651	0.0638
 HIV prevalence in adult TB patients, 2009-2016
 0.7065	0.7088	0.6930	0.6808	0.6593	0.6470	0.6362	0.6316
+Number of recorded TB patients in DHIS by year (2020-25)
+169203.0	176624.0	219994.0	220320.0	215815.0	213937.0
 Number of recorded patients starting second-line treatment (2007-2019)
 3612.5	4087.0	4772.5	5522.5	6068.5	8578.5	11100.5	12032.5	11859.5	10663.5	9846.5	9150.5	7807.0

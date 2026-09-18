@@ -1446,10 +1446,11 @@ double ModelMarried[15][2][4]; ///< % of adults married by age and sex, in 1996,
 
 ///< TB data inputs used in calibration
 
-double RecordedTBdeathsA[16][26][2]; ///< Stats SA TB deaths by age, year (1997-2016) & sex
+double RecordedTBdeathsA[16][26][2]; ///< Stats SA TB deaths by age, year (1997-2022) & sex
 double ExpectedTBdeathsPLHIV[14]; ///< Expected # TB deaths in HIV+ adults, based on post-mortem studies
 double SE_TBdeathsPLHIV[14]; ///< Std error for # TB deaths in HIV+ adults, based on post-mortem studies
 double RecordedTBcasesA[16][13][2]; ///< ETR cases treated by age, year (2004-2016) & sex
+double RecordedTBcasesDHIS[6]; ///< DHIS cases treated by year (2020-2025) 
 double ETRmortPropn[13][2]; ///< % of TB cases recorded as dead in ETR, by year (2004-2016) & sex
 double RecordedTBlabA[21]; ///< Recorded numbers of microbiologically-tested adults (negative & positive)
 double ETR_HIVprev[8]; ///< HIV prevalence in adult TB patients in ETR
@@ -1468,6 +1469,7 @@ double TB_HIV_ORdetails[9][3]; ///< Details of surveys measuring HIV-TB associat
 
 double ModelTBdeathsA[16][23][2]; ///< Model estimates of TB deaths by age, year (1997-2016) & sex
 double ModelTBcasesA[16][13][2]; ///< Model estimates of TB cases treated by age, year (2004-16) & sex
+double ModelTBcasesDHIS[6]; ///< Model estimates of TB cases treated by year (2020-25)
 double TBprev2018[2]; ///< Modelled pulmonary TB prevalence in 2018, by sex
 
 ///< Priors and likelihood

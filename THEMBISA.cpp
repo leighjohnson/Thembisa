@@ -5590,6 +5590,11 @@ void ReadTB_ETRdata()
 	}
 	file.ignore(255, '\n');
 	file.ignore(255, '\n');
+	for (iy = 0; iy < 6; iy++) {
+		file >> RecordedTBcasesDHIS[iy];
+	}
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
 	for (iy = 0; iy < 13; iy++) {
 		file >> Recorded2ndLineTB[iy];
 	}
@@ -18602,6 +18607,10 @@ void TBresultsAtEndOfYr()
 			}
 			CaseDetectionRatioR.out[CurrSim - 1][iy] = temp1 / NewActiveTBadult.out[CurrSim - 1][iy];
 		}
+		if (CurrYear >= 2020 && CurrYear <= 2025) {
+			CaseDetectionRatioR.out[CurrSim - 1][iy] = RecordedTBcasesDHIS[iy - 35] / 
+				NewActiveTBadult.out[CurrSim - 1][iy];
+		}
 		temp1 = 0.0;
 		temp2 = 0.0;
 		for (ii = 0; ii < 5 && ii <= iy; ii++) { // ii is years prior to current; guard against negative index
@@ -23275,15 +23284,16 @@ double CalcAdultTBcasesLogL()
 {
 	// TBcaseAdj is to allow for possibility that ETR totals might be under-estimates (some studies
 	// suggest under-reporting, especially in tertiary care, and the ETR totals also don't include
-	// cases of drug-resistant TB) or over-estimates (because some of the individuals treated for
-	// TB don't actually have TB).
+	// cases of drug-resistant TB).
+
+	// TBcaseAdj2 is similarly defined, but for DHIS data.
 
 	int ia, ig, iy, UpperAge;
-	double TempLogL, Temp1, Temp2, ErrorVar, TBcaseAdj, TBcaseAdjMax, TempAdj, Temp3[2], Temp4[2];
+	double TempLogL, Temp1, Temp2, ErrorVar, TBcaseAdj, TBcaseAdj2, Temp3[2], Temp4[2];
 
 	TempLogL = 0.0;
 
-	// First calculate ModelTBcasesA, after interpolation
+	// First calculate ModelTBcasesA (after interpolation) and TBcaseAdj
 	UpperAge = 16;
 	Temp1 = 0.0;
 	Temp2 = 0.0;
@@ -23293,32 +23303,39 @@ double CalcAdultTBcasesLogL()
 				ModelTBcasesA[ia][iy][ig] = 0.5 * (TBadultRxBy5yr[iy + 18][ia][ig] +
 					TBadultRxBy5yr[iy + 19][ia][ig]);
 				if (ModelTBcasesA[ia][iy][ig] < 0.0) { ModelTBcasesA[ia][iy][ig] = 0.0001; }
-				//if (iy == 0 || iy >= 5){
 				Temp1 += ModelTBcasesA[ia][iy][ig];
 				Temp2 += RecordedTBcasesA[ia][iy][ig];
-				//}
 			}
 		}
-		/*if (iy == 0){
-			TBcaseAdjMax = Temp1 / Temp2;
-			Temp1 = 0.0;
-			Temp2 = 0.0;
-		}*/
 	}
 	TBcaseAdj = Temp1 / Temp2;
-	TBcaseAdjMax = TBcaseAdj;
 	if (TBcaseAdj < 1.0) { TBcaseAdj = 1.0; }
 	if (TBcaseAdj > 1.3) { TBcaseAdj = 1.3; }
 
+	// Similarly calculate TBcaseAdj2
+	Temp1 = 0.0;
+	Temp2 = 0.0;
+	for (iy = 0; iy < 6; iy++) {
+		ModelTBcasesDHIS[iy] = 0.0;
+		for (ia = 1; ia < UpperAge; ia++) {
+			for (ig = 0; ig < 2; ig++) {
+				ModelTBcasesDHIS[iy] += 0.5 * (TBadultRxBy5yr[iy + 34][ia][ig] +
+					TBadultRxBy5yr[iy + 35][ia][ig]);
+			}
+		}
+		if (ModelTBcasesDHIS[iy] < 0.0) { ModelTBcasesDHIS[iy] = 0.0001; }
+		Temp1 += ModelTBcasesDHIS[iy];
+		Temp2 += RecordedTBcasesDHIS[iy];
+	}
+	TBcaseAdj2 = Temp1 / Temp2;
+	if (TBcaseAdj2 < 0.9) { TBcaseAdj2 = 0.9; }
+	if (TBcaseAdj2 > 1.2) { TBcaseAdj2 = 1.2; }
+
 	ErrorVar = 0.01; // Previously 0.04
 
-	// Calculate likelihood
+	// Calculate likelihood for ETR data
 	TempLogL = 0.0;
 	for (iy = 0; iy < 13; iy++) {
-		TempAdj = TBcaseAdj;
-		// The code below is from when we previously allowed for a changing bias over time.
-		//if (iy >= 5){ TempAdj = TBcaseAdj; }
-		//else{ TempAdj = TBcaseAdj + (TBcaseAdjMax - TBcaseAdj) * (5.0 - iy) / 5.0; }
 		for (ig = 0; ig < 2; ig++) {
 			Temp3[ig] = 0.0;
 			Temp4[ig] = 0.0;
@@ -23326,7 +23343,7 @@ double CalcAdultTBcasesLogL()
 		for (ia = 1; ia < UpperAge; ia++) {
 			for (ig = 0; ig < 2; ig++) {
 				Temp3[ig] += ModelTBcasesA[ia][iy][ig];
-				Temp4[ig] += RecordedTBcasesA[ia][iy][ig] * TempAdj;
+				Temp4[ig] += RecordedTBcasesA[ia][iy][ig] * TBcaseAdj;
 				//Temp1 = log(ModelTBcasesA[ia][iy][ig]) - log(RecordedTBcasesA[ia][iy][ig] * TBcaseAdj);
 				//TempLogL += -0.5 * (log(2.0 * 3.141592654 * ErrorVar) +
 				//	pow(Temp1, 2.0) / ErrorVar);
@@ -23338,9 +23355,15 @@ double CalcAdultTBcasesLogL()
 			pow(log(Temp3[1]) - log(Temp4[1]), 2.0) / ErrorVar);
 	}
 
+	// Add likelihood for DHIS data
+	for (iy = 0; iy < 6; iy++) {
+		TempLogL += -0.5 * (log(2.0 * 3.141592654 * ErrorVar) + pow(log(ModelTBcasesDHIS[iy]) -
+			log(RecordedTBcasesDHIS[iy] * TBcaseAdj2), 2.0) / ErrorVar);
+	}
+
 	if (FixedUncertainty == 1) {
 		ETRbias.out[CurrSim - 1][0] = TBcaseAdj;
-		ETRbias.out[CurrSim - 1][1] = TBcaseAdjMax;
+		ETRbias.out[CurrSim - 1][1] = TBcaseAdj2;
 		TBlogL.out[CurrSim - 1][2] = TempLogL;
 	}
 
