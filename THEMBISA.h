@@ -342,6 +342,7 @@ double ExitRateInjOAT; ///< Annual rate of ceasing injecting while on OAT
 double MaxExitInjOAT; ///< Maximum increase in ceasing injecting due to OAT
 double EffectOATstartOnInjExit; ///< Effect of OAT initiation rate on exit from injecting
 double EffectOATstopOnInjExit; ///< Effect of rate of stopping OAT on exit from injecting
+double ARTinfectivityPWID[4][2][81]; ///< Rel infectivity after ART start, by CD4, sex, age
 
 //=============================================================================
 ///< Parameters in the 'PaedAssumps' file
@@ -776,6 +777,7 @@ double ProbCondomST[81][2]; ///< Prob of condom use per sex act in ST relationsh
 double ProbCondomLT[81][2]; ///< Prob of condom use per sex act in LT relationships
 double ProbCondomFSW; ///< Prob of condom use per sex act in FSW-client contacts
 double RelativeInf[39][2][81]; ///< Relative infectiousness by HIV stage, sex, age
+double RelativeInfNS[39][2][81]; ///< Relative infectiousness of PWID by HIV stage, sex, age
 double RelativeCoit[39][2][81]; ///< Relative frequency of sex by HIV stage, sex, age
 double RelativeUnprot[39]; ///< Relative proportion of sex acts that are unprotected
 double RelativeTransm[39][3][2][81]; ///< RR of transm (HIV stage, , sex, age)

@@ -1415,13 +1415,13 @@ void Adult::UpdateProbTransmNS()
 			for (is = 0; is < 5; is++) {
 				Temp2 += PosDiagnosedPreART[ia][is] * RelativeTransm[is + 10][2][Sex][ia];}
 			for (is = 0; is < 5; is++) {
-				Temp2 += OnARTpre500[ia][is] * RelativeTransm[is + 15][2][Sex][ia];}
+				Temp2 += OnARTpre500[ia][is] * RelativeInfNS[is + 15][Sex][ia] * RelativeUnprot[is + 15];}
 			for (is = 0; is < 5; is++) {
-				Temp2 += OnART500[ia][is] * RelativeTransm[is + 20][2][Sex][ia];}
+				Temp2 += OnART500[ia][is] * RelativeInfNS[is + 20][Sex][ia] * RelativeUnprot[is + 20];}
 			for (is = 0; is < 5; is++) {
-				Temp2 += OnART350[ia][is] * RelativeTransm[is + 25][2][Sex][ia];}
+				Temp2 += OnART350[ia][is] * RelativeInfNS[is + 25][Sex][ia] * RelativeUnprot[is + 25];}
 			for (is = 0; is < 5; is++) {
-				Temp2 += OnART200[ia][is] * RelativeTransm[is + 30][2][Sex][ia];}
+				Temp2 += OnART200[ia][is] * RelativeInfNS[is + 30][Sex][ia] * RelativeUnprot[is + 30];}
 			for (is = 0; is < 4; is++) {
 				Temp2 += StoppedART[ia][is] * RelativeTransm[is + 35][2][Sex][ia];}
 		}
@@ -6683,11 +6683,11 @@ void CalcInterruptions()
 void SetActivityByStage()
 {
 	int is, id, ic, iy, ig, ia;
-	double UnadjRelSex[5], Temp1, Temp2, TempCD4, ORsuppress, VCTcondomTemp, omega[2], theta;
+	double UnadjRelSex[5], Temp1, Temp2, Temp3, TempCD4, ORsuppress, VCTcondomTemp, omega[2], theta;
 
 	iy = CurrYear - StartYear;
 
-	// Calculate ARTinfectivity
+	// Calculate ARTinfectivity and ARTinfectivityPWID
 	theta = log(VLeffectInfectivity) / (ShapeVL * pow(2.0, ShapeVL - 1.0));
 	for(ic = 0; ic < 4; ic++){
 		TempCD4 = (AveCD4byARTdur[3-ic][0] - AveCD4byARTdur[0][0]) / 100.0;
@@ -6702,8 +6702,13 @@ void SetActivityByStage()
 						ORsuppressionCD4[ic][ig][1] * (ia - 25) / 25.0;
 				}
 				Temp2 = 1.0 / (1.0 + (1.0 - CurrSuppression200) / (CurrSuppression200 * ORsuppress));
+				Temp3 = 1.0 / (1.0 + (1.0 - CurrSuppression200) / (CurrSuppression200 * ORsuppress *
+					ORsuppressionPWID));
 				omega[1] = -log(Temp2) / pow(6.0 - log10(400), ShapeVL);
 				ARTinfectivity[ic][ig][ia] = (omega[1] / (omega[1] + theta)) /
+					(omega[0] / (omega[0] + theta));
+				omega[1] = -log(Temp3) / pow(6.0 - log10(400), ShapeVL);
+				ARTinfectivityPWID[ic][ig][ia] = (omega[1] / (omega[1] + theta)) /
 					(omega[0] / (omega[0] + theta));
 			}
 		}
@@ -6738,9 +6743,13 @@ void SetActivityByStage()
 			for (ia = 0; ia < 81; ia++){
 				RelativeInf[10 + is * 5][ig][ia] = RelativeInf[is][ig][ia] * (OnARThalfIntDur[0][ig][ia] *
 					ARTinfectivity[is - 1][ig][ia] + (1.0 - OnARThalfIntDur[0][ig][ia]));
+				RelativeInfNS[10 + is * 5][ig][ia] = RelativeInf[is][ig][ia] * (OnARThalfIntDur[0][ig][ia] *
+					ARTinfectivityPWID[is - 1][ig][ia] + (1.0 - OnARThalfIntDur[0][ig][ia]));
 				for (id = 1; id < 5; id++){
 					RelativeInf[10 + is * 5 + id][ig][ia] = RelativeInf[is][ig][ia] * (OnARTbyIntDur[id][ig][ia] *
 						ARTinfectivity[is - 1][ig][ia] + (1.0 - OnARTbyIntDur[id][ig][ia]));
+					RelativeInfNS[10 + is * 5 + id][ig][ia] = RelativeInf[is][ig][ia] * (OnARTbyIntDur[id][ig][ia] *
+						ARTinfectivityPWID[is - 1][ig][ia] + (1.0 - OnARTbyIntDur[id][ig][ia]));
 				}
 			}
 		}
