@@ -18133,6 +18133,7 @@ void ResultsAtEndOfYr()
 		PosHIVtests50plusM.out[CurrSim - 1][iy] = PosTestedAdult[2][0];
 		PosHIVtests50plusF.out[CurrSim - 1][iy] = PosTestedAdult[2][1];
 		PWIDyield.out[CurrSim - 1][iy] = ModelTestsPWID[1] / (ModelTestsPWID[0] + ModelTestsPWID[1]);
+		TotalHIVtestsPWID.out[CurrSim - 1][iy] = ModelTestsPWID[0] + ModelTestsPWID[1];
 		PregDiag15to24.out[CurrSim - 1][iy] = ANCtestsByAge[0][1];
 		PregDiag25to49.out[CurrSim - 1][iy] = ANCtestsByAge[1][1];
 		if (iy >= 35 && iy < 39){
@@ -19490,6 +19491,7 @@ void GetAddedOutputs(const char* filout)
 	PregDiag15to24.GetMeans(); // New to 4.8
 	PregDiag25to49.GetMeans(); // New to 4.8
 	PWIDyield.GetMeans();
+	TotalHIVtestsPWID.GetMeans();
 	DiagnosedPropnAdult.GetMeans();
 	FalseNegPropn.GetMeans(); 
 	HIVtestsPos18mo.GetMeans();

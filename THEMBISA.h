@@ -2590,6 +2590,7 @@ PostOutputArray PosHIVtests25to49F(56);
 PostOutputArray PosHIVtests50plusM(56);
 PostOutputArray PosHIVtests50plusF(56);
 PostOutputArray PWIDyield(56);
+PostOutputArray TotalHIVtestsPWID(56);
 PostOutputArray PregDiag15to24(56);
 PostOutputArray PregDiag25to49(56);
 PostOutputArray FalseNegPropn(56);
