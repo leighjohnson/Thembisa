@@ -19636,7 +19636,6 @@ void GetTBoutputs(const char* filout)
 	AdultTBprev.GetMeans();
 	AdultTBprevM.GetMeans();
 	AdultTBprevF.GetMeans();
-	AdultTBprevN.GetMeans();
 	AdultPTBprev.GetMeans();
 	AdultPTBprevM.GetMeans();
 	AdultPTBprevF.GetMeans();
@@ -19683,8 +19682,6 @@ void GetTBoutputs(const char* filout)
 	TotNewRxAdultTB_HIV.GetMeans();
 	HIVprevNewRxAdultTB.GetMeans();
 	CaseDetectionRatioT.GetMeans();
-	CaseDetectionRatioR.GetMeans();
-	LagAdjCaseDetectionRatio.GetMeans(); 
 	TBRxCompletion.GetMeans(); 
 
 	// Diagnosis and treatment outputs (passive)
@@ -19703,38 +19700,12 @@ void GetTBoutputs(const char* filout)
 
 	// TB active case finding and TUTT
 	SummOutRow += 3;
-	TotalScreensACF.GetMeans();
 	TotalXpertScreensACF.GetMeans();
 	NewRxAdultTB_ACF.GetMeans();
-	TotalScreensART_ICF.GetMeans();
 	TotalXpertScreensART_ICF.GetMeans();
 	NewRxAdultTB_ART_ICF.GetMeans();
-	TotalScreensPrevTB.GetMeans();
 	TotalXpertScreensPrevTB.GetMeans();
 	NewRxAdultTBscreenPrev.GetMeans();
-	TotalScreensD2D.GetMeans();
-	Total_dCXRscreensD2D.GetMeans();
-	TotalXpertScreensD2D.GetMeans();
-	NewRxAdultTBscreenD2D.GetMeans();
-
-	// Drug-resistant TB outputs
-	SummOutRow += 3;
-	PropnPrevTreated.GetMeans(); // New in version 16i
-	PropnPrevTreatedRR.GetMeans(); // New in version 16i
-	PropnPrevTreatedRS.GetMeans(); // New in version 16i
-	TotRifResTB.GetMeans(); // New in version 16i
-	RifResAllTB.GetMeans(); // New in version 16i
-	RifResPrevTB.GetMeans(); // New in version 16i
-	RifResNewTB.GetMeans(); // New in version 16i
-	MDRprevAllTB.GetMeans(); // New in version 16i
-	NewRifResAcquired.GetMeans(); // New in version 16i
-	CultureLPAtestsFailing.GetMeans(); // New in version 16i
-	RifResDetected.GetMeans(); // New in version 16i
-	RifResDetectedFailing.GetMeans(); // New in version 16i
-	New2ndRxAdultTB.GetMeans(); // New in version 16i
-	New2ndRxFailing1st.GetMeans(); // New in version 16i
-	TreatedTBcurr2nd.GetMeans(); // New in version 16i
-	TBRx2Completion.GetMeans(); // New in version 16j
 
 	// Mortality outputs
 	SummOutRow += 3;
@@ -19800,6 +19771,34 @@ void GetAddedTBoutputs(const char* filout)
 	TreatedTB15to24.GetMeans();
 	NewRxAdultTB_M.GetMeans();
 	NewRxAdultTB_F.GetMeans();
+	CaseDetectionRatioR.GetMeans(); // Moved from GetTBoutputs
+	LagAdjCaseDetectionRatio.GetMeans(); // Moved from GetTBoutputs
+	TotalScreensACF.GetMeans(); // Moved from GetTBoutputs
+	TotalScreensART_ICF.GetMeans(); // Moved from GetTBoutputs
+	TotalScreensPrevTB.GetMeans(); // Moved from GetTBoutputs
+	TotalScreensD2D.GetMeans(); // Moved from GetTBoutputs
+	Total_dCXRscreensD2D.GetMeans(); // Moved from GetTBoutputs
+	TotalXpertScreensD2D.GetMeans(); // Moved from GetTBoutputs
+	NewRxAdultTBscreenD2D.GetMeans(); // Moved from GetTBoutputs
+
+	// Drug-resistant TB outputs
+	SummOutRow += 3;
+	PropnPrevTreated.GetMeans(); // New in version 16i
+	PropnPrevTreatedRR.GetMeans(); // New in version 16i
+	PropnPrevTreatedRS.GetMeans(); // New in version 16i
+	TotRifResTB.GetMeans(); // New in version 16i
+	RifResAllTB.GetMeans(); // New in version 16i
+	RifResPrevTB.GetMeans(); // New in version 16i
+	RifResNewTB.GetMeans(); // New in version 16i
+	MDRprevAllTB.GetMeans(); // New in version 16i
+	NewRifResAcquired.GetMeans(); // New in version 16i
+	CultureLPAtestsFailing.GetMeans(); // New in version 16i
+	RifResDetected.GetMeans(); // New in version 16i
+	RifResDetectedFailing.GetMeans(); // New in version 16i
+	New2ndRxAdultTB.GetMeans(); // New in version 16i
+	New2ndRxFailing1st.GetMeans(); // New in version 16i
+	TreatedTBcurr2nd.GetMeans(); // New in version 16i
+	TBRx2Completion.GetMeans(); // New in version 16j
 
 	// Mortality outputs
 	SummOutRow += 3;
