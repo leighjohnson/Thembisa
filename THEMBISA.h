@@ -2732,7 +2732,6 @@ PostOutputArray AdultLTBIprev(56);
 PostOutputArray AdultTBprev(56);
 PostOutputArray AdultTBprevM(56);
 PostOutputArray AdultTBprevF(56);
-PostOutputArray AdultTBprevN(56);
 PostOutputArray AdultPTBprev(56);
 PostOutputArray AdultPTBprevM(56);
 PostOutputArray AdultPTBprevF(56);

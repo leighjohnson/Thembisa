@@ -13657,7 +13657,6 @@ void TBresultsAtStartOfYr()
 	AdultTBprev.out[CurrSim - 1][iy] = (temp1 + temp2) / (temp3 + temp4);
 	AdultTBprevM.out[CurrSim - 1][iy] = temp1 / temp3;
 	AdultTBprevF.out[CurrSim - 1][iy] = temp2 / temp4;
-	AdultTBprevN.out[CurrSim - 1][iy] = temp1 + temp2;
 	TotTBadult.out[CurrSim - 1][iy] = temp1 + temp2;
 	TotTBadultM.out[CurrSim - 1][iy] = temp1;
 	TotTBadultF.out[CurrSim - 1][iy] = temp2;
@@ -18596,7 +18595,7 @@ void TBresultsAtEndOfYr()
 			NewRxAdultTBscreenPrev.out[CurrSim - 1][iy] + NewRxAdultTBscreenD2D.out[CurrSim - 1][iy];
 		HIVprevNewRxAdultTB.out[CurrSim - 1][iy] = TotNewRxAdultTB_HIV.out[CurrSim - 1][iy] /
 			TotNewRxAdultTB.out[CurrSim - 1][iy];
-		DiagnosisDelay.out[CurrSim - 1][iy] = AdultTBprevN.out[CurrSim - 1][iy] /
+		DiagnosisDelay.out[CurrSim - 1][iy] = TotTBadult.out[CurrSim - 1][iy] /
 			TotNewRxAdultTB.out[CurrSim - 1][iy];
 		CaseDetectionRatioT.out[CurrSim - 1][iy] = (TotNewRxAdultTB.out[CurrSim - 1][iy] -
 			TotNewRxAdultTBfalsePos.out[CurrSim - 1][iy]) / NewActiveTBadult.out[CurrSim - 1][iy];
