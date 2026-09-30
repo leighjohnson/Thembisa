@@ -13626,8 +13626,21 @@ void TBresultsAtStartOfYr()
 	for (ia = 5; ia < 81; ia++) {
 		temp1 += TBsuscepM.Total[ia] + TBsuscepF.Total[ia];
 		temp2 += TotalPop[ia + 10][0] + TotalPop[ia + 10][1];
+		if (ia == 39) {
+			temp3 = temp1;
+			temp4 = temp2;
+		}
 	}
 	AdultLTBIprev.out[CurrSim - 1][iy] = 1.0 - temp1 / temp2;
+	LTBIprev15to49.out[CurrSim - 1][iy] = 1.0 - temp3 / temp4;
+	LTBIprev50plus.out[CurrSim - 1][iy] = 1.0 - (temp1 - temp3) / (temp2 - temp4);
+	temp1 = 0.0;
+	temp2 = 0.0;
+	for (ia = 0; ia < 10; ia++) {
+		temp1 += TBsuscepM.Total[ia] + TBsuscepF.Total[ia];
+		temp2 += TotalPop[ia + 10][0] + TotalPop[ia + 10][1];
+	}
+	LTBIprev10to19.out[CurrSim - 1][iy] = 1.0 - temp1 / temp2;
 
 	// Active TB prevalence
 	temp1 = 0.0;
@@ -19761,6 +19774,12 @@ void GetAddedTBoutputs(const char* filout)
 	TBincFastProg.GetMeans();
 	TBincReactivation.GetMeans();
 	AnnMTBriskPaed.GetMeans();
+
+	// Prevalence outputs
+	SummOutRow += 3;
+	LTBIprev15to49.GetMeans();
+	LTBIprev50plus.GetMeans();
+	LTBIprev10to19.GetMeans();
 
 	// Diagnosis and treatment outputs 
 	SummOutRow += 3;

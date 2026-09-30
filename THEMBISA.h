@@ -2729,6 +2729,9 @@ PostOutputArray AnnMTBriskPaed(56);
 
 ///< TB outputs : prevalence
 PostOutputArray AdultLTBIprev(56);
+PostOutputArray LTBIprev15to49(56);
+PostOutputArray LTBIprev50plus(56);
+PostOutputArray LTBIprev10to19(56);
 PostOutputArray AdultTBprev(56);
 PostOutputArray AdultTBprevM(56);
 PostOutputArray AdultTBprevF(56);
