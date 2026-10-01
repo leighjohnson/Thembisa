@@ -22330,6 +22330,10 @@ void SimulateParameters()
 		for (iy = 0; iy < 19; iy++) { PropnNeedleSharing[iy] = PropnNeedleSharing[19]; }
 		for (iy = 40; iy < 86; iy++) { PropnNeedleSharing[iy] = PropnNeedleSharing[39]; }
 	}
+	if (InclPriors[149][0] == 1) {
+		RednNeedleSharePerNeedleDist = SamplePrior(149);}
+	if (InclPriors[150][0] == 1) {
+		ORsuppressionPWID = SamplePrior(150);}
 	
 	// Update natural history calculations
 	CD4duration[1] = (1.0/CD4decline[0]) - CD4duration[0];
@@ -25362,6 +25366,10 @@ void SimulateParameters_IMIS()
 		for (iy = 0; iy < 19; iy++) { PropnNeedleSharing[iy] = PropnNeedleSharing[19]; }
 		for (iy = 40; iy < 86; iy++) { PropnNeedleSharing[iy] = PropnNeedleSharing[39]; }
 	}
+	if (InclPriors[149][0] == 1) {
+		RednNeedleSharePerNeedleDist = GetParameter(149);}
+	if (InclPriors[150][0] == 1) {
+		ORsuppressionPWID = GetParameter(150);}
 	
 	// Update natural history calculations
 	CD4duration[1] = (1.0/CD4decline[0]) - CD4duration[0];
