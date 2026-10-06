@@ -298,6 +298,6 @@
 149. OR for needle sharing per year, 2004-2024
 1	1	1714.6	1533.5
 150. NSP effectiveness in preventing needle sharing
-1	0	4.00	2000.0
+0	0	4.00	2000.0
 151. OR for viral suppression in PWID
-1	1	4.25	5.64
+0	1	4.25	5.64

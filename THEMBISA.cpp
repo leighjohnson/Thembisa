@@ -34,8 +34,8 @@ int main()
 
 	start = clock();
 	//GenerateSample(); // Not yet updated in THEMBISA
-	RunSample();	// Remember to set FixedUncertainty = 1 before running this function
-	//runIMIS(0.0);
+	//RunSample();	// Remember to set FixedUncertainty = 1 before running this function
+	runIMIS(0.0);
 	//MaximizeLikelihood(0.0000001, "InitialSimplex.txt", "FinalSimplex.txt");
 	/*ReadAllFiles();
 	CurrSim = 1;
@@ -24531,7 +24531,7 @@ void runIMIS(double CumSteps)
 		denom = 1.0 * (InitSample + i * StepSample);
 		LogIntegratedL[i] = log(sumweights) + MaxLogLxWeight - log(denom);
 		//if(FractionUnique[i] >= 1.0 - exp(-1.0)){
-		if (FractionUnique[i] >= 0.30){
+		if (FractionUnique[i] >= 0.40){
 			totsim = InitSample + i * StepSample;
 			break;
 		}

@@ -1348,13 +1348,13 @@ double SE_AHDpaedART[4];
 double RecordedHCT_P[5]; ///< Recorded numbers of HIV tests in children, 2015-17. Redundant
 double RecordedHCT_P_CoV[5]; ///< Coefficients of variation for numbers of HIV tests in kids (on log scale)
 double AdultTestsAgeSex[5][4]; ///< Propn of adult HIV tests by risk (M 15-24, F 15-24, 25-49, 50, ANC), year
-const int nCSWstudies = 5;
+const int nCSWstudies = 45;
 double CSWstudyDetails[nCSWstudies][3];
-const int nMSMstudies = 0;
+const int nMSMstudies = 20;
 double MSMstudyDetails[nMSMstudies+1][4];
-const int nPWIDstudies = 0;
+const int nPWIDstudies = 18;
 double PWIDstudyDetails[nPWIDstudies + 1][3];
-const int nPWIDstudiesFtoM = 0;
+const int nPWIDstudiesFtoM = 13;
 double PWID_FtoMdetails[nPWIDstudiesFtoM + 1][3];
 double AgeDbnAdultsOnART[7][9][2]; ///< % of treated adults in each age group (2nd index) by yr (1st index), sex
 double AgeDbnKidsStartingART[10][2]; ///< Propn of kids starting ART in <1 and 1-4 age groups (2nd index)
@@ -1404,8 +1404,8 @@ double AIDScasesByYr[5]; ///< Reported new adult AIDS cases, 1990-94
 double AIDScasesProfile[10][2]; ///< Reported new adult AIDS cases (1993-94) by age (1st index) & sex
 
 const int ARTdataPoints = 206; ///< Number of reported ART totals that combine adults and children
-const int ARTdataPointsP = 192; ///< Number of reported ART totals in children
-const int ARTdataPointsM = 8; ///< Number of estimates of fraction of adult ART patients who are men
+const int ARTdataPointsP = 149; ///< Number of reported ART totals in children
+const int ARTdataPointsM = 4; ///< Number of estimates of fraction of adult ART patients who are men
 double ARTtotals[ARTdataPoints][5]; ///< Total numbers on ART in public and private sectors
 double ARTtotalsP[ARTdataPointsP][5]; ///< Total children on ART in public and private sectors
 double ARTmale[ARTdataPointsM][3]; ///< Proportions of ART patients who are male (year, mean, SE)
@@ -1488,7 +1488,7 @@ double TBprev2018[2]; ///< Modelled pulmonary TB prevalence in 2018, by sex
 ///< Priors and likelihood
 
 double LogLikelihood;
-const int MCMCdim = 51; ///< Number of parameters in uncertainty analysis
+const int MCMCdim = 4; ///< Number of parameters in uncertainty analysis
 const int MaxPriors = 151; ///< Number of input rows in Priors file (149 for HIV, 65 for TB)
 int InclPriors[MaxPriors][2]; ///< Indicator of which priors are included (1st index) and if
 							  ///< included their index in MCMCdim (2nd index)
