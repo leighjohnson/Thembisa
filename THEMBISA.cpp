@@ -11967,7 +11967,9 @@ void ResetMonthlyCum()
 	BirthsPosMothers = 0.0;
 	BirthsARTmothers = 0.0;
 	BirthsDiagMothers = 0.0;
-	TotBirthsARTconcep.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
+	if (FixedUncertainty == 1){
+		TotBirthsARTconcep.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
+	}
 	NewPCRdiagBirth = 0.0;
 	NewPCRdiag12mo = 0.0;
 	NewPCRdiag24mo = 0.0;
@@ -12106,10 +12108,12 @@ void ResetMonthlyCum()
 	}
 
 	// AIDS deaths by stage
-	AIDSdeathsUndiag.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
-	AIDSdeathsDiagPreART.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
-	AIDSdeaths1st6moART.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
-	AIDSdeathsAfter6moART.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
+	if (FixedUncertainty == 1){
+		AIDSdeathsUndiag.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
+		AIDSdeathsDiagPreART.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
+		AIDSdeaths1st6moART.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
+		AIDSdeathsAfter6moART.out[CurrSim - 1][CurrYear - StartYear] = 0.0;
+	}
 
 	// TB outputs
 	if (IncludeTB == 1) {
@@ -12723,7 +12727,9 @@ void ResultsAtStartOfYr()
 	Temp1 = 0.0;
 	for(ia=0; ia<15; ia++){
 		Temp1 += TotalART[ia][0] + TotalART[ia][1];}
-	TotalARTunder15.out[CurrSim-1][iy] = Temp1;
+	if (FixedUncertainty == 1){
+		TotalARTunder15.out[CurrSim-1][iy] = Temp1;
+	}
 	if (FixedUncertainty == 1 || CalibARTcoverage == 1 || CalibARTtotals == 1){
 		ARTcoverageU15.out[CurrSim - 1][iy] = Temp1 / TotPaedHIV.out[CurrSim - 1][iy];
 		Temp1 = 0.0;
@@ -13267,7 +13273,10 @@ void ResultsAtStartOfYr()
 		for (ia = 0; ia < 81; ia++){
 			for (is = 0; is < 5; is++){
 				Temp1 += FH_SW.PosNoHCT[ia][is] + FH_SW.PosHCTpreHIV[ia][is];
-				Temp2 += FH_SW.PosDiagnosedPreART[ia][is] + FH_SW.StoppedART[ia][is];
+				Temp2 += FH_SW.PosDiagnosedPreART[ia][is];
+			}
+			for (is = 0; is < 4; is++){
+				Temp2 += FH_SW.StoppedART[ia][is];
 			}
 			for (id = 1; id < 5; id++){
 				Temp2 += FH_SW.OnARTpre500[ia][id] + FH_SW.OnART500[ia][id] +
@@ -13284,16 +13293,22 @@ void ResultsAtStartOfYr()
 		Temp3 = 0.0;
 		for (ia = 0; ia < 81; ia++){
 			for (is = 0; is < 5; is++){
-				Temp1 += MHU_STM.PosNoHCT[ia][is] + MHU_STM.PosHCTpreHIV[ia][is] + MHC_STM.PosNoHCT[ia][is] + MHC_STM.PosHCTpreHIV[ia][is] + 
+				Temp1 += MHU_STM.PosNoHCT[ia][is] + MHU_STM.PosHCTpreHIV[ia][is] + MHC_STM.PosNoHCT[ia][is] + MHC_STM.PosHCTpreHIV[ia][is] +
 					MLU_STM.PosNoHCT[ia][is] + MLU_STM.PosHCTpreHIV[ia][is] +  MLC_STM.PosNoHCT[ia][is] + MLC_STM.PosHCTpreHIV[ia][is] +
 					MHU_LTM.PosNoHCT[ia][is] + MHU_LTM.PosHCTpreHIV[ia][is] + MHC_LTM.PosNoHCT[ia][is] + MHC_LTM.PosHCTpreHIV[ia][is] +
 					MLU_LTM.PosNoHCT[ia][is] + MLU_LTM.PosHCTpreHIV[ia][is] + MLC_LTM.PosNoHCT[ia][is] + MLC_LTM.PosHCTpreHIV[ia][is];
-				Temp2 += MHU_STM.PosDiagnosedPreART[ia][is] + MHU_STM.StoppedART[ia][is] + MHC_STM.PosDiagnosedPreART[ia][is] +
-					MHC_STM.StoppedART[ia][is] + MLU_STM.PosDiagnosedPreART[ia][is] + MLU_STM.StoppedART[ia][is] +
-					MLC_STM.PosDiagnosedPreART[ia][is] + MLC_STM.StoppedART[ia][is] +
-					MHU_LTM.PosDiagnosedPreART[ia][is] + MHU_LTM.StoppedART[ia][is] + MHC_LTM.PosDiagnosedPreART[ia][is] +
-					MHC_LTM.StoppedART[ia][is] + MLU_LTM.PosDiagnosedPreART[ia][is] + MLU_LTM.StoppedART[ia][is] +
-					MLC_LTM.PosDiagnosedPreART[ia][is] + MLC_LTM.StoppedART[ia][is];
+				Temp2 += MHU_STM.PosDiagnosedPreART[ia][is] + MHC_STM.PosDiagnosedPreART[ia][is] +
+					MLU_STM.PosDiagnosedPreART[ia][is] +
+					MLC_STM.PosDiagnosedPreART[ia][is] +
+					MHU_LTM.PosDiagnosedPreART[ia][is] + MHC_LTM.PosDiagnosedPreART[ia][is] +
+					MLU_LTM.PosDiagnosedPreART[ia][is] +
+					MLC_LTM.PosDiagnosedPreART[ia][is];
+			}
+			for (is = 0; is < 4; is++){
+				Temp2 += MHU_STM.StoppedART[ia][is] + MHC_STM.StoppedART[ia][is] +
+					MLU_STM.StoppedART[ia][is] + MLC_STM.StoppedART[ia][is] +
+					MHU_LTM.StoppedART[ia][is] + MHC_LTM.StoppedART[ia][is] +
+					MLU_LTM.StoppedART[ia][is] + MLC_LTM.StoppedART[ia][is];
 			}
 			for (id = 1; id < 5; id++){
 				Temp2 += MHU_STM.OnARTpre500[ia][id] + MHU_STM.OnART500[ia][id] + MHU_STM.OnART350[ia][id] + MHU_STM.OnART200[ia][id] +
@@ -13326,10 +13341,15 @@ void ResultsAtStartOfYr()
 				Temp1 += MHU_ID.PosNoHCT[ia][is] + MHU_ID.PosHCTpreHIV[ia][is] + MHC_ID.PosNoHCT[ia][is] + MHC_ID.PosHCTpreHIV[ia][is] +
 					MLU_ID.PosNoHCT[ia][is] + MLU_ID.PosHCTpreHIV[ia][is] + MLC_ID.PosNoHCT[ia][is] + MLC_ID.PosHCTpreHIV[ia][is] +
 					FH_ID.PosNoHCT[ia][is] + FH_ID.PosHCTpreHIV[ia][is] + FL_ID.PosNoHCT[ia][is] + FL_ID.PosHCTpreHIV[ia][is];
-				Temp2 += MHU_ID.PosDiagnosedPreART[ia][is] + MHU_ID.StoppedART[ia][is] + MHC_ID.PosDiagnosedPreART[ia][is] +
-					MHC_ID.StoppedART[ia][is] + MLU_ID.PosDiagnosedPreART[ia][is] + MLU_ID.StoppedART[ia][is] +
-					MLC_ID.PosDiagnosedPreART[ia][is] + MLC_ID.StoppedART[ia][is] + FH_ID.PosDiagnosedPreART[ia][is] + 
-					FH_ID.StoppedART[ia][is] + FL_ID.PosDiagnosedPreART[ia][is] + FL_ID.StoppedART[ia][is];
+				Temp2 += MHU_ID.PosDiagnosedPreART[ia][is] + MHC_ID.PosDiagnosedPreART[ia][is] +
+					MLU_ID.PosDiagnosedPreART[ia][is] +
+					MLC_ID.PosDiagnosedPreART[ia][is] + FH_ID.PosDiagnosedPreART[ia][is] +
+					FL_ID.PosDiagnosedPreART[ia][is];
+			}
+			for (is = 0; is < 4; is++) {
+				Temp2 += MHU_ID.StoppedART[ia][is] + MHC_ID.StoppedART[ia][is] +
+					MLU_ID.StoppedART[ia][is] + MLC_ID.StoppedART[ia][is] +
+					FH_ID.StoppedART[ia][is] + FL_ID.StoppedART[ia][is];
 			}
 			for (id = 1; id < 5; id++) {
 				Temp2 += MHU_ID.OnARTpre500[ia][id] + MHU_ID.OnART500[ia][id] + MHU_ID.OnART350[ia][id] + MHU_ID.OnART200[ia][id] +
@@ -17824,7 +17844,9 @@ void ResultsAtEndOfYr()
 
 	NewART_P = 0.0;
 	for (ia = 0; ia < 15; ia++){ NewART_P += PaedNewARTbyAge[ia]; }
-	StartingART0to14.out[CurrSim - 1][iy] = NewART_P;
+	if (FixedUncertainty == 1){
+		StartingART0to14.out[CurrSim - 1][iy] = NewART_P;
+	}
 
 	// Fraction of infections acquired recently
 	if (CalibANCprev == 1 || CalibYouthPrev){
