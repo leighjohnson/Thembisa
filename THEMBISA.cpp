@@ -12619,17 +12619,19 @@ void ResultsAtStartOfYr()
 			Temp4 += FH_ID.NegNoHCT[ia] + FL_ID.NegNoHCT[ia] + FH_ID.NegPastHCT[ia] + FL_ID.NegPastHCT[ia] +
 				FH_ID.RegHCT[ia] + FL_ID.RegHCT[ia] + FH_ID.RegPrEP[ia] + FL_ID.RegPrEP[ia] +
 				FH_ID.RegVM[ia] + FL_ID.RegVM[ia];
-			if (CurrYear == 2015) { PWIDbyAge.out[CurrSim - 1][ia] = Temp1 + Temp2; }
+			if (FixedUncertainty == 1 && CurrYear == 2015) { PWIDbyAge.out[CurrSim - 1][ia] = Temp1 + Temp2; }
 		}
 		PWIDprev[iy] = 1.0 - (Temp3 + Temp4) / (Temp1 + Temp2);
 		PWIDprevM[iy] = 1.0 - Temp3 / Temp1;
 		PWIDprevF[iy] = 1.0 - Temp4 / Temp2;
-		PrevPWID.out[CurrSim - 1][iy] = PWIDprev[iy];
-		PrevPWID_M.out[CurrSim - 1][iy] = PWIDprevM[iy];
-		PrevPWID_F.out[CurrSim - 1][iy] = PWIDprevF[iy];
-		TotalPWID.out[CurrSim - 1][iy] = Temp1 + Temp2;
-		PWIDpropnMale.out[CurrSim - 1][iy] = Temp1 / (Temp1 + Temp2);
-		NegPWID.out[CurrSim - 1][iy] = Temp3 + Temp4;
+		if (FixedUncertainty == 1){
+			PrevPWID.out[CurrSim - 1][iy] = PWIDprev[iy];
+			PrevPWID_M.out[CurrSim - 1][iy] = PWIDprevM[iy];
+			PrevPWID_F.out[CurrSim - 1][iy] = PWIDprevF[iy];
+			TotalPWID.out[CurrSim - 1][iy] = Temp1 + Temp2;
+			PWIDpropnMale.out[CurrSim - 1][iy] = Temp1 / (Temp1 + Temp2);
+			NegPWID.out[CurrSim - 1][iy] = Temp3 + Temp4;
+		}
 	}
 
 	// Age distribution of MSM and men in same-sex unions
