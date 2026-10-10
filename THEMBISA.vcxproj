@@ -29,25 +29,25 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v145</PlatformToolset>
-    <CLRSupport>true</CLRSupport>
+    <CLRSupport>false</CLRSupport>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -126,7 +126,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="mersenne.cpp" />
     <ClCompile Include="StatFunctions.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -142,6 +141,283 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="app.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include=".vscode\c_cpp_properties.json" />
+    <None Include=".vscode\settings.json" />
+    <None Include="Debug\Intermediates\vc145.pdb" />
+    <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Debug\Intermediates\THEMBISA.vcxproj.FileListAbsolute.txt" />
+    <Text Include="inputs\AdultAssumps.txt" />
+    <Text Include="inputs\AdultAssumps2.txt" />
+    <Text Include="inputs\AdultAssumpsEC.txt" />
+    <Text Include="inputs\AdultAssumpsFS.txt" />
+    <Text Include="inputs\AdultAssumpsGT.txt" />
+    <Text Include="inputs\AdultAssumpsKZ.txt" />
+    <Text Include="inputs\AdultAssumpsLM.txt" />
+    <Text Include="inputs\AdultAssumpsMP.txt" />
+    <Text Include="inputs\AdultAssumpsNC.txt" />
+    <Text Include="inputs\AdultAssumpsNW.txt" />
+    <Text Include="inputs\AdultAssumpsWC.txt" />
+    <Text Include="inputs\AIDScases.txt" />
+    <Text Include="inputs\ANCprevData.txt" />
+    <Text Include="inputs\ARTtotals.txt" />
+    <Text Include="inputs\ARTtotalsEC.txt" />
+    <Text Include="inputs\ARTtotalsFS.txt" />
+    <Text Include="inputs\ARTtotalsGT.txt" />
+    <Text Include="inputs\ARTtotalsKZ.txt" />
+    <Text Include="inputs\ARTtotalsLM.txt" />
+    <Text Include="inputs\ARTtotalsMP.txt" />
+    <Text Include="inputs\ARTtotalsNC.txt" />
+    <Text Include="inputs\ARTtotalsNW.txt" />
+    <Text Include="inputs\ARTtotalsWC.txt" />
+    <Text Include="inputs\Assumptions.txt" />
+    <Text Include="inputs\CD4dbn.txt" />
+    <Text Include="inputs\ChildPIP.txt" />
+    <Text Include="inputs\Completeness.txt" />
+    <Text Include="inputs\CompletenessProv.txt" />
+    <Text Include="inputs\CSWstudies.txt" />
+    <Text Include="inputs\CSWstudiesEC.txt" />
+    <Text Include="inputs\CSWstudiesFS.txt" />
+    <Text Include="inputs\CSWstudiesGT.txt" />
+    <Text Include="inputs\CSWstudiesKZ.txt" />
+    <Text Include="inputs\CSWstudiesLM.txt" />
+    <Text Include="inputs\CSWstudiesMP.txt" />
+    <Text Include="inputs\CSWstudiesNC.txt" />
+    <Text Include="inputs\CSWstudiesNW.txt" />
+    <Text Include="inputs\CSWstudiesWC.txt" />
+    <Text Include="inputs\DiscordantARTelig.txt" />
+    <Text Include="inputs\DiscordantPrEPelig.txt" />
+    <Text Include="inputs\Fertility.txt" />
+    <Text Include="inputs\FertilityEC.txt" />
+    <Text Include="inputs\FertilityFS.txt" />
+    <Text Include="inputs\FertilityGT.txt" />
+    <Text Include="inputs\FertilityKZ.txt" />
+    <Text Include="inputs\FertilityLM.txt" />
+    <Text Include="inputs\FertilityMP.txt" />
+    <Text Include="inputs\FertilityNC.txt" />
+    <Text Include="inputs\FertilityNW.txt" />
+    <Text Include="inputs\FertilityWC.txt" />
+    <Text Include="inputs\FutureInterventions.txt" />
+    <Text Include="inputs\HCTdata.txt" />
+    <Text Include="inputs\HCTpaedData.txt" />
+    <Text Include="inputs\HCTpaedDataGT.txt" />
+    <Text Include="inputs\HCTprevData.txt" />
+    <Text Include="inputs\HCTprevDataEC.txt" />
+    <Text Include="inputs\HCTprevDataFS.txt" />
+    <Text Include="inputs\HCTprevDataGT.txt" />
+    <Text Include="inputs\HCTprevDataKZ.txt" />
+    <Text Include="inputs\HCTprevDataLM.txt" />
+    <Text Include="inputs\HCTprevDataMP.txt" />
+    <Text Include="inputs\HCTprevDataNC.txt" />
+    <Text Include="inputs\HCTprevDataNW.txt" />
+    <Text Include="inputs\HCTprevDataWC.txt" />
+    <Text Include="inputs\HIVprevData.txt" />
+    <Text Include="inputs\HIVprevDataEC.txt" />
+    <Text Include="inputs\HIVprevDataFS.txt" />
+    <Text Include="inputs\HIVprevDataGT.txt" />
+    <Text Include="inputs\HIVprevDataKZ.txt" />
+    <Text Include="inputs\HIVprevDataLM.txt" />
+    <Text Include="inputs\HIVprevDataMP.txt" />
+    <Text Include="inputs\HIVprevDataNC.txt" />
+    <Text Include="inputs\HIVprevDataNW.txt" />
+    <Text Include="inputs\HIVprevDataWC.txt" />
+    <Text Include="inputs\ImportanceDbns.txt" />
+    <Text Include="inputs\InitialSimplex.txt" />
+    <Text Include="inputs\InitPrev.txt" />
+    <Text Include="inputs\Marriage.txt" />
+    <Text Include="inputs\MarriageEC.txt" />
+    <Text Include="inputs\MarriageFS.txt" />
+    <Text Include="inputs\MarriageGT.txt" />
+    <Text Include="inputs\MarriageKZ.txt" />
+    <Text Include="inputs\MarriageLM.txt" />
+    <Text Include="inputs\MarriageMP.txt" />
+    <Text Include="inputs\MarriageNC.txt" />
+    <Text Include="inputs\MarriageNW.txt" />
+    <Text Include="inputs\MarriageWC.txt" />
+    <Text Include="inputs\Migration.txt" />
+    <Text Include="inputs\MigrationEC.txt" />
+    <Text Include="inputs\MigrationFS.txt" />
+    <Text Include="inputs\MigrationGT.txt" />
+    <Text Include="inputs\MigrationKZ.txt" />
+    <Text Include="inputs\MigrationLM.txt" />
+    <Text Include="inputs\MigrationMP.txt" />
+    <Text Include="inputs\MigrationNC.txt" />
+    <Text Include="inputs\MigrationNW.txt" />
+    <Text Include="inputs\MigrationWC.txt" />
+    <Text Include="inputs\MortData.txt" />
+    <Text Include="inputs\MortDataEC.txt" />
+    <Text Include="inputs\MortDataFS.txt" />
+    <Text Include="inputs\MortDataGT.txt" />
+    <Text Include="inputs\MortDataKZ.txt" />
+    <Text Include="inputs\MortDataLM.txt" />
+    <Text Include="inputs\MortDataMP.txt" />
+    <Text Include="inputs\MortDataNC.txt" />
+    <Text Include="inputs\MortDataNW.txt" />
+    <Text Include="inputs\MortDataWC.txt" />
+    <Text Include="inputs\MSMbyAge.txt" />
+    <Text Include="inputs\MSMstudies.txt" />
+    <Text Include="inputs\MSMstudiesEC.txt" />
+    <Text Include="inputs\MSMstudiesFS.txt" />
+    <Text Include="inputs\MSMstudiesGT.txt" />
+    <Text Include="inputs\MSMstudiesKZ.txt" />
+    <Text Include="inputs\MSMstudiesLM.txt" />
+    <Text Include="inputs\MSMstudiesMP.txt" />
+    <Text Include="inputs\MSMstudiesNC.txt" />
+    <Text Include="inputs\MSMstudiesNW.txt" />
+    <Text Include="inputs\MSMstudiesWC.txt" />
+    <Text Include="inputs\Non-HIVmort.txt" />
+    <Text Include="inputs\Non-HIVmortEC.txt" />
+    <Text Include="inputs\Non-HIVmortFS.txt" />
+    <Text Include="inputs\Non-HIVmortGT.txt" />
+    <Text Include="inputs\Non-HIVmortKZ.txt" />
+    <Text Include="inputs\Non-HIVmortLM.txt" />
+    <Text Include="inputs\Non-HIVmortMP.txt" />
+    <Text Include="inputs\Non-HIVmortNC.txt" />
+    <Text Include="inputs\Non-HIVmortNW.txt" />
+    <Text Include="inputs\Non-HIVmortWC.txt" />
+    <Text Include="inputs\PaedAssumps.txt" />
+    <Text Include="inputs\PaedAssumpsEC.txt" />
+    <Text Include="inputs\PaedAssumpsFS.txt" />
+    <Text Include="inputs\PaedAssumpsGT.txt" />
+    <Text Include="inputs\PaedAssumpsKZ.txt" />
+    <Text Include="inputs\PaedAssumpsLM.txt" />
+    <Text Include="inputs\PaedAssumpsMP.txt" />
+    <Text Include="inputs\PaedAssumpsNC.txt" />
+    <Text Include="inputs\PaedAssumpsNW.txt" />
+    <Text Include="inputs\PaedAssumpsWC.txt" />
+    <Text Include="inputs\Priors.txt" />
+    <Text Include="inputs\PriorsEC.txt" />
+    <Text Include="inputs\PriorsFS.txt" />
+    <Text Include="inputs\PriorsGT.txt" />
+    <Text Include="inputs\PriorsKZ.txt" />
+    <Text Include="inputs\PriorsLM.txt" />
+    <Text Include="inputs\PriorsMP.txt" />
+    <Text Include="inputs\PriorsNC.txt" />
+    <Text Include="inputs\PriorsNW.txt" />
+    <Text Include="inputs\PriorsWC.txt" />
+    <Text Include="inputs\PWIDstudies.txt" />
+    <Text Include="inputs\PWIDstudiesEC.txt" />
+    <Text Include="inputs\PWIDstudiesFS.txt" />
+    <Text Include="inputs\PWIDstudiesGT.txt" />
+    <Text Include="inputs\PWIDstudiesKZ.txt" />
+    <Text Include="inputs\PWIDstudiesLM.txt" />
+    <Text Include="inputs\PWIDstudiesMP.txt" />
+    <Text Include="inputs\PWIDstudiesNC.txt" />
+    <Text Include="inputs\PWIDstudiesNW.txt" />
+    <Text Include="inputs\PWIDstudiesWC.txt" />
+    <Text Include="inputs\Rollout.txt" />
+    <Text Include="inputs\RolloutEC.txt" />
+    <Text Include="inputs\RolloutFS.txt" />
+    <Text Include="inputs\RolloutGT.txt" />
+    <Text Include="inputs\RolloutKZ.txt" />
+    <Text Include="inputs\RolloutLM.txt" />
+    <Text Include="inputs\RolloutMP.txt" />
+    <Text Include="inputs\RolloutNC.txt" />
+    <Text Include="inputs\RolloutNW.txt" />
+    <Text Include="inputs\RolloutWC.txt" />
+    <Text Include="inputs\StartingPop.txt" />
+    <Text Include="inputs\StartingPopEC.txt" />
+    <Text Include="inputs\StartingPopFS.txt" />
+    <Text Include="inputs\StartingPopGT.txt" />
+    <Text Include="inputs\StartingPopKZ.txt" />
+    <Text Include="inputs\StartingPopLM.txt" />
+    <Text Include="inputs\StartingPopMP.txt" />
+    <Text Include="inputs\StartingPopNC.txt" />
+    <Text Include="inputs\StartingPopNW.txt" />
+    <Text Include="inputs\StartingPopWC.txt" />
+    <Text Include="inputs\TBinputs\InitTBprev.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevEC.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevFS.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevGT.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevKZ.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevLM.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevMP.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevNC.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevNW.txt" />
+    <Text Include="inputs\TBinputs\InitTBprevWC.txt" />
+    <Text Include="inputs\TBinputs\PropnScreened.txt" />
+    <Text Include="inputs\TBinputs\PropnScreened2.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumps.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsEC.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsFS.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsGT.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsKZ.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsLM.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsMP.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsNC.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsNW.txt" />
+    <Text Include="inputs\TBinputs\TBadultAssumpsWC.txt" />
+    <Text Include="inputs\TBinputs\TBlabTests.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsEC.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsFS.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsGT.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsKZ.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsLM.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsMP.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsNC.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsNW.txt" />
+    <Text Include="inputs\TBinputs\TBlabTestsWC.txt" />
+    <Text Include="inputs\TBinputs\TBprevData.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataEC.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataFS.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataGT.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataKZ.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataLM.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataMP.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataNC.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataNW.txt" />
+    <Text Include="inputs\TBinputs\TBprevDataWC.txt" />
+    <Text Include="inputs\TBinputs\TBpriors.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrev.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevEC.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevFS.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevGT.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevKZ.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevLM.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevMP.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevNC.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevNW.txt" />
+    <Text Include="inputs\TBinputs\TBriskFactorPrevWC.txt" />
+    <Text Include="inputs\TBinputs\TBrollout.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutEC.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutFS.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutGT.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutKZ.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutLM.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutMP.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutNC.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutNW.txt" />
+    <Text Include="inputs\TBinputs\TBrolloutWC.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdata.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataEC.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataFS.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataGT.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataKZ.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataLM.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataMP.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataNC.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataNW.txt" />
+    <Text Include="inputs\TBinputs\TB_ETRdataWC.txt" />
+    <Text Include="inputs\TBinputs\TB_HIVoddsRatios.txt" />
+    <Text Include="inputs\TBinputs\TB_MortData.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataEC.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataFS.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataGT.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataKZ.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataLM.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataMP.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataNC.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataNW.txt" />
+    <Text Include="inputs\TBinputs\TB_MortDataWC.txt" />
+    <Text Include="inputs\WestLevel26.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
