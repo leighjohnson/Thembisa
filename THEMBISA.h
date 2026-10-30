@@ -648,7 +648,10 @@ double TBadultRxSmDiag[86]; ///< True TB Rx initiations in adults diagnosed by s
 double SmPosRxDelay[86]; ///< Average delay (years) until active smear-pos TB is treated
 double TBadultRxHIV[86][2]; ///< True TB Rx initiations in adults with HIV, by sex
 double ModelTBtests[86]; ///< Total # adults tested for TB microbiologically
-double TBadultLabDiag[86]; ///< TB diagnoses based on laboratory testing
+double ModelTBtestsART[86]; ///< Total # ART-experienced adults tested for TB microbiologically
+double ModelTBdiag[86]; ///< Total # adults diagnosed with TB microbiologically (excl. false-pos)
+double ModelTBdiagART[86]; ///< Total # ART-experienced adults diagnosed with TB microbiologically
+double TBadultLabDiag[86]; ///< TB diagnoses based on laboratory testing (passive, i.e. excl. TUTT)
 double FalseTBadultLabDiag[86]; ///< False-positive TB diagnoses based on laboratory testing (passive)
 double LabDiagFalsePosActive[86]; ///< False-positive TB diagnoses based on laboratory testing (active)
 double TotSmPosTB[86]; ///< Number of adults with untreated smear-positive TB
@@ -678,6 +681,8 @@ double AnnualRiskMTBpaed[86]; ///< Annual risk of Mtb infection in children aged
 double EmpiricalAdj; ///< Time-varying adjustment to empirical Rx rate
 double TotTUTTtests; ///< Total Xpert tests performed under TUTT
 double TotTUTTdiag; ///< Total diagnoses under TUTT
+double TotTUTTtestsART; ///< Total Xpert tests performed under TUTT for ART patients
+double TotTUTTdiagART; ///< Total diagnoses under TUTT for ART patients
 
 //==================================================================================
 ///< Parameters and arrays for age/sex-specific outputs (formerly 'Population' sheet)
@@ -2786,6 +2791,8 @@ PostOutputArray CaseDetectionRatioR(56);
 PostOutputArray LagAdjCaseDetectionRatio(56);
 PostOutputArray TBRxCompletion(56);
 PostOutputArray TBtestingYield(56);
+PostOutputArray TBtestingYieldART(56);
+PostOutputArray TBtestingYieldNoART(56);
 PostOutputArray ETRbias(5);
 PostOutputArray VRbiasTB(1);
 PostOutputArray TBlogL(10);

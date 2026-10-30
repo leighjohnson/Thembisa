@@ -12071,6 +12071,8 @@ void ResetMonthlyCum()
 		AnnualRiskMTBpaed[CurrYear - StartYear] = 0.0;
 		TotTUTTtests = 0.0;
 		TotTUTTdiag = 0.0;
+		TotTUTTtestsART = 0.0;
+		TotTUTTdiagART = 0.0;
 	}
 }
 
@@ -13906,6 +13908,8 @@ void TBresultsAtStartOfYr2()
 			TotTUTTtests = temp1 * RateART_TBscreened[iy];
 			TotTUTTdiag = temp2 * RateART_TBscreened[iy] * CurrSeTB_ART[0] +
 				(temp1 - temp2) * RateART_TBscreened[iy] * (1.0 - CurrSpTB);
+			TotTUTTtestsART = TotTUTTtests;
+			TotTUTTdiagART = TotTUTTdiag;
 		}
 	}
 
@@ -15857,7 +15861,7 @@ void CalcRRtestVirgin()
 void CalcTBscreenPropn()
 {
 	int iy, ia, ig, is, ia2;
-	double SmPosTB[2][2], SmNegTB[2][2], NonTBpop[2][2]; // Population totals stratified by sex and HIV status
+	double SmPosTB[2][3], SmNegTB[2][3], NonTBpop[2][3]; // Population totals stratified by sex and HIV status
 	double temp1, temp2, temp3, temp4, temp5, HIVeffect[2], SexEffect[2], AdjF;
 	double ScreenTemp[2], Sensitivity, temp1a, temp1b, temp2a, temp2b, Growth;
 	double PropnSymptomCheck[2]; // In people seeking Rx for TB symptoms and those seeking Rx for other conditions
@@ -15865,7 +15869,7 @@ void CalcTBscreenPropn()
 	iy = CurrYear - StartYear;
 
 	for (ig = 0; ig < 2; ig++) {
-		for (is = 0; is < 2; is++) {
+		for (is = 0; is < 3; is++) {
 			SmPosTB[ig][is] = 0.0;
 			SmNegTB[ig][is] = 0.0;
 			NonTBpop[ig][is] = 0.0;
@@ -15988,6 +15992,7 @@ void CalcTBscreenPropn()
 	EmpiricalAdj = pow(TBsymptomScreened[iy] / 0.2, LogEmpiricToMicro);
 	TBsymptomScreened2[iy] = TBsymptomScreened[iy] / RRscreenSymptoms;
 	ModelTBtests[iy] = (temp1 + temp2) * TBsymptomScreened[iy];
+	ModelTBdiag[iy] = temp2 * Sensitivity * TBsymptomScreened[iy];
 	if (FixedUncertainty == 1) {
 		TotalScreens.out[CurrSim - 1][iy] = ModelTBtests[iy];
 		CultureConfirmTests.out[CurrSim - 1][iy] = temp3 * TBsymptomScreened[iy];
@@ -15998,6 +16003,7 @@ void CalcTBscreenPropn()
 	}
 	if (RateART_TBscreened[iy] > 0.0 || PropnHHcontactScreened[iy] > 0.0) { 
 		ModelTBtests[iy] += TotTUTTtests; 
+		ModelTBdiag[iy] += TotTUTTdiag;
 	}
 
 	// Calculate proportion of patients who are symptom-screened.
@@ -16187,6 +16193,71 @@ void CalcTBscreenPropn()
 				temp2 *= EmpiricalAdj;
 				TBadultRxBy5yr[iy][ia2][ig] += temp1 + temp2;
 			}
+		}
+	}
+
+	// Calculate tests and diagnoses in ART-experienced adults
+	// Using the same code as before, but slightly simplified
+	if (FixedUncertainty == 1) { // Modify condition if we decide to use the NICD testing yield data in calibration.
+		for (ia = 5; ia < 81; ia++) {
+			temp1 = 0.0;
+			temp2 = 0.0;
+			temp3 = 0.0;
+			temp4 = 0.0;
+			for (is = 20; is < 44; is++) {
+				temp1 += TBactiveSmPosM.HIVstage[ia][is];
+				temp2 += TBactiveSmPosF.HIVstage[ia][is];
+				temp3 += TBactiveSmNegM.HIVstage[ia][is];
+				temp4 += TBactiveSmNegF.HIVstage[ia][is];
+			}
+			SmPosTB[0][2] += temp1;
+			SmPosTB[1][2] += temp2;
+			SmNegTB[0][2] += temp3;
+			SmNegTB[1][2] += temp4;
+			if (IncludeDR_TB == 1) {
+				temp1 = 0.0;
+				temp2 = 0.0;
+				temp3 = 0.0;
+				temp4 = 0.0;
+				for (is = 20; is < 44; is++) {
+					temp1 += TBactiveSmPosRR_M.HIVstage[ia][is];
+					temp2 += TBactiveSmPosRR_F.HIVstage[ia][is];
+					temp3 += TBactiveSmNegRR_M.HIVstage[ia][is];
+					temp4 += TBactiveSmNegRR_F.HIVstage[ia][is];
+				}
+				SmPosTB[0][2] += temp1;
+				SmPosTB[1][2] += temp2;
+				SmNegTB[0][2] += temp3;
+				SmNegTB[1][2] += temp4;
+			}
+			for (ig = 0; ig < 2; ig++) {
+				NonTBpop[ig][2] += TotalART[ia + 10][ig] + TotalInterrupt[ia + 10][ig];
+			}
+		}
+		temp1 = 0.0;
+		temp2 = 0.0;
+		temp3 = 0.0;
+		Sensitivity = 0.0;
+		HIVeffect[0] = 1.0;
+		HIVeffect[1] = RRhealthSeekingHIV;
+		SexEffect[0] = 1.0;
+		SexEffect[1] = RRhealthSeekingFem * RRscreenF;
+		for (ig = 0; ig < 2; ig++) {
+			NonTBpop[ig][2] = NonTBpop[ig][2] - SmPosTB[ig][2] - SmNegTB[ig][2];
+			temp1 += NonTBpop[ig][2] * (HealthSeekingGen * Cough2wkGen / RRscreenSymptoms +
+				HealthSeekingTBLS) * RRhealthSeekingHIV * SexEffect[ig];
+			temp2 += (SmNegTB[ig][2] + SmPosTB[ig][2] * RRsymptomsSmPos) * (HealthSeekingGen *
+				Cough2wkActiveSmNeg / RRscreenSymptoms + HealthSeekingTB) * RRhealthSeekingHIV *
+				SexEffect[ig];
+			Sensitivity += (SmNegTB[ig][2] * CurrSeTB[0][1] + SmPosTB[ig][2] * CurrSeTB[1][1] *
+				RRsymptomsSmPos) * (HealthSeekingGen * Cough2wkActiveSmNeg / RRscreenSymptoms +
+				HealthSeekingTB) * RRhealthSeekingHIV * SexEffect[ig];
+		}
+		ModelTBdiagART[iy] = Sensitivity * TBsymptomScreened[iy];
+		ModelTBtestsART[iy] = (temp1 + temp2) * TBsymptomScreened[iy];
+		if (RateART_TBscreened[iy] > 0.0) {
+			ModelTBdiagART[iy] += TotTUTTdiagART;
+			ModelTBtestsART[iy] += TotTUTTtestsART;
 		}
 	}
 }
@@ -18609,6 +18680,9 @@ void TBresultsAtEndOfYr()
 			NewRxAdultTBscreenD2D.out[CurrSim - 1][iy] / ((1.0 - CurrInitLTFU) * HHcontactRxUptake);
 		TBtestingYield.out[CurrSim - 1][iy] = TotLabDiagAllTBscreening.out[CurrSim - 1][iy] /
 			ModelTBtests[iy];
+		TBtestingYieldART.out[CurrSim - 1][iy] = ModelTBdiagART[iy] / ModelTBtestsART[iy];
+		TBtestingYieldNoART.out[CurrSim - 1][iy] = (ModelTBdiag[iy] - ModelTBdiagART[iy]) /
+			(ModelTBtests[iy] - ModelTBtestsART[iy]);
 		TotNewRxAdultTBfalsePos.out[CurrSim - 1][iy] = NewRxAdultTBfalsePos.out[CurrSim - 1][iy] +
 			FalsePosRx[0] + FalsePosRx[1] + FalsePosRx[2] + FalsePosRx[3];
 		LabDiagFalsePosActive[iy] = ((FalsePosRx[0] + FalsePosRx[3])/(HHcontactRxUptake) + FalsePosRx[1] + 
@@ -19798,6 +19872,8 @@ void GetAddedTBoutputs(const char* filout)
 	HIVprevNewRxTB_M.GetMeans();
 	HIVprevNewRxTB_F.GetMeans();
 	TBtestingYield.GetMeans();
+	TBtestingYieldART.GetMeans();
+	TBtestingYieldNoART.GetMeans();
 	TreatedTB15to24.GetMeans();
 	NewRxAdultTB_M.GetMeans();
 	NewRxAdultTB_F.GetMeans();
