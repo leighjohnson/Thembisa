@@ -12069,6 +12069,8 @@ void ResetMonthlyCum()
 			}
 		}
 		AnnualRiskMTBpaed[CurrYear - StartYear] = 0.0;
+		TotTUTTtests = 0.0;
+		TotTUTTdiag = 0.0;
 	}
 }
 
@@ -13864,7 +13866,7 @@ void TBresultsAtStartOfYr2()
 		if (FixedUncertainty == 1) { OR_TB_HIVassociation.out[CurrSim - 1][iy] = OddsTB_HIV[iy]; }
 	}
 
-	// Active TB prevalence in ART patients by baseline CD4
+	// Active TB prevalence in ART patients by baseline CD4, TUTT in ART patients
 	if (FixedUncertainty == 1 || RateART_TBscreened[iy] > 0.0) {
 		for (is = 0; is < 4; is++) {
 			ARTbyCD4[is] = 0.0;
@@ -13905,6 +13907,14 @@ void TBresultsAtStartOfYr2()
 			TotTUTTdiag = temp2 * RateART_TBscreened[iy] * CurrSeTB_ART[0] +
 				(temp1 - temp2) * RateART_TBscreened[iy] * (1.0 - CurrSpTB);
 		}
+	}
+
+	// TUTT in household contacts
+	if (FixedUncertainty == 1 || PropnHHcontactScreened[iy] > 0.0) {
+		TotTUTTtests += TBindexCasesLastYr * HHcontactsPerCase * PropnHHcontactScreened[iy] * 
+			PropnHHcontactTUTT[iy];
+		TotTUTTdiag += TBindexCasesLastYr * HHcontactsPerCase * PropnHHcontactScreened[iy] *
+			PropnHHcontactTUTT[iy] * TBprevHHcontacts * CurrSeTB_HHC[0];
 	}
 }
 
@@ -15968,7 +15978,7 @@ void CalcTBscreenPropn()
 	else {
 		TBsymptomScreened[iy] = TotPosTBtestsAdult[iy] /
 			(temp1 * (1.0 - CurrSpTB) + temp2 * Sensitivity);
-		if (RateART_TBscreened[iy] > 0.0) {
+		if (RateART_TBscreened[iy] > 0.0 || PropnHHcontactScreened[iy] > 0.0) {
 			TBsymptomScreened[iy] = (TotPosTBtestsAdult[iy] - TotTUTTdiag) /
 				(temp1 * (1.0 - CurrSpTB) + temp2 * Sensitivity);
 			if (TotPosTBtestsAdult[iy] < TotTUTTdiag) { TBsymptomScreened[iy] = 0.001; }
@@ -15986,7 +15996,9 @@ void CalcTBscreenPropn()
 			PropnScreened2.out[CurrSim - 1][iy] = TBsymptomScreened2[iy];
 		}
 	}
-	if (RateART_TBscreened[iy] > 0.0) { ModelTBtests[iy] += TotTUTTtests; }
+	if (RateART_TBscreened[iy] > 0.0 || PropnHHcontactScreened[iy] > 0.0) { 
+		ModelTBtests[iy] += TotTUTTtests; 
+	}
 
 	// Calculate proportion of patients who are symptom-screened.
 	if (FixedUncertainty == 1) {

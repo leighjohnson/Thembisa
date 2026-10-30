@@ -34,7 +34,7 @@ string ProvID = "NW"; ///< Choose from EC, FS, GT, KZ, LM, MP, NC, NW, WC
 const int UseBrassLogit = 0; ///< 1 if using Brass relational logit to get non-HIV mort over 1996-2018
 int PrEPorVM = 0; ///< 1 if allowing for PrEP or vaginal microbicides. Keep set to 0 as default; it
 				  ///< will automatically get recalculated if there is PrEP/VM rollout.
-const int IncludeTB = 0; ///< 1 if including TB simulations
+const int IncludeTB = 1; ///< 1 if including TB simulations
 const int IncludeDR_TB = 0; ///< 1 if including drug-resisant (DR) TB 
 const int FixedTBscreening = 0; ///< 1 = fix the rates of TB screening at the values generated in
 								///< the uncertainty analysis (only valid if FixedUncertainty = 1)
@@ -42,51 +42,51 @@ double RRtestingDiagnosed = 1.0; ///< Relative rate of consent to testing if ind
 								 ///< positive (relevant in calibration to HSRC data)
 
 const int CalibPaedPrev = 0;
-const int CalibAdultPrev = 1; ///< 1 = calibrate to adult HIV prevalence data from HSRC & DHS surveys
-const int CalibANCprev = 1; ///< 1 = calibrate to HIV prevalence data from antenatal surveys
+const int CalibAdultPrev = 0; ///< 1 = calibrate to adult HIV prevalence data from HSRC & DHS surveys
+const int CalibANCprev = 0; ///< 1 = calibrate to HIV prevalence data from antenatal surveys
 const int InclANCpre1997 = 1; ///< 1 = include ANC prevalence data prior to 1997
 const int InclAS_ANCprov = 1; ///< 1 = include age-specific ANC prevalence data in prov calibration
 const int CalibYouthPrev = 0; ///< 1 = include HIV prevalence for 15-24 year olds
-const int CalibFSWprev = 1; ///< 1 = calibrate to HIV prevalence data from sex worker surveys
-const int CalibMSMprev = 1; ///< 1 = calibrate to HIV prevalence data from MSM surveys
+const int CalibFSWprev = 0; ///< 1 = calibrate to HIV prevalence data from sex worker surveys
+const int CalibMSMprev = 0; ///< 1 = calibrate to HIV prevalence data from MSM surveys
 const int CalibPWIDprev = 0; ///< 1 = calibrate to HIV prevalence data from PWID surveys
 const int CalibCD4 = 0; ///< 1 = calibrate to CD4 distributions in household/workforce surveys
 const int CalibCD4ANC = 0; ///< 1 = calibrate to CD4 distributions in antenatal surveys
-const int CalibHCT_HH = 1; ///< 1 = calibrate to propn ever tested in HSRC surveys
+const int CalibHCT_HH = 0; ///< 1 = calibrate to propn ever tested in HSRC surveys
 const int CalibHCT_ANC = 0; ///< 1 = calibrate to propn ever tested in antenatal surveys
-const int CalibHCTprev = 1; ///< 1 = calibrate to HIV prevalence in adults receiving HCT
-const int CalibHCTprevP = 1; ///< 1 = calibrate to HIV prevalence in children receiving HCT
+const int CalibHCTprev = 0; ///< 1 = calibrate to HIV prevalence in adults receiving HCT
+const int CalibHCTprevP = 0; ///< 1 = calibrate to HIV prevalence in children receiving HCT
 const int CalibHCTtotP = 0; ///< 1 = calibrate to recorded number of kids receiving HCT
 const int CalibHCTageSex = 0; ///< 1 = calibrate to proportions tested by age/sex and prev by age/sex
-const int CalibDeathsA = 1; ///< 1 = calibrate to recorded numbers of adult deaths
+const int CalibDeathsA = 0; ///< 1 = calibrate to recorded numbers of adult deaths
 const int AgeLimitMortCalib = 60; ///< Death data below this age are used in mort calibration
 								  ///< Should be multiple of 5 (set to 95 if all ages included)
-const int CalibDeathsP = 1; ///< 1 = calibrate to recorded numbers of paediatric deaths
+const int CalibDeathsP = 0; ///< 1 = calibrate to recorded numbers of paediatric deaths
 const int CalibAIDStrend = 0; ///< 1 = calibrate to reported new AIDS cases in adults (1990-4)
 const int CalibAIDSage = 0; ///< 1 = calibrate to reported new AIDS cases by age and sex (1993-4)
 const int CalibARTtotals = 0; ///< 1 = calibrate to reported total numbers of ART patients
 const int CalibARTtotalsP = 0; ///< 1 = calibrate to reported total numbers of children on ART
 const int CalibCD4atARTstart = 0; ///< 1 = calibrate to recorded # starting ART by CD4 (WC only)
-const int CalibARTbyAge = 1; ///< 1 = calibrate to age distribution of adults on ART
+const int CalibARTbyAge = 0; ///< 1 = calibrate to age distribution of adults on ART
 const int CalibARTbyAgeP = 0; ///< 1 = calibrate to age distribution of kids starting ART
 const int CalibARTbyAgeP2 = 0; ///< 1 = calibrate to age distribution of kids on ART
 const int CalibChildPIP = 0; ///< 1 = calibrate to child deaths in facilities
-const int CalibARTcoverage = 1; ///< 1 = calibrate to ARV metabolite data
+const int CalibARTcoverage = 0; ///< 1 = calibrate to ARV metabolite data
 const int CalibMarriageData = 0; ///< 1 = calibrate to marriage data
 const int CalibANC_ART = 0; ///< 1 = calibrate to % of HIV+ ANC attenders previously on ART
 const int CalibAHDpaedART = 0; ///< 1 = calibrate to % of kids starting ART w severe immunodeficiency
 
-const int CalibTBdeathsA = 0; ///< 1 = calibrate to recorded TB deaths in adults
-const int CalibTBdeathsPLHIV = 0; ///< 1 = calibrate to expected TB deaths in HIV-pos adults
-const int CalibETRdeathsA = 0; ///< 1 = calibrate to recorded death rate in treated TB patients
-const int CalibTBcasesA = 0; ///< 1 = calibrate to recorded # treated TB cases in adults
-const int CalibTBdiagnosesA = 0; ///< 1 = calibrate to adult TB microbiological tests
-const int CalibHIVprevETR = 0; ///< 1 = calibrate to HIV prev data in adult TB cases
-const int CalibTBprev = 0; ///< 1 = calibrate to adult TB prevalence survey data
+const int CalibTBdeathsA = 1; ///< 1 = calibrate to recorded TB deaths in adults
+const int CalibTBdeathsPLHIV = 1; ///< 1 = calibrate to expected TB deaths in HIV-pos adults
+const int CalibETRdeathsA = 1; ///< 1 = calibrate to recorded death rate in treated TB patients
+const int CalibTBcasesA = 1; ///< 1 = calibrate to recorded # treated TB cases in adults
+const int CalibTBdiagnosesA = 1; ///< 1 = calibrate to adult TB microbiological tests
+const int CalibHIVprevETR = 1; ///< 1 = calibrate to HIV prev data in adult TB cases
+const int CalibTBprev = 1; ///< 1 = calibrate to adult TB prevalence survey data
 const int CalibRifResPropn = 0; ///< 1 = calibrate to % of TB cases that are rifampicin-resistant
 const int CalibSmPosHH = 0; ///< 1 = calibrate to TB prevalence survey data on smear-pos propn
 const int CalibRRscreen = 0; ///< 1 = calibrate to RR screening in TB symptomatic patients
-const int CalibTB_HIV_OR = 0; ///< 1 = calibrate to odds ratios of HIV-TB associations
+const int CalibTB_HIV_OR = 1; ///< 1 = calibrate to odds ratios of HIV-TB associations
 
 //=============================================================================
 ///< Parameters in the 'AdultAssumps' file
@@ -1475,15 +1475,15 @@ double TBprev2018[2]; ///< Modelled pulmonary TB prevalence in 2018, by sex
 ///< Priors and likelihood
 
 double LogLikelihood;
-const int MCMCdim = 51; ///< Number of parameters in uncertainty analysis
-const int MaxPriors = 149; ///< Number of input rows in Priors file (149 for HIV, 65 for TB)
+const int MCMCdim = 21; ///< Number of parameters in uncertainty analysis
+const int MaxPriors = 65; ///< Number of input rows in Priors file (149 for HIV, 65 for TB)
 int InclPriors[MaxPriors][2]; ///< Indicator of which priors are included (1st index) and if
 							  ///< included their index in MCMCdim (2nd index)
 double RandPrior[MCMCdim]; ///< Random numbers used to sample from prior in current simulation
 double Cholesky1[MCMCdim][MCMCdim];
 double Covariance[MCMCdim][MCMCdim]; ///< The covariance matrix for the MCMC parameters
 const int InitSample = 10000;
-const int ResampleSize = 1000;
+const int ResampleSize = 100;
 int SampleID[ResampleSize];
 int CurrSim;
 double temp[ResampleSize][41]; ///< Previously local to the SampleInput function in OutputArray class
