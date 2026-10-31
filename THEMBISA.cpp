@@ -6149,9 +6149,9 @@ void InitializeTBprofiles()
 		TBrecoveredLT_M.Total[ia] = StartingPop[ia + 10][0] * InitTBhistory[ia + 10][0];
 		TBrecoveredLT_F.Total[ia] = StartingPop[ia + 10][1] * InitTBhistory[ia + 10][1];
 		TBlatentM.Total[ia] = StartingPop[ia + 10][0] * (InitLTBIprev[ia + 10] -
-			InitPropnSmPos[ia + 10][0] - InitPropnSmPos[ia + 10][0] - InitTBhistory[ia + 10][0]);
+			InitPropnSmPos[ia + 10][0] - InitPropnSmNeg[ia + 10][0] - InitTBhistory[ia + 10][0]);
 		TBlatentF.Total[ia] = StartingPop[ia + 10][1] * (InitLTBIprev[ia + 10] -
-			InitPropnSmPos[ia + 10][1] - InitPropnSmPos[ia + 10][1] - InitTBhistory[ia + 10][1]);
+			InitPropnSmPos[ia + 10][1] - InitPropnSmNeg[ia + 10][1] - InitTBhistory[ia + 10][1]);
 		TBtreatedM.Total[ia] = 0.0;
 		TBtreatedF.Total[ia] = 0.0;
 		TBrecoveredST_M.Total[ia] = 0.0;
