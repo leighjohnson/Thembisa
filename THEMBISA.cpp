@@ -5688,7 +5688,7 @@ void ReadTB_HIV_ORs()
 		exit(1);
 	}
 
-	for (ic = 0; ic < 9; ic++) {
+	for (ic = 0; ic < 10; ic++) {
 		file >> TB_HIV_ORdetails[ic][0] >> TB_HIV_ORdetails[ic][1] >> TB_HIV_ORdetails[ic][2];
 	}
 	file.close();
@@ -23681,11 +23681,11 @@ double CalcTB_HIV_ORlogL()
 	double ModelOR, StudyVar, VarRandEffects, TempLogL;
 	int ic, year;
 
-	VarRandEffects = 0.1352;
+	VarRandEffects = 0.1373;
 
 	// Calculate likelihood
 	TempLogL = 0.0;
-	for (ic = 0; ic < 9; ic++) {
+	for (ic = 0; ic < 10; ic++) {
 		year = TB_HIV_ORdetails[ic][0] - StartYear;
 		ModelOR = OddsTB_HIV[year];
 		StudyVar = pow(TB_HIV_ORdetails[ic][2], 2.0);

@@ -1468,7 +1468,7 @@ double TotRifResDiagnosed[11]; ///< Reported number of diagnosed rifampicin-resi
 double Recorded2ndLineTB[13]; ///< Reported # patients starting 2nd-line TB treatment (2007-2019)
 double SmPosStudyDetails[4][3]; ///< Details of household surveys measuring % of TB that is smear-pos
 double RRscreenStudyDetails[4][3]; ///< Details of surveys measuring RR screening in symptomatic TB
-double TB_HIV_ORdetails[9][3]; ///< Details of surveys measuring HIV-TB association
+double TB_HIV_ORdetails[10][3]; ///< Details of surveys measuring HIV-TB association
 
 ///< TB model outputs used in calibration
 
