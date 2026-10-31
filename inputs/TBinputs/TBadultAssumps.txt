@@ -163,7 +163,7 @@ EmpiricRednXpert (Rees 2018, Hermans 2017)
 LogEmpiricToMicro
 -0.50
 TBprevHHcontacts (Velen 2021, Thind 2012, Shapiro 2012, Gilpin 1987)
-0.08
+0.067
 HHcontactsPerCase (Velen 2021, Thind 2012, Shapiro 2012, Gilpin 1987)
 3.00
 HHcontactRxUptake (Shapiro 2012, Johnson 2019 - as for community-based HIV testing)
