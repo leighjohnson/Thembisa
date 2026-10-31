@@ -11016,7 +11016,8 @@ void CalcTBforceOfInf()
 		for (ia = 26; ia < 46; ia++) { RateNewTBinfection[ia][ig2] = ForceOfInf[3][ig2]; }
 		for (ia = 46; ia < 91; ia++) { RateNewTBinfection[ia][ig2] = ForceOfInf[4][ig2]; }
 	}
-	AnnualRiskMTBpaed[CurrYear - StartYear] += 0.5 * (ForceOfInf[0][0] + ForceOfInf[0][1]);
+	AnnualRiskMTBpaed[CurrYear - StartYear] += 0.25 * (ForceOfInf[0][0] + ForceOfInf[0][1] +
+		ForceOfInf[1][0] + ForceOfInf[1][1]);
 
 	/*if (CurrYear == 1985 && CurrMonth==0){
 		for (ia = 0; ia < 90; ia++){
