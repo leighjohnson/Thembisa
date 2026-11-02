@@ -1,9 +1,9 @@
 // This is the main project file for VC++ application project 
 // generated using an Application Wizard.
 
-//#include "stdafx.h"
-//#using <mscorlib.dll>
-//using namespace System;
+#include "stdafx.h"
+#using <mscorlib.dll>
+using namespace System;
 
 using namespace std;
 
@@ -26,7 +26,7 @@ using namespace std;
   #define MKDIR(path) mkdir((path).c_str(), 0755)
 #endif
 
-int main()
+int _tmain()
 {
 	int iy; 
 	clock_t start, finish;
