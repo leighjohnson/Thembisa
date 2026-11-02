@@ -15923,6 +15923,9 @@ void CalcTBscreenPropn()
 	temp1 = 0.0;
 	temp2 = 0.0;
 	temp3 = 0.0;
+	TotAttendingPHC[iy] = 0.0;
+	TotPHCwTBsymptoms[iy] = 0.0;
+	TotPHCdueTBsymptoms[iy] = 0.0;
 	Sensitivity = 0.0;
 	HIVeffect[0] = 1.0;
 	HIVeffect[1] = RRhealthSeekingHIV;
@@ -15949,6 +15952,14 @@ void CalcTBscreenPropn()
 					SmPosTB[ig][is] * (1.0 - MicroscopyPropn[iy]) * (1.0 - CurrXpertSe[1]) * CultureConfirmXpNeg[iy][is] *
 					RRsymptomsSmPos) * (HealthSeekingGen * Cough2wkActiveSmNeg / RRscreenSymptoms +
 						HealthSeekingTB) * HIVeffect[is] * SexEffect[ig];
+				TotAttendingPHC[iy] += (NonTBpop[ig][is] * (HealthSeekingGen + HealthSeekingTBLS) +
+					(SmNegTB[ig][is] + SmPosTB[ig][is]) * (HealthSeekingGen + HealthSeekingTB) +
+					SmPosTB[ig][is] * (RRsymptomsSmPos - 1.0) * HealthSeekingTB) * HIVeffect[is] * SexEffect[ig];
+				TotPHCwTBsymptoms[iy] += (NonTBpop[ig][is] * (HealthSeekingGen * Cough2wkGen + HealthSeekingTBLS) +
+					(SmNegTB[ig][is] + SmPosTB[ig][is] * RRsymptomsSmPos) * (HealthSeekingGen * Cough2wkActiveSmNeg +
+					HealthSeekingTB)) * HIVeffect[is] * SexEffect[ig];
+				TotPHCdueTBsymptoms[iy] += (NonTBpop[ig][is] * HealthSeekingTBLS + (SmNegTB[ig][is] +
+					SmPosTB[ig][is] * RRsymptomsSmPos) * (HealthSeekingTB)) * HIVeffect[is] * SexEffect[ig];
 			}
 		}
 	}
@@ -16001,6 +16012,8 @@ void CalcTBscreenPropn()
 			PropnScreened.out[CurrSim - 1][iy] = TBsymptomScreened[iy];
 			PropnScreened2.out[CurrSim - 1][iy] = TBsymptomScreened2[iy];
 		}
+		TBsymptomaticPHC.out[CurrSim - 1][iy] = TotPHCwTBsymptoms[iy] / TotAttendingPHC[iy];
+		SeekingRxTB_PHC.out[CurrSim - 1][iy] = TotPHCdueTBsymptoms[iy] / TotAttendingPHC[iy];
 	}
 	if (RateART_TBscreened[iy] > 0.0 || PropnHHcontactScreened[iy] > 0.0) { 
 		ModelTBtests[iy] += TotTUTTtests; 
@@ -19887,6 +19900,8 @@ void GetAddedTBoutputs(const char* filout)
 	Total_dCXRscreensD2D.GetMeans(); // Moved from GetTBoutputs
 	TotalXpertScreensD2D.GetMeans(); // Moved from GetTBoutputs
 	NewRxAdultTBscreenD2D.GetMeans(); // Moved from GetTBoutputs
+	TBsymptomaticPHC.GetMeans();
+	SeekingRxTB_PHC.GetMeans();
 
 	// Drug-resistant TB outputs
 	SummOutRow += 3;

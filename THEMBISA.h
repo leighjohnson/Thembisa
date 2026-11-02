@@ -643,6 +643,9 @@ double TBsymptomScreened[86]; ///< % of symptomatic TB patients screened microbi
 							  ///< if specifically seeking Rx for TB or TB-like symptoms
 double TBsymptomScreened2[86]; ///< % of patients with TB/TB-like symptoms screened micro-
 							   ///< biologically if attending health services for other reasons
+double TotAttendingPHC[86]; ///< Number of adults attending PHC
+double TotPHCwTBsymptoms[86]; ///< Number of adults attending PHC with symptoms of TB
+double TotPHCdueTBsymptoms[86]; ///< Number of adults attending PHC due to symptoms of TB
 double SmPosRxScreen[86]; ///< # smear-pos TB cases starting Rx after active/intensive case finding
 double TBadultRxSmDiag[86]; ///< True TB Rx initiations in adults diagnosed by smear
 double SmPosRxDelay[86]; ///< Average delay (years) until active smear-pos TB is treated
@@ -2793,6 +2796,8 @@ PostOutputArray TBRxCompletion(56);
 PostOutputArray TBtestingYield(56);
 PostOutputArray TBtestingYieldART(56);
 PostOutputArray TBtestingYieldNoART(56);
+PostOutputArray TBsymptomaticPHC(56);
+PostOutputArray SeekingRxTB_PHC(56);
 PostOutputArray ETRbias(5);
 PostOutputArray VRbiasTB(1);
 PostOutputArray TBlogL(10);
