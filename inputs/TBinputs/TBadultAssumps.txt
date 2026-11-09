@@ -140,6 +140,12 @@ XpertUltraSeActive (no data stratified by smear status, so same assumps)
 0.77	0.99
 XpertUltraSp (Dorman 2018, Parker 2019)
 0.995
+BD_MAX_Se (David 2026, Shah 2020)
+0.70	0.98
+BD_MAX_SeActive (no data stratified by smear status, so same assumps)
+0.70	0.98
+BD_MAX_Sp (David 2026)
+0.995
 Se_dCXR (Fehr 2021)
 0.83
 Sp_dCXR (Fehr 2021)

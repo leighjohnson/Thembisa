@@ -5175,6 +5175,15 @@ void ReadTBadultAssumps()
 	file >> XpertUltraSp;
 	file.ignore(255, '\n');
 	file.ignore(255, '\n');
+	file >> BD_MAX_Se[0] >> BD_MAX_Se[1];
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> BD_MAX_SeActive[0] >> BD_MAX_SeActive[1];
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> BD_MAX_Sp;
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
 	file >> Se_dCXR;
 	file.ignore(255, '\n');
 	file.ignore(255, '\n');
@@ -5345,6 +5354,11 @@ void ReadTBrollout()
 	file.ignore(255, '\n');
 	for (iy = 0; iy < 86; iy++) {
 		file >> UltraPropn[iy];
+	}
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	for (iy = 0; iy < 86; iy++) {
+		file >> BD_MAXpropn[iy];
 	}
 	file.ignore(255, '\n');
 	file.ignore(255, '\n');
@@ -14874,9 +14888,12 @@ void SetCurrYearParametersTB()
 
 	// Sensitivity and specificity of microbiological diagnosis
 	//MicroscopyPropn[iy] = 1.0;
-	CurrXpertSe[0] = UltraPropn[iy] * XpertUltraSe[0] + (1.0 - UltraPropn[iy]) * XpertSe[0];
-	CurrXpertSe[1] = UltraPropn[iy] * XpertUltraSe[1] + (1.0 - UltraPropn[iy]) * XpertSe[1];
-	CurrXpertSp = UltraPropn[iy] * XpertUltraSp + (1.0 - UltraPropn[iy]) * XpertSp;
+	CurrXpertSe[0] = UltraPropn[iy] * XpertUltraSe[0] + BD_MAXpropn[iy] * BD_MAX_Se[0] +
+		(1.0 - UltraPropn[iy] - BD_MAXpropn[iy]) * XpertSe[0];
+	CurrXpertSe[1] = UltraPropn[iy] * XpertUltraSe[1] + BD_MAXpropn[iy] * BD_MAX_Se[1] +
+		(1.0 - UltraPropn[iy] - BD_MAXpropn[iy]) * XpertSe[1];
+	CurrXpertSp = UltraPropn[iy] * XpertUltraSp + BD_MAXpropn[iy] * BD_MAX_Sp + 
+		(1.0 - UltraPropn[iy] - BD_MAXpropn[iy]) * XpertSp;
 	CurrSeTB[0][0] = MicroscopyPropn[iy] * CultureConfirmSmNeg[iy][0] + (1.0 - MicroscopyPropn[iy]) *
 		(CurrXpertSe[0] + (1.0 - CurrXpertSe[0]) * CultureConfirmXpNeg[iy][0]);
 	CurrSeTB[1][0] = MicroscopyPropn[iy] + (1.0 - MicroscopyPropn[iy]) *
@@ -14892,17 +14909,18 @@ void SetCurrYearParametersTB()
 	CurrSpTB = MicroscopyPropn[iy] * SmearSp + (1.0 - MicroscopyPropn[iy]) * CurrXpertSp;
 	for (is = 0; is < 2; is++) {
 		CurrSeTB_HHC[is] = (PropnHHcontactTUTT[iy] + (1 - PropnHHcontactTUTT[iy]) * Cough2wkActiveSmNeg *
-			pow(RRsymptomsSmPos, is)) * (UltraPropn[iy] * XpertUltraSeActive[is] + (1.0 - UltraPropn[iy]) *
-				XpertSeActive[is]);
+			pow(RRsymptomsSmPos, is)) * (UltraPropn[iy] * XpertUltraSeActive[is] + BD_MAXpropn[iy] * BD_MAX_SeActive[is] + 
+			(1.0 - UltraPropn[iy] - BD_MAXpropn[iy]) * XpertSeActive[is]);
 		CurrSeTB_ART[is] = (PropnART_TB_TUTT[iy] + (1 - PropnART_TB_TUTT[iy]) * Cough2wkActiveSmNeg *
-			pow(RRsymptomsSmPos, is)) * (UltraPropn[iy] * XpertUltraSeActive[is] + (1.0 - UltraPropn[iy]) *
-				XpertSeActive[is]);
+			pow(RRsymptomsSmPos, is)) * (UltraPropn[iy] * XpertUltraSeActive[is] + BD_MAXpropn[iy] * BD_MAX_SeActive[is] + 
+			(1.0 - UltraPropn[iy] - BD_MAXpropn[iy]) * XpertSeActive[is]);
 		CurrSeTBprev[is] = (PropnPrevTB_TUTT[iy] + (1 - PropnPrevTB_TUTT[iy]) * Cough2wkActiveSmNeg *
-			pow(RRsymptomsSmPos, is)) * (UltraPropn[iy] * XpertUltraSeActive[is] + (1.0 - UltraPropn[iy]) *
-				XpertSeActive[is]);
+			pow(RRsymptomsSmPos, is)) * (UltraPropn[iy] * XpertUltraSeActive[is] + BD_MAXpropn[iy] * BD_MAX_SeActive[is] + 
+			(1.0 - UltraPropn[iy] - BD_MAXpropn[iy]) * XpertSeActive[is]);
 		CurrSeTB_D2D[is] = (Cough2wkActiveSmNeg * pow(RRsymptomsSmPos, is) / (1.0 - TongueSwabDetected[1]) + (1.0 -
 			Cough2wkActiveSmNeg * pow(RRsymptomsSmPos, is)) * PropnD2DdCXR[iy] * Se_dCXR / (1.0 - TongueSwabDetected[0])) *
-			(UltraPropn[iy] * XpertUltraSeActive[is] + (1.0 - UltraPropn[iy]) * XpertSeActive[is]);
+			(UltraPropn[iy] * XpertUltraSeActive[is] + BD_MAXpropn[iy] * BD_MAX_SeActive[is] + 
+			(1.0 - UltraPropn[iy] - BD_MAXpropn[iy]) * XpertSeActive[is]);
 	}
 
 	// Initial LTFU

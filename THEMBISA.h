@@ -566,7 +566,8 @@ double PropnNeedleSharing[86]; ///< % of injections in which needle is shared
 double TotPosTBtestsAdult[86]; ///< # individuals testing positive for TB microbiologically
 double TotPosTBtestsAdult1[86]; ///< # individuals testing positive for TB microbiologically
 double MicroscopyPropn[86]; ///< % of TB-tested individuals screened by microscopy (not Xpert)
-double UltraPropn[86]; ///< % of Xpert-tested individuals screened by Xpert Ultra
+double UltraPropn[86]; ///< % of NAAT-tested individuals screened by Xpert Ultra
+double BD_MAXpropn[86]; ///< % of NAAT-tested individuals screened by BD MAX
 double CultureConfirmSmNeg[86][2]; ///< % smear-neg suspects sent for culture, by HIV status
 double CultureConfirmXpNeg[86][2]; ///< % of Xpert-neg suspects sent for culture, by HIV status
 double DSTcoveragePrevTB[86]; ///< % of previously-treated TB cases who undergo DST
@@ -984,6 +985,9 @@ double SmearSp; ///< Smear specificity
 double XpertUltraSe[2]; ///< Xpert Ultra sensitivity in smear-negative and -positive TB
 double XpertUltraSeActive[2]; ///< Xpert Ultra sensitivity in active case finding (HHCs)
 double XpertUltraSp; ///< Xpert Ultra specificity
+double BD_MAX_Se[2]; ///< BD MAX sensitivity in smear-negative and -positive TB
+double BD_MAX_SeActive[2]; ///< BD MAX sensitivity in active case finding (HHCs)
+double BD_MAX_Sp; ///< BD MAX specificity
 double Se_dCXR; ///< Sensitivity of digital chest X-ray
 double Sp_dCXR; ///< Specificity of digital chest X-ray
 double AbleSputum[2]; ///< % of asymptomatic/symptomatic able to provide sputum specimens
@@ -1066,8 +1070,8 @@ double RR_TBmortByAge[81];
 double TBmortSmPos[81][2]; ///< Total TB deaths in smear-pos cases, by age & sex
 double TBmortSmNeg[81][2]; ///< Total TB deaths in smear-neg cases, by age & sex
 double TBmortTreated[81][2]; ///< Total TB deaths after treatment initiation
-double CurrXpertSe[2]; ///< Current sensitivity of Xpert/Ultra testing, by smear status
-double CurrXpertSp; ///< Current specificity of Xpert/Ultra testing
+double CurrXpertSe[2]; ///< Current sensitivity of NAAT testing, by smear status
+double CurrXpertSp; ///< Current specificity of NAAT testing
 double CurrSeTB[2][2]; ///< Current sensitivity of TB testing, by smear status and HIV status
 double CurrSeTB_HHC[2]; ///< Current sensitivity of TB testing in HH contacts, by smear status
 double CurrSeTB_ART[2]; ///< Current sensitivity of TB testing in ART patients, by smear status
