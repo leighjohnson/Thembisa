@@ -34,8 +34,8 @@ int _tmain()
 
 	start = clock();
 	//GenerateSample(); // Not yet updated in THEMBISA
-	RunSample();	// Remember to set FixedUncertainty = 1 before running this function
-	//runIMIS(0.0);
+	//RunSample();	// Remember to set FixedUncertainty = 1 before running this function
+	runIMIS(0.0);
 	//MaximizeLikelihood(0.0000001, "InitialSimplex.txt", "FinalSimplex.txt");
 	/*ReadAllFiles();
 	CurrSim = 1;
@@ -4883,6 +4883,7 @@ void ReadAllFiles()
 		ReadTBlabDiag();
 		ReadTBprevData();
 		if (CalibTB_HIV_OR == 1) { ReadTB_HIV_ORs(); }
+		if (CalibPHCvisits == 1) { ReadPHCvisitsTB(); }
 		if (FixedTBscreening == 1 && FixedUncertainty == 1) { ReadTBscreening(); }
 	}
 }
@@ -5704,6 +5705,24 @@ void ReadTB_HIV_ORs()
 
 	for (ic = 0; ic < 10; ic++) {
 		file >> TB_HIV_ORdetails[ic][0] >> TB_HIV_ORdetails[ic][1] >> TB_HIV_ORdetails[ic][2];
+	}
+	file.close();
+}
+
+void ReadPHCvisitsTB()
+{
+	int ic;
+	ifstream file;
+	string InputFile = "./inputs/TBinputs/PHCvisitsTBstudies.txt";
+
+	file.open(InputFile);
+	if (file.fail()) {
+		cerr << "Could not open PHCvisitsTBstudies.txt\n";
+		exit(1);
+	}
+
+	for (ic = 0; ic < nPHCstudies; ic++) {
+		file >> PHCvisitsTB_SxDetails[ic][0] >> PHCvisitsTB_SxDetails[ic][1];
 	}
 	file.close();
 }
@@ -15982,7 +16001,7 @@ void CalcTBscreenPropn()
 			Sensitivity += (SmNegTB[ig][is] * CurrSeTB[0][is] + SmPosTB[ig][is] * CurrSeTB[1][is] *
 				RRsymptomsSmPos) * (HealthSeekingGen * Cough2wkActiveSmNeg / RRscreenSymptoms +
 					HealthSeekingTB) * HIVeffect[is] * SexEffect[ig];
-			if (FixedUncertainty == 1) {
+			if (FixedUncertainty == 1 || CalibPHCvisits == 1) {
 				temp3 += NonTBpop[ig][is] * (HealthSeekingGen * Cough2wkGen / RRscreenSymptoms +
 					HealthSeekingTBLS) * HIVeffect[is] * SexEffect[ig] * (MicroscopyPropn[iy] *
 						SmearSp * CultureConfirmSmNeg[iy][is] + (1.0 - MicroscopyPropn[iy]) * CurrXpertSp *
@@ -20094,6 +20113,8 @@ void CalcLikelihood()
 			LogLikelihood += CalcRRscreenLogL();}
 		if (CalibTB_HIV_OR == 1) {
 			LogLikelihood += CalcTB_HIV_ORlogL();}
+		if (CalibPHCvisits == 1) {
+			LogLikelihood += CalcPHC_TBlogL();}
 	}
 	else{
 		if (CalibAdultPrev == 1 || CalibYouthPrev == 1){
@@ -23753,6 +23774,26 @@ double CalcTB_HIV_ORlogL()
 	}
 
 	if (FixedUncertainty == 1) { TBlogL.out[CurrSim - 1][9] = TempLogL; }
+
+	return TempLogL;
+}
+
+double CalcPHC_TBlogL()
+{
+	double ModelLog, VarRandEffects, TempLogL;
+	int ic, year;
+
+	VarRandEffects = 0.2834;
+
+	// Calculate likelihood
+	TempLogL = 0.0;
+	for (ic = 0; ic < nPHCstudies; ic++) {
+		year = PHCvisitsTB_SxDetails[ic][0] - StartYear;
+		ModelLog = log(TotPHCdueTBsymptoms[year]/ TotAttendingPHC[year]);
+		TempLogL += -0.5 * (log(2.0 * 3.141592654 * VarRandEffects) +
+			pow(log(PHCvisitsTB_SxDetails[ic][1]) - ModelLog, 2.0) /
+			VarRandEffects);
+	}
 
 	return TempLogL;
 }

@@ -14,11 +14,11 @@ using namespace std;
 //=============================================================================
 
 int StartYear = 1985;
-int ProjectionTerm = 46; ///< Note that entering term of 10 will give you results in 1994
+int ProjectionTerm = 41; ///< Note that entering term of 10 will give you results in 1994
 int CurrYear;
 int CurrMonth; ///< 0 to 11
 
-int FixedUncertainty = 1;
+int FixedUncertainty = 0;
 const int VaryFutureInterventions = 0; ///< 0 = fix the future rollout at Rollout.txt values
 const int VaryFutureInterventionsTB = 0; ///< 0 = fix the future rollout at TBrollout.txt values
 const int FixedARTinitiation = 0; ///< 1 = fix the rates of ART initiation at the values generated in
@@ -87,6 +87,7 @@ const int CalibRifResPropn = 0; ///< 1 = calibrate to % of TB cases that are rif
 const int CalibSmPosHH = 0; ///< 1 = calibrate to TB prevalence survey data on smear-pos propn
 const int CalibRRscreen = 0; ///< 1 = calibrate to RR screening in TB symptomatic patients
 const int CalibTB_HIV_OR = 1; ///< 1 = calibrate to odds ratios of HIV-TB associations
+const int CalibPHCvisits = 1; ///< 1 = calibrate to data on # of PHC visits, % due to TB symptoms
 
 //=============================================================================
 ///< Parameters in the 'AdultAssumps' file
@@ -1477,6 +1478,9 @@ double SmPosStudyDetails[4][3]; ///< Details of household surveys measuring % of
 double RRscreenStudyDetails[4][3]; ///< Details of surveys measuring RR screening in symptomatic TB
 double TB_HIV_ORdetails[10][3]; ///< Details of surveys measuring HIV-TB association
 
+const int nPHCstudies = 7;
+double PHCvisitsTB_SxDetails[nPHCstudies + 1][2];
+
 ///< TB model outputs used in calibration
 
 double ModelTBdeathsA[16][23][2]; ///< Model estimates of TB deaths by age, year (1997-2016) & sex
@@ -1810,6 +1814,7 @@ void ReadTB_ETRdata();
 void ReadTBlabDiag();
 void ReadTBprevData();
 void ReadTB_HIV_ORs();
+void ReadPHCvisitsTB();
 void ReadTBscreening();
 
 ///< Initialization functions
@@ -1992,6 +1997,7 @@ double CalcRifResLogL();
 double CalcSmPosHHlogL();
 double CalcRRscreenLogL();
 double CalcTB_HIV_ORlogL();
+double CalcPHC_TBlogL();
 void SimulateTBparams();
 
 ///< IMIS functions
