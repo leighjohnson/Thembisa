@@ -1479,7 +1479,8 @@ double RRscreenStudyDetails[4][3]; ///< Details of surveys measuring RR screenin
 double TB_HIV_ORdetails[10][3]; ///< Details of surveys measuring HIV-TB association
 
 const int nPHCstudies = 7;
-double PHCvisitsTB_SxDetails[nPHCstudies + 1][2];
+double PHCvisitsTB_SxDetails[nPHCstudies + 1][2]; ///< Studies: % of people attending PHC due to TB symptoms
+double DHISheadcounts[1][2]; ///< DHIS data on total PHC visits by people aged 15+
 
 ///< TB model outputs used in calibration
 

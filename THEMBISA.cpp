@@ -5724,6 +5724,9 @@ void ReadPHCvisitsTB()
 	for (ic = 0; ic < nPHCstudies; ic++) {
 		file >> PHCvisitsTB_SxDetails[ic][0] >> PHCvisitsTB_SxDetails[ic][1];
 	}
+	file.ignore(255, '\n');
+	file.ignore(255, '\n');
+	file >> DHISheadcounts[0][0] >> DHISheadcounts[0][1];
 	file.close();
 }
 
@@ -23780,12 +23783,12 @@ double CalcTB_HIV_ORlogL()
 
 double CalcPHC_TBlogL()
 {
-	double ModelLog, VarRandEffects, TempLogL;
+	double ModelLog, VarRandEffects, ModelPublic, TempLogL;
 	int ic, year;
 
 	VarRandEffects = 0.2834;
 
-	// Calculate likelihood
+	// Calculate likelihood for % of PHC visits due to TB symptoms
 	TempLogL = 0.0;
 	for (ic = 0; ic < nPHCstudies; ic++) {
 		year = PHCvisitsTB_SxDetails[ic][0] - StartYear;
@@ -23795,6 +23798,11 @@ double CalcPHC_TBlogL()
 			VarRandEffects);
 	}
 
+	// Calculate likelihood for number of PHC visits in public sector
+	ModelPublic = DHISheadcounts[0][1] / TotAttendingPHC[40];
+	TempLogL += -0.5 * (log(2.0 * 3.141592654 * pow(0.052, 2.0)) +
+		pow((0.750 - ModelPublic)/0.052, 2.0));
+	
 	return TempLogL;
 }
 
