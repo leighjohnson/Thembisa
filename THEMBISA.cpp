@@ -13671,15 +13671,14 @@ void ResultsAtStartOfYr()
 		CalcYLDs();
 	}
 	if (CalibMarriageData == 1 || FixedUncertainty == 1){ GetMarriageForCalib(); }
-	if (IncludeTB == 1 && (FixedUncertainty == 1 || CurrYear == 2018)) { TBresultsAtStartOfYr(); }
+	if (IncludeTB == 1 && FixedUncertainty == 1) { TBresultsAtStartOfYr(); }
 	if (IncludeTB == 1) { TBresultsAtStartOfYr2(); }
 }
 
 void TBresultsAtStartOfYr()
 {
 	int ia, ig, iy, is, id, ii;
-	double temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8;
-	double temp9, temp10, temp11, temp12;
+	double temp1, temp2, temp3, temp4;
 
 	iy = CurrYear - StartYear;
 
@@ -13705,93 +13704,18 @@ void TBresultsAtStartOfYr()
 	}
 	LTBIprev10to19.out[CurrSim - 1][iy] = 1.0 - temp1 / temp2;
 
-	// Active TB prevalence
+	// Ever treated prevalence
 	temp1 = 0.0;
 	temp2 = 0.0;
 	temp3 = 0.0;
 	temp4 = 0.0;
-	temp9 = 0.0;
-	temp10 = 0.0;
-	for (ia = 5; ia < 81; ia++) {
-		temp1 += TBactiveSmPosM.Total[ia] + TBactiveSmNegM.Total[ia] + TBtreatedM.Total[ia];
-		temp2 += TBactiveSmPosF.Total[ia] + TBactiveSmNegF.Total[ia] + TBtreatedF.Total[ia];
-		temp3 += TotalPop[ia + 10][0];
-		temp4 += TotalPop[ia + 10][1];
-		temp9 += TBtreatedM.Total[ia];
-		temp10 += TBtreatedF.Total[ia];
-	}
-	if (IncludeDR_TB == 1) {
-		for (ia = 5; ia < 81; ia++) {
-			temp1 += TBactiveSmPosRR_M.Total[ia] + TBactiveSmNegRR_M.Total[ia] +
-				RR_TBtreated1stM.Total[ia] + RR_TBtreated2ndM.Total[ia];
-			temp2 += TBactiveSmPosRR_F.Total[ia] + TBactiveSmNegRR_F.Total[ia] +
-				RR_TBtreated1stF.Total[ia] + RR_TBtreated2ndF.Total[ia];
-			temp9 += RR_TBtreated1stM.Total[ia] + RR_TBtreated2ndM.Total[ia];
-			temp10 += RR_TBtreated1stF.Total[ia] + RR_TBtreated2ndF.Total[ia];
-		}
-	}
-	AdultTBprev.out[CurrSim - 1][iy] = (temp1 + temp2) / (temp3 + temp4);
-	AdultTBprevM.out[CurrSim - 1][iy] = temp1 / temp3;
-	AdultTBprevF.out[CurrSim - 1][iy] = temp2 / temp4;
-	TotTBadult.out[CurrSim - 1][iy] = temp1 + temp2;
-	TotTBadultM.out[CurrSim - 1][iy] = temp1;
-	TotTBadultF.out[CurrSim - 1][iy] = temp2;
-	UntreatedTBprev.out[CurrSim - 1][iy] = (temp1 + temp2 - temp9 - temp10) / (temp3 + temp4);
-	UntreatedTBprevM.out[CurrSim - 1][iy] = (temp1 - temp9) / temp3;
-	UntreatedTBprevF.out[CurrSim - 1][iy] = (temp2 - temp10) / temp4;
-	temp5 = 0.0;
-	temp6 = 0.0;
-	temp7 = 0.0;
-	temp8 = 0.0;
-	temp11 = 0.0;
-	temp12 = 0.0;
-	for (ia = 5; ia < 81; ia++) {
-		for (is = 5; is < 44; is++) {
-			temp5 += TBactiveSmPosM.HIVstage[ia][is] + TBactiveSmNegM.HIVstage[ia][is] + TBtreatedM.HIVstage[ia][is];
-			temp6 += TBactiveSmPosF.HIVstage[ia][is] + TBactiveSmNegF.HIVstage[ia][is] + TBtreatedF.HIVstage[ia][is];
-			temp11 += TBtreatedM.HIVstage[ia][is];
-			temp12 += TBtreatedF.HIVstage[ia][is];
-		}
-		temp7 += TotalPositive[ia + 10][0];
-		temp8 += TotalPositive[ia + 10][1];
-	}
-	if (IncludeDR_TB == 1) {
-		for (ia = 5; ia < 81; ia++) {
-			for (is = 5; is < 44; is++) {
-				temp5 += TBactiveSmPosRR_M.HIVstage[ia][is] + TBactiveSmNegRR_M.HIVstage[ia][is] +
-					RR_TBtreated1stM.HIVstage[ia][is] + RR_TBtreated2ndM.HIVstage[ia][is];
-				temp6 += TBactiveSmPosRR_F.HIVstage[ia][is] + TBactiveSmNegRR_F.HIVstage[ia][is] +
-					RR_TBtreated1stF.HIVstage[ia][is] + RR_TBtreated2ndF.HIVstage[ia][is];
-				temp11 += RR_TBtreated1stM.HIVstage[ia][is] + RR_TBtreated2ndM.HIVstage[ia][is];
-				temp12 += RR_TBtreated1stF.HIVstage[ia][is] + RR_TBtreated2ndF.HIVstage[ia][is];
-			}
-		}
-	}
-	AdultTBprevHIVpos.out[CurrSim - 1][iy] = (temp5 + temp6) / (temp7 + temp8);
-	AdultTBprevHIVneg.out[CurrSim - 1][iy] = (temp1 + temp2 - temp5 - temp6) / (temp3 + temp4 - temp7 - temp8);
-	TotTBadultHIVpos.out[CurrSim - 1][iy] = temp5 + temp6;
-	TotTBadultHIVneg.out[CurrSim - 1][iy] = temp1 + temp2 - temp5 - temp6;
-	if (CalibTBprev == 1) {
-		AdultPTBprev.out[CurrSim - 1][iy] = ((temp1 + temp2 - temp5 - temp6) * (1.0 - PropnETB[0]) + (temp5 + temp6) *
-			(1.0 - PropnETB[1])) / (temp3 + temp4);
-		AdultPTBprevM.out[CurrSim - 1][iy] = ((temp1 - temp5) * (1.0 - PropnETB[0]) + temp5 * (1.0 - PropnETB[1])) / temp3;
-		AdultPTBprevF.out[CurrSim - 1][iy] = ((temp2 - temp6) * (1.0 - PropnETB[0]) + temp6 * (1.0 - PropnETB[1])) / temp4;
-		if (CurrYear == 2018) {
-			TBprev2018[0] = ((temp1 - temp5 - (temp9 - temp11)) * (1.0 - PropnETB[0]) + (temp5 - temp11) * (1.0 - PropnETB[1]) +
-				0.15 * ((temp9 - temp11) * (1.0 - PropnETB[0]) + temp11 * (1.0 - PropnETB[1]))) / temp3;
-			TBprev2018[1] = ((temp2 - temp6 - (temp10 - temp12)) * (1.0 - PropnETB[0]) + (temp6 - temp12) * (1.0 - PropnETB[1]) +
-				0.15 * ((temp10 - temp12) * (1.0 - PropnETB[0]) + temp12 * (1.0 - PropnETB[1]))) / temp4;
-		}
-	}
-
-	// Ever treated prevalence
-	temp1 = 0.0;
-	temp2 = 0.0;
 	for (ia = 5; ia < 81; ia++) {
 		temp1 += TBtreatedM.Total[ia] + TBrecoveredST_M.Total[ia] + TBrecoveredLT_M.Total[ia] +
 			TBrecST_IPT_M.Total[ia] + TBrecLT_IPT_M.Total[ia];
 		temp2 += TBtreatedF.Total[ia] + TBrecoveredST_F.Total[ia] + TBrecoveredLT_F.Total[ia] +
 			TBrecST_IPT_F.Total[ia] + TBrecLT_IPT_F.Total[ia];
+		temp3 += TotalPop[ia + 10][0];
+		temp4 += TotalPop[ia + 10][1];
 	}
 	if (IncludeDR_TB == 1) {
 		for (ia = 5; ia < 81; ia++) {
@@ -13841,9 +13765,95 @@ void TBresultsAtStartOfYr()
 void TBresultsAtStartOfYr2()
 {
 	int ia, iy, is, ii, id;
-	double temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, ARTbyCD4[4], TBbyCD4[4];
+	double temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, temp9, temp10, temp11, temp12;
+	double ARTbyCD4[4], TBbyCD4[4];
 
 	iy = CurrYear - StartYear;
+
+	// Active TB prevalence
+	if (FixedUncertainty == 1 || (CalibTBprev == 1 && CurrYear == 2018)) {
+		temp1 = 0.0;
+		temp2 = 0.0;
+		temp3 = 0.0;
+		temp4 = 0.0;
+		temp9 = 0.0;
+		temp10 = 0.0;
+		for (ia = 5; ia < 81; ia++) {
+			temp1 += TBactiveSmPosM.Total[ia] + TBactiveSmNegM.Total[ia] + TBtreatedM.Total[ia];
+			temp2 += TBactiveSmPosF.Total[ia] + TBactiveSmNegF.Total[ia] + TBtreatedF.Total[ia];
+			temp3 += TotalPop[ia + 10][0];
+			temp4 += TotalPop[ia + 10][1];
+			temp9 += TBtreatedM.Total[ia];
+			temp10 += TBtreatedF.Total[ia];
+		}
+		if (IncludeDR_TB == 1) {
+			for (ia = 5; ia < 81; ia++) {
+				temp1 += TBactiveSmPosRR_M.Total[ia] + TBactiveSmNegRR_M.Total[ia] +
+					RR_TBtreated1stM.Total[ia] + RR_TBtreated2ndM.Total[ia];
+				temp2 += TBactiveSmPosRR_F.Total[ia] + TBactiveSmNegRR_F.Total[ia] +
+					RR_TBtreated1stF.Total[ia] + RR_TBtreated2ndF.Total[ia];
+				temp9 += RR_TBtreated1stM.Total[ia] + RR_TBtreated2ndM.Total[ia];
+				temp10 += RR_TBtreated1stF.Total[ia] + RR_TBtreated2ndF.Total[ia];
+			}
+		}
+		if (FixedUncertainty == 1) {
+			AdultTBprev.out[CurrSim - 1][iy] = (temp1 + temp2) / (temp3 + temp4);
+			AdultTBprevM.out[CurrSim - 1][iy] = temp1 / temp3;
+			AdultTBprevF.out[CurrSim - 1][iy] = temp2 / temp4;
+			TotTBadult.out[CurrSim - 1][iy] = temp1 + temp2;
+			TotTBadultM.out[CurrSim - 1][iy] = temp1;
+			TotTBadultF.out[CurrSim - 1][iy] = temp2;
+			UntreatedTBprev.out[CurrSim - 1][iy] = (temp1 + temp2 - temp9 - temp10) / (temp3 + temp4);
+			UntreatedTBprevM.out[CurrSim - 1][iy] = (temp1 - temp9) / temp3;
+			UntreatedTBprevF.out[CurrSim - 1][iy] = (temp2 - temp10) / temp4;
+		}
+		temp5 = 0.0;
+		temp6 = 0.0;
+		temp7 = 0.0;
+		temp8 = 0.0;
+		temp11 = 0.0;
+		temp12 = 0.0;
+		for (ia = 5; ia < 81; ia++) {
+			for (is = 5; is < 44; is++) {
+				temp5 += TBactiveSmPosM.HIVstage[ia][is] + TBactiveSmNegM.HIVstage[ia][is] + TBtreatedM.HIVstage[ia][is];
+				temp6 += TBactiveSmPosF.HIVstage[ia][is] + TBactiveSmNegF.HIVstage[ia][is] + TBtreatedF.HIVstage[ia][is];
+				temp11 += TBtreatedM.HIVstage[ia][is];
+				temp12 += TBtreatedF.HIVstage[ia][is];
+			}
+			temp7 += TotalPositive[ia + 10][0];
+			temp8 += TotalPositive[ia + 10][1];
+		}
+		if (IncludeDR_TB == 1) {
+			for (ia = 5; ia < 81; ia++) {
+				for (is = 5; is < 44; is++) {
+					temp5 += TBactiveSmPosRR_M.HIVstage[ia][is] + TBactiveSmNegRR_M.HIVstage[ia][is] +
+						RR_TBtreated1stM.HIVstage[ia][is] + RR_TBtreated2ndM.HIVstage[ia][is];
+					temp6 += TBactiveSmPosRR_F.HIVstage[ia][is] + TBactiveSmNegRR_F.HIVstage[ia][is] +
+						RR_TBtreated1stF.HIVstage[ia][is] + RR_TBtreated2ndF.HIVstage[ia][is];
+					temp11 += RR_TBtreated1stM.HIVstage[ia][is] + RR_TBtreated2ndM.HIVstage[ia][is];
+					temp12 += RR_TBtreated1stF.HIVstage[ia][is] + RR_TBtreated2ndF.HIVstage[ia][is];
+				}
+			}
+		}
+		if (FixedUncertainty == 1) {
+			AdultTBprevHIVpos.out[CurrSim - 1][iy] = (temp5 + temp6) / (temp7 + temp8);
+			AdultTBprevHIVneg.out[CurrSim - 1][iy] = (temp1 + temp2 - temp5 - temp6) / (temp3 + temp4 - temp7 - temp8);
+			TotTBadultHIVpos.out[CurrSim - 1][iy] = temp5 + temp6;
+			TotTBadultHIVneg.out[CurrSim - 1][iy] = temp1 + temp2 - temp5 - temp6;
+			AdultPTBprev.out[CurrSim - 1][iy] = ((temp1 + temp2 - temp5 - temp6) * (1.0 - PropnETB[0]) + (temp5 + temp6) *
+				(1.0 - PropnETB[1])) / (temp3 + temp4);
+			AdultPTBprevM.out[CurrSim - 1][iy] = ((temp1 - temp5) * (1.0 - PropnETB[0]) + temp5 * (1.0 - PropnETB[1])) / temp3;
+			AdultPTBprevF.out[CurrSim - 1][iy] = ((temp2 - temp6) * (1.0 - PropnETB[0]) + temp6 * (1.0 - PropnETB[1])) / temp4;
+		}
+		if (CalibTBprev == 1) {
+			if (CurrYear == 2018) {
+				TBprev2018[0] = ((temp1 - temp5 - (temp9 - temp11)) * (1.0 - PropnETB[0]) + (temp5 - temp11) * (1.0 - PropnETB[1]) +
+					0.15 * ((temp9 - temp11) * (1.0 - PropnETB[0]) + temp11 * (1.0 - PropnETB[1]))) / temp3;
+				TBprev2018[1] = ((temp2 - temp6 - (temp10 - temp12)) * (1.0 - PropnETB[0]) + (temp6 - temp12) * (1.0 - PropnETB[1]) +
+					0.15 * ((temp10 - temp12) * (1.0 - PropnETB[0]) + temp12 * (1.0 - PropnETB[1]))) / temp4;
+			}
+		}
+	}
 
 	// Untreated TB
 	temp1 = 0.0;

@@ -1492,7 +1492,7 @@ double TBprev2018[2]; ///< Modelled pulmonary TB prevalence in 2018, by sex
 ///< Priors and likelihood
 
 double LogLikelihood;
-const int MCMCdim = 21; ///< Number of parameters in uncertainty analysis
+const int MCMCdim = 2; ///< Number of parameters in uncertainty analysis
 const int MaxPriors = 65; ///< Number of input rows in Priors file (149 for HIV, 65 for TB)
 int InclPriors[MaxPriors][2]; ///< Indicator of which priors are included (1st index) and if
 							  ///< included their index in MCMCdim (2nd index)
@@ -1500,7 +1500,7 @@ double RandPrior[MCMCdim]; ///< Random numbers used to sample from prior in curr
 double Cholesky1[MCMCdim][MCMCdim];
 double Covariance[MCMCdim][MCMCdim]; ///< The covariance matrix for the MCMC parameters
 const int InitSample = 10000;
-const int ResampleSize = 100;
+const int ResampleSize = 1000;
 int SampleID[ResampleSize];
 int CurrSim;
 double temp[ResampleSize][41]; ///< Previously local to the SampleInput function in OutputArray class
@@ -1882,8 +1882,8 @@ void GetTBcontactScreenPropns();
 ///< Functions called on an annual basis
 void ResetMonthlyCum(); ///< Sets to zero the running totals in the Monthly sheet
 void ResultsAtStartOfYr();
-void TBresultsAtStartOfYr();
-void TBresultsAtStartOfYr2();
+void TBresultsAtStartOfYr(); ///< For outputs that are NOT used in calibration
+void TBresultsAtStartOfYr2(); ///< For outputs that are potentially used in calibration
 void Get2ndLineOutput();
 void CalcVLSstartYr();
 void CalcYLDs();
