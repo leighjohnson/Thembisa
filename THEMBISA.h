@@ -76,17 +76,17 @@ const int CalibMarriageData = 0; ///< 1 = calibrate to marriage data
 const int CalibANC_ART = 0; ///< 1 = calibrate to % of HIV+ ANC attenders previously on ART
 const int CalibAHDpaedART = 0; ///< 1 = calibrate to % of kids starting ART w severe immunodeficiency
 
-const int CalibTBdeathsA = 1; ///< 1 = calibrate to recorded TB deaths in adults
-const int CalibTBdeathsPLHIV = 1; ///< 1 = calibrate to expected TB deaths in HIV-pos adults
-const int CalibETRdeathsA = 1; ///< 1 = calibrate to recorded death rate in treated TB patients
-const int CalibTBcasesA = 1; ///< 1 = calibrate to recorded # treated TB cases in adults
-const int CalibTBdiagnosesA = 1; ///< 1 = calibrate to adult TB microbiological tests
-const int CalibHIVprevETR = 1; ///< 1 = calibrate to HIV prev data in adult TB cases
-const int CalibTBprev = 1; ///< 1 = calibrate to adult TB prevalence survey data
+const int CalibTBdeathsA = 0; ///< 1 = calibrate to recorded TB deaths in adults
+const int CalibTBdeathsPLHIV = 0; ///< 1 = calibrate to expected TB deaths in HIV-pos adults
+const int CalibETRdeathsA = 0; ///< 1 = calibrate to recorded death rate in treated TB patients
+const int CalibTBcasesA = 0; ///< 1 = calibrate to recorded # treated TB cases in adults
+const int CalibTBdiagnosesA = 0; ///< 1 = calibrate to adult TB microbiological tests
+const int CalibHIVprevETR = 0; ///< 1 = calibrate to HIV prev data in adult TB cases
+const int CalibTBprev = 0; ///< 1 = calibrate to adult TB prevalence survey data
 const int CalibRifResPropn = 0; ///< 1 = calibrate to % of TB cases that are rifampicin-resistant
 const int CalibSmPosHH = 0; ///< 1 = calibrate to TB prevalence survey data on smear-pos propn
 const int CalibRRscreen = 0; ///< 1 = calibrate to RR screening in TB symptomatic patients
-const int CalibTB_HIV_OR = 1; ///< 1 = calibrate to odds ratios of HIV-TB associations
+const int CalibTB_HIV_OR = 0; ///< 1 = calibrate to odds ratios of HIV-TB associations
 const int CalibPHCvisits = 1; ///< 1 = calibrate to data on # of PHC visits, % due to TB symptoms
 
 //=============================================================================

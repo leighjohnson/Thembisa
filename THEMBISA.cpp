@@ -16123,8 +16123,8 @@ void CalcTBscreenPropn()
 	}
 
 	// Calculate false-positive diagnoses and Rx initiations
-	if (FixedUncertainty == 1 || CalibTBdiagnosesA == 1) {
-		FalseTBadultLabDiag[iy] = temp1 * TBsymptomScreened[iy] * (1.0 - CurrSpTB);
+	FalseTBadultLabDiag[iy] = temp1 * TBsymptomScreened[iy] * (1.0 - CurrSpTB);
+	if (FixedUncertainty == 1) {
 		LabDiagAdultTBfalsePos.out[CurrSim - 1][iy] = FalseTBadultLabDiag[iy];
 		temp3 = NonTBpop[0][0] + NonTBpop[0][1] * HIVeffect[1];
 		// We divide by RRscreenF in the next line to reverse the previous adjustment to SexEffect[1]
@@ -18598,7 +18598,7 @@ void TBresultsAtEndOfYr()
 
 	// Diagnosis and treatment outputs
 	SmPosRxDelay[iy] = TotSmPosTB[iy] / (TBadultRxSmDiag[iy] + SmPosRxScreen[iy]);
-	if (FixedUncertainty == 1 || CalibTBdiagnosesA == 1) {
+	if (FixedUncertainty == 1) {
 		NewRxAdultTBsmPos.out[CurrSim - 1][iy] = TBadultRxSmDiag[iy];
 		TotNewRxAdultTBsmPos.out[CurrSim - 1][iy] = TBadultRxSmDiag[iy] + NewRxACF[1] + 
 			NewRxART_ICF[1] + NewRxTBscreenPrev[1] + NewRxTBscreenD2D[1];
@@ -18621,11 +18621,9 @@ void TBresultsAtEndOfYr()
 			}
 		}
 		NewRxAdultTB.out[CurrSim - 1][iy] += temp1;
-		if (FixedUncertainty == 1) {
-			TreatedTB15to24.out[CurrSim - 1][iy] = temp2 / temp1;
-			NewRxAdultTB_M.out[CurrSim - 1][iy] = temp3;
-			NewRxAdultTB_F.out[CurrSim - 1][iy] = temp1 - temp3;
-		}
+		TreatedTB15to24.out[CurrSim - 1][iy] = temp2 / temp1;
+		NewRxAdultTB_M.out[CurrSim - 1][iy] = temp3;
+		NewRxAdultTB_F.out[CurrSim - 1][iy] = temp1 - temp3;
 		NewRxAdultTB_HIV.out[CurrSim - 1][iy] += TBadultRxHIV[iy][0] + TBadultRxHIV[iy][1];
 		TotNewRxAdultTB_HIV.out[CurrSim - 1][iy] = NewRxAdultTB_HIV.out[CurrSim - 1][iy] +
 			NewRxART_ICF[0] + NewRxART_ICF[1]; // Quick fix, ignoring other active case finding
